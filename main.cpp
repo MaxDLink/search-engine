@@ -20,22 +20,33 @@ using std::setw;
 using std::left;
 
 //Function Prototypes
-void testFileSystem(const char* path);
-void testReadJsonFile(const char* fileName);
+void testFileSystem(const char *path);
 
+void testReadJsonFile(const char *fileName);
+
+//todo - print elements of articles to terminal & tokenize test field into individual words
+//todo - work on stemmer & stopwords removal also
+//todo - throw in AVL tree
 
 int main() {
+
+    //    //calls userInterface
+//    interface userInterface;
+//    userInterface.userInterface();
 
     cout << "-------------------------------------------" << endl;
     cout << "------ RapidJSON Doc Parsing Example ------" << endl;
     cout << "-------------------------------------------" << endl;
-    testReadJsonFile("sample_data/news_0064567.json");
+//    testReadJsonFile("sample_data/news_0064567.json");
+    testReadJsonFile("own_file_data_sample/news_0041337.json");
 
     cout << "\n";
     cout << "-------------------------------------------" << endl;
     cout << "------     File System Example       ------" << endl;
     cout << "-------------------------------------------" << endl;
-    testFileSystem("sample_data/");
+//    testFileSystem("sample_data/");
+    testFileSystem("own_file_data_sample/");
+
 
 
 }
@@ -46,11 +57,11 @@ int main() {
  * entities.
  * @param fileName filename with relative or absolute path included.
  */
-void testReadJsonFile(const char* fileName) {
+void testReadJsonFile(const char *fileName) {
 
     //open an ifstream on the file of interest and check that it could be opened.
     ifstream input(fileName);
-    if(!input.is_open())
+    if (!input.is_open())
         std::cerr << "cannot open file" << endl;
 
     //Create a RapidJSON IStreamWrapper using the file input stream above.
@@ -80,9 +91,16 @@ void testReadJsonFile(const char* fileName) {
     // a little JSON document object in that you can use the same subscript notation
     // to access particular values.
     cout << "  Person Entities:" << endl;
-    for (auto& p : persons) {
+    for (auto &p: persons) {
         cout << "    > " << setw(30) << left << p["name"].GetString()
              << setw(10) << left << p["sentiment"].GetString() << endl;
+    }
+    //grabs organization entities
+    auto orgs = d["entities"]["organizations"].GetArray();
+    cout << "Organization Entities:" << endl;
+    for (auto &org: orgs) {
+        cout << "    > " << setw(30) << left << org["name"].GetString()
+             << setw(10) << left << org["sentiment"].GetString() << endl;
     }
 
     input.close();
@@ -94,14 +112,14 @@ void testReadJsonFile(const char* fileName) {
  * @param path an absolute or relative path to a folder containing files
  * you want to parse.
  */
-void testFileSystem(const char* path) {
+void testFileSystem(const char *path) {
 
     //recursive_director_iterator used to "access" folder at parameter -path-
     //we are using the recursive iterator so it will go into subfolders.
     auto it = std::filesystem::recursive_directory_iterator(path);
 
     //loop over all the entries.
-    for(const auto& entry : it) {
+    for (const auto &entry: it) {
 
         cout << "--- " << setw(60) << left << entry.path().c_str() << " ---" << endl;
 
