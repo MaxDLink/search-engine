@@ -191,14 +191,34 @@ void testReadJsonFile(const char *fileName) {
     }
 
     stopWordsFile.close();
+    ofstream outputBeforeErase("data/outputBeforeErase.txt");
+    if(!outputBeforeErase.is_open()){
+        cout << "Output file before erase failed to open" << endl;
+    }
+    for(auto& i : textContent){
+        outputBeforeErase << i << endl;
+    }
+
+    outputBeforeErase.close();
     //loop through and erase stopwords that are found in textContent vector
-    for(int i = 0; i < stopWords.size(); i++){
-        for(int j = 0; j < textContent.size(); j++){
-            if(textContent.at(i) == stopWords.at(i)){
-                    textContent.erase(textContent.begin()+j);
+    for (int i = 0; i < stopWords.size(); i++) {
+        for (int j = 0; j < textContent.size(); j++) {
+            if (textContent.at(j) == stopWords.at(i)) {
+                textContent.erase(textContent.begin() + j);
             }
         }
     }
+
+    ofstream textErased;
+    textErased.open("data/output.txt");
+    if(!textErased.is_open()){
+        cout << "outputfile failed to open" << endl;
+    }
+    for(auto & i : textContent){
+        textErased << i << endl;
+    }
+
+    textErased.close();
     ///print text after stop word removal
 //    for(auto t: textContent){
 //        cout << "text after stopWord removal: " << t << endl;
