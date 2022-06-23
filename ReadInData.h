@@ -35,9 +35,14 @@ class ReadInData {
 private:
     void testReadJsonFile(const char *fileName);
 
+    void lowerCaseAndRemovePunct(Document &d, vector<string> &textContent);
+
+    void removeStopWords(vector<string> &stopWords, vector<string> &text);
+
+    void testPrintOutput(vector<string> &text);
+
 public:
     void testFileSystem(const char *path);
-
 
 };
 

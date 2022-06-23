@@ -5,6 +5,35 @@
 #include "ReadInData.h"
 
 /**
+ * example code for how to traverse the filesystem using std::filesystem
+ * @param path an absolute or relative path to a folder containing files
+ * you want to parse.
+ */
+
+void ReadInData::testFileSystem(const char *path) {
+
+    //recursive_director_iterator used to "access" folder at parameter -path-
+    //we are using the recursive iterator so it will go into subfolders.
+    auto it = std::filesystem::recursive_directory_iterator(path);
+
+    //loop over all the entries.
+    for (const auto &entry: it) {
+
+        cout << "--- " << setw(60) << left << entry.path().c_str() << " ---" << endl;
+
+        //We only want to attempt to parse files that end with .json...
+        if (entry.is_regular_file() && entry.path().extension().string() == ".json") {
+            ////testReadJsonFile("sample_data/news_0064567.json");
+            ///testReadJsonFile("own_file_data_sample/news_0041337.json");
+            testReadJsonFile(entry.path().c_str());
+        }
+
+    }
+
+
+}
+
+/**
  * example code that reads and parses a json file and extracts the title and person
  * entities.
  * @param fileName filename with relative or absolute path included.
@@ -55,9 +84,20 @@ void ReadInData::testReadJsonFile(const char *fileName) {
              << setw(10) << left << org["sentiment"].GetString() << endl;
     }
 
-    //todo - break up this function & organize it better
+    input.close();
+
     vector<string> stopWords;
     vector<string> textContent;
+
+    lowerCaseAndRemovePunct(d, textContent);
+
+    removeStopWords(stopWords, textContent);
+
+///    testPrintOutput(textContent);
+
+}
+
+void ReadInData::lowerCaseAndRemovePunct(Document &d, vector<string> &textContent) {
     ///compare vector of stopwords to vector of text & only print text that is not in stopwords vector
     //get text as a string
     auto text = d["text"].GetString();
@@ -75,15 +115,18 @@ void ReadInData::testReadJsonFile(const char *fileName) {
             }
         }
         //removes punctuation from string
-        for(int i = 0; i < lowerWord.size(); i++) {
-            if (ispunct(lowerWord.at(i))) {
-               lowerWord = lowerWord.erase(i, 1); //erases any punctuation from word
+        for(int i = 0; i < word.size(); i++) {
+            if (ispunct(word.at(i))) {
+                word = word.erase(i, 1); //erases any punctuation from word
             }
+        }if(lowerWord != ""){//check for empty in lowerWord
+            textContent.push_back(lowerWord);
         }
-        if(lowerWord != "") //check for empty in lowerWord
-        textContent.push_back(lowerWord);
+
     }
-    input.close();
+}
+
+void ReadInData::removeStopWords(vector<string> &stopWords,vector<string> &text) {
 
     ifstream stopWordsFile("own_file_data_sample/stopwords.txt");
     if (!stopWordsFile.is_open()) {
@@ -98,69 +141,45 @@ void ReadInData::testReadJsonFile(const char *fileName) {
     }
 
     stopWordsFile.close();
+
+    //loop through and erase stopwords that are found in text vector
+    for (int i = 0; i < stopWords.size(); i++) {
+        for (int j = 0; j < text.size(); j++) {
+            if (text.at(j) == stopWords.at(i)) {
+                text.erase(text.begin() + j); //todo check if erasing stopwords
+            }
+        }
+    }
+
+}
+
+void ReadInData::testPrintOutput(vector<string> &text) {
     std::ofstream outputBeforeErase("data/outputBeforeErase.txt");
     if(!outputBeforeErase.is_open()){
         cout << "Output file before erase failed to open" << endl;
     }
-    for(auto& i : textContent){
+    //writes to output file
+    for(auto& i : text){
         outputBeforeErase << i << endl;
     }
 
     outputBeforeErase.close();
-    //loop through and erase stopwords that are found in textContent vector
-    for (int i = 0; i < stopWords.size(); i++) {
-        for (int j = 0; j < textContent.size(); j++) {
-            if (textContent.at(j) == stopWords.at(i)) {
-                textContent.erase(textContent.begin() + j);
-            }
-        }
-    }
+
 
     std::ofstream textErased;
     textErased.open("data/output.txt");
     if(!textErased.is_open()){
         cout << "outputfile failed to open" << endl;
     }
-    for(auto & i : textContent){
+    //writes to output file
+    for(auto & i : text){
         textErased << i << endl;
     }
 
     textErased.close();
     ///print text after stop word removal
-//    for(auto t: textContent){
+//    for(auto t: text){
 //        cout << "text after stopWord removal: " << t << endl;
 //    }
-
-
 }
 
-
-/**
- * example code for how to traverse the filesystem using std::filesystem
- * @param path an absolute or relative path to a folder containing files
- * you want to parse.
- */
-
-
-
-
-void ReadInData::testFileSystem(const char *path) {
-
-    //recursive_director_iterator used to "access" folder at parameter -path-
-    //we are using the recursive iterator so it will go into subfolders.
-    auto it = std::filesystem::recursive_directory_iterator(path);
-
-    //loop over all the entries.
-    for (const auto &entry: it) {
-
-        cout << "--- " << setw(60) << left << entry.path().c_str() << " ---" << endl;
-
-        //We only want to attempt to parse files that end with .json...
-        if (entry.is_regular_file() && entry.path().extension().string() == ".json") {
-            testReadJsonFile(entry.path().c_str());
-        }
-
-    }
-
-
-}
