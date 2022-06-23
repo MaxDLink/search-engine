@@ -2,11 +2,18 @@
  * Summer 2022 Search Engine Template
  * includes some example code related to 2341 final project for summer 2022
  */
+/*
+ * code references:
+ * stopwords list from https://gist.github.com/larsyencken/1440509
+ * stringstream string splitting: https://www.geeksforgeeks.org/split-a-sentence-into-words-in-cpp/
+ *
+ */
 #include <iostream>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
-
+#include <vector>
+#include <sstream>
 //RapidJSON headers we need for our parsing.
 #include "rapidjson/istreamwrapper.h"
 #include "rapidjson/document.h"
@@ -18,6 +25,8 @@ using std::cin;
 using std::ifstream;
 using std::setw;
 using std::left;
+using std::string;
+using std::vector;
 
 //Function Prototypes
 void testFileSystem(const char *path);
@@ -28,7 +37,10 @@ void testReadJsonFile(const char *fileName);
 //todo - work on stemmer & stopwords removal also
 //todo - throw in AVL tree
 
-int main() {
+using namespace std;
+
+int main(int argc,
+         char *argv[]) {
 
     //    //calls userInterface
 //    interface userInterface;
@@ -46,7 +58,6 @@ int main() {
     cout << "-------------------------------------------" << endl;
 //    testFileSystem("sample_data/");
     testFileSystem("own_file_data_sample/");
-
 
 
 }
@@ -103,7 +114,44 @@ void testReadJsonFile(const char *fileName) {
              << setw(10) << left << org["sentiment"].GetString() << endl;
     }
 
+    //todo - break up this function & organize it better
+    vector<string> stopWords;
+    vector<string> textContent;
+    ///compare vector of stopwords to vector of text & only print text that is not in stopwords vector
+    //get text as a string
+    auto text = d["text"].GetString();
+    std::istringstream ss(text);
+    string word;
+    while (ss >> word) {//push all text into a vector to compare to stopwords vector
+        textContent.push_back(word);
+    }
     input.close();
+
+    ifstream stopWordsFile("own_file_data_sample/stopwords.txt");
+    if (!stopWordsFile.is_open()) {
+        cout << "Error opening stopWordsFile" << endl;
+    }
+    char stopWordsBuffer[500];
+    //while (stopWordsFile.getline(stopWordsBuffer, 500)) {
+    while (!stopWordsFile.eof()) {
+        stopWordsFile.getline(stopWordsBuffer, 500);
+        stopWords.push_back(
+                stopWordsBuffer); //fills stopWords vector with the list of stopwords from the stopWords.txt file
+    }
+
+    stopWordsFile.close();
+
+    for(int i = 0; i < stopWords.size(); i++){
+        for(int j = 0; j < textContent.size(); j++){
+            if(textContent.at(i) == stopWords.at(i)){
+                    textContent.erase(textContent.begin()+j);
+            }
+        }
+    }
+
+    for(auto t: textContent){
+        cout << "text after stopWord removal: " << t << endl;
+    }
 }
 
 
