@@ -66,19 +66,21 @@ void ReadInData::testReadJsonFile(const char *fileName) {
     while (ss >> word) {//push all text into a vector to compare to stopwords vector
         string lowerWord;
         for(int i = 0; i < word.size(); i++){
-            //todo - lower into var here first then push to vector if good
-            if(tolower(word.at(i)) >= 'a' || tolower(word.at(i)) <= 'z'){//lowercases words
+            //todo - include numbers in for word concatination???
+            //if(tolower(word.at(i)) >= 'a' && tolower(word.at(i)) <= 'z' || tolower(word.at(i)) >= '0' && tolower(word.at(i)) <= '9'){//lowercases words
+            if(tolower(word.at(i)) >= 'a' && tolower(word.at(i)) <= 'z'){
                 lowerWord += tolower(word.at(i));
             }else{//continues if punctuation
                 continue;
             }
         }
-        //todo - remove punctuation from string
-        for(int i = 0; i < word.size(); i++) {
-            if (ispunct(word.at(i))) {
-               lowerWord = word.erase(i, 1); //erases any punctuation from word fixme
+        //removes punctuation from string
+        for(int i = 0; i < lowerWord.size(); i++) {
+            if (ispunct(lowerWord.at(i))) {
+               lowerWord = lowerWord.erase(i, 1); //erases any punctuation from word
             }
         }
+        if(lowerWord != "") //check for empty in lowerWord
         textContent.push_back(lowerWord);
     }
     input.close();
