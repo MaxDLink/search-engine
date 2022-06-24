@@ -13,3 +13,7 @@ references:
 * json parsing
 * code for `rapidjson` filesystem readin https://rapidjson.org/md_doc_stream.html
 
+6/24/22
+* created templated avl tree class with reference from 
+* 
+

@@ -47,6 +47,7 @@ void ReadInData::indexAllFiles(const char *path) {
 //        cout << "--- " << setw(60) << left << entry.path().c_str() << " ---" << endl;
         if (entry.is_regular_file() && entry.path().extension().string() == ".json") {
             string jsonLink = entry.path().c_str();
+            cout << ".json file: " << jsonLink << endl;
             documentIdAndName.emplace(documentId, jsonLink); //put documentID & file.json into map
             documentId++;
             // cout << "filename: " << entry.path().c_str() << endl;
@@ -104,7 +105,9 @@ void ReadInData::readJsonFile(const char *fileName, set<string> stopWords) {
 
     lowerCaseAndRemovePunct(d, textContent);
 
-    //removeStopWords(stopWords, textContent);
+    removeStopWords(stopWords, textContent);
+
+    //todo - implement stemming
 
 ///    testPrintOutput(textContent);
 
@@ -141,9 +144,9 @@ void ReadInData::lowerCaseAndRemovePunct(Document &d, vector<string> &textConten
 
     }
     ///print text content to console
-//    for(int i = 0; i < textContent.size(); i++){
-//        cout << "WORD: " << textContent.at(i) << endl;
-//    }
+    for(int i = 0; i < textContent.size(); i++){
+        cout << "WORD: " << textContent.at(i) << endl;
+    }
 }
 
 void ReadInData::removeStopWords(set<string> &stopWords, vector<string> &text) {

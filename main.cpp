@@ -43,8 +43,8 @@ int main(int argc,
     ReadInData data;
 //data.indexAllFiles("sample_data/");
     //data.indexAllFiles("own_file_data_sample/");
-    data.indexAllFiles("../../fulldataset/");
-
+    //data.indexAllFiles("../../fulldataset/");
+    data.indexAllFiles("../../sample_data_sets/size-10");
 //    tempTestAVLTree<float> t;
 //    t.insert(1.3);
 //    t.insert(2.4);
