@@ -40,9 +40,10 @@ int main(int argc,
     //userInterface.userInterface();
 
 //reads in data
-    //ReadInData data;
-////data.testFileSystem("sample_data/");
-    //data.testFileSystem("own_file_data_sample/");
+    ReadInData data;
+//data.indexAllFiles("sample_data/");
+    //data.indexAllFiles("own_file_data_sample/");
+    data.indexAllFiles("../../fulldataset/");
 
 //    tempTestAVLTree<float> t;
 //    t.insert(1.3);

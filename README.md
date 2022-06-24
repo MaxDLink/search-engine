@@ -9,3 +9,7 @@ references:
 
 
 6/23/22
+* AVL test code
+* json parsing
+* code for `rapidjson` filesystem readin https://rapidjson.org/md_doc_stream.html
+

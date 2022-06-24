@@ -10,7 +10,7 @@
 using namespace std;
 
 template <typename T>
-class tempTestAVLTree{//todo - adopt this for AVLTreeTemplated.h
+class tempTestAVLTree{//todo - adopt this for AVLTreeTemplated.h (replace with own avl tree)
 public:
     class node{
     public:

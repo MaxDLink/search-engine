@@ -3,4 +3,5 @@ cmake-build-debug/
 .idea/
 /sample_data/
 /own_file_data_sample/
+/fulldataset/
 /data/diffs.txt

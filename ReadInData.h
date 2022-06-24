@@ -20,7 +20,8 @@
 #include "rapidjson/istreamwrapper.h"
 #include "rapidjson/document.h"
 #include "stemmer.h"
-
+#include <map>
+#include <set>
 using namespace rapidjson;
 using std::cout;
 using std::endl;
@@ -30,19 +31,20 @@ using std::setw;
 using std::left;
 using std::string;
 using std::vector;
-
+using std::map;
+using std::set;
 class ReadInData {
 private:
-    void testReadJsonFile(const char *fileName);
+    void readJsonFile(const char *fileName, set<string> stopWords);
 
     void lowerCaseAndRemovePunct(Document &d, vector<string> &textContent);
 
-    void removeStopWords(vector<string> &stopWords, vector<string> &text);
+    void removeStopWords(std::set<string> &stopWords, vector<string> &text);
 
     void testPrintOutput(vector<string> &text);
 
 public:
-    void testFileSystem(const char *path);
+    void indexAllFiles(const char *path);
 
 };
 

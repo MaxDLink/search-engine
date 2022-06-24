@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(22su_search_engine)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(input01 "data/stopwords.txt")
 # The configure_file statements below ensure that files are copied into the data
 # folder that will be created in the build folder.

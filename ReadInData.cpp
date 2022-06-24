@@ -1,8 +1,15 @@
 //
 // Created by Max Link on 6/22/22.
+// code for rapidjson filesystem readin https://rapidjson.org/md_doc_stream.html
 //
 
 #include "ReadInData.h"
+#include "rapidjson/filereadstream.h"
+#include <chrono>
+#include <set>
+#include <algorithm>
+#include <map>
+#include <string>
 
 /**
  * example code for how to traverse the filesystem using std::filesystem
@@ -10,27 +17,40 @@
  * you want to parse.
  */
 
-void ReadInData::testFileSystem(const char *path) {
+void ReadInData::indexAllFiles(const char *path) {
+    auto start = std::chrono::steady_clock::now();
 
     //recursive_director_iterator used to "access" folder at parameter -path-
     //we are using the recursive iterator so it will go into subfolders.
     auto it = std::filesystem::recursive_directory_iterator(path);
+    //make stopwords vector
+    //vector<string> stopWords;
+    std::set<std::string> stopWords;
 
-    //loop over all the entries.
-    for (const auto &entry: it) {
-
-        cout << "--- " << setw(60) << left << entry.path().c_str() << " ---" << endl;
-
-        //We only want to attempt to parse files that end with .json...
-        if (entry.is_regular_file() && entry.path().extension().string() == ".json") {
-            ////testReadJsonFile("sample_data/news_0064567.json");
-            ///testReadJsonFile("own_file_data_sample/news_0041337.json");
-            testReadJsonFile(entry.path().c_str());
-        }
-
+    ifstream stopWordsFile("own_file_data_sample/stopwords.txt");
+    if (!stopWordsFile.is_open()) {
+        cout << "Error opening stopWordsFile" << endl;
+    }
+    char stopWordsBuffer[500];
+    //while (stopWordsFile.getline(stopWordsBuffer, 500)) {
+    while (!stopWordsFile.eof()) {
+        stopWordsFile.getline(stopWordsBuffer, 500);
+        string buffer = stopWordsBuffer;
+        stopWords.insert(buffer); //fills stopWords vector with the list of stopwords from the stopWords.txt file
     }
 
+    stopWordsFile.close();
+    //loop over all the entries.
+    for (const auto &entry: it) {
+//        cout << "--- " << setw(60) << left << entry.path().c_str() << " ---" << endl;
+        if (entry.is_regular_file() && entry.path().extension().string() == ".json") {
+            readJsonFile(entry.path().c_str(), stopWords); //call to readJsonFile function
+        }
+    }
 
+    auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    std::cout << "Total parsing elapsed time: " << elapsed_seconds.count() << "s\n";
 }
 
 /**
@@ -38,63 +58,53 @@ void ReadInData::testFileSystem(const char *path) {
  * entities.
  * @param fileName filename with relative or absolute path included.
  */
-void ReadInData::testReadJsonFile(const char *fileName) {
+void ReadInData::readJsonFile(const char *fileName, set<string> stopWords) {
 
-    //open an ifstream on the file of interest and check that it could be opened.
-    ifstream input(fileName);
-    if (!input.is_open())
-        std::cerr << "cannot open file" << endl;
+    auto start = std::chrono::steady_clock::now();
 
-    //Create a RapidJSON IStreamWrapper using the file input stream above.
-    IStreamWrapper isw(input);
 
-    //Create a RapidJSON Document object and use it to parse the IStreamWrapper object above.
+//    https://en.cppreference.com/w/cpp/chrono
+
+
+    FILE *fp = fopen(fileName, "r");
+
+    char readBuffer[65536];
+    FileReadStream is(fp, readBuffer, sizeof(readBuffer));
+
     Document d;
-    d.ParseStream(isw);
+    d.ParseStream(is);
+    fclose(fp);
 
-    //Now that the document is parsed, we can access different elements the JSON using
-    //familiar subscript notation.
 
-    //This accesses the -title- element in the JSON. Since the value associated with title is a string (rather than
-    // an array or something else), we call the GetString() function to return the actual title of the article
-    // as a c-string.
-    //
     auto val = d["title"].GetString();
-    cout << "Title: " << val << endl;
+//    cout << "Title: " << val << endl;
 
-    //The Persons entity for which you're building a specific inverted index is contained in
-    // top level -entities- element.  So that's why we subscript with ["entities"]["persons"].
-    // The value associated with entities>persons is an array.  So we call GetArray() to get
-    // an iterable collection of elements
     auto persons = d["entities"]["persons"].GetArray();
-
-    //We iterate over the Array returned from the line above.  Each element kind of operates like
-    // a little JSON document object in that you can use the same subscript notation
-    // to access particular values.
-    cout << "  Person Entities:" << endl;
+//    cout << "  Person Entities:" << endl;
     for (auto &p: persons) {
-        cout << "    > " << setw(30) << left << p["name"].GetString()
-             << setw(10) << left << p["sentiment"].GetString() << endl;
+//        cout << "    > " << setw(30) << left << p["name"].GetString()
+//             << setw(10) << left << p["sentiment"].GetString() << endl;
     }
-    //grabs organization entities
+
     auto orgs = d["entities"]["organizations"].GetArray();
-    cout << "Organization Entities:" << endl;
+//    cout << "Organization Entities:" << endl;
     for (auto &org: orgs) {
-        cout << "    > " << setw(30) << left << org["name"].GetString()
-             << setw(10) << left << org["sentiment"].GetString() << endl;
+//        cout << "    > " << setw(30) << left << org["name"].GetString()
+//             << setw(10) << left << org["sentiment"].GetString() << endl;
     }
 
-    input.close();
-
-    vector<string> stopWords;
+    //vector<string> stopWords;
     vector<string> textContent;
 
     lowerCaseAndRemovePunct(d, textContent);
 
-    removeStopWords(stopWords, textContent);
+    //removeStopWords(stopWords, textContent);
 
 ///    testPrintOutput(textContent);
 
+    auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    std::cout << "jsonFileParse elapsed time: " << elapsed_seconds.count() << "s\n";
 }
 
 void ReadInData::lowerCaseAndRemovePunct(Document &d, vector<string> &textContent) {
@@ -105,61 +115,51 @@ void ReadInData::lowerCaseAndRemovePunct(Document &d, vector<string> &textConten
     string word;
     while (ss >> word) {//push all text into a vector to compare to stopwords vector
         string lowerWord;
-        for(int i = 0; i < word.size(); i++){
+        for (int i = 0; i < word.size(); i++) {
             //todo - include numbers in for word concatination???
             //if(tolower(word.at(i)) >= 'a' && tolower(word.at(i)) <= 'z' || tolower(word.at(i)) >= '0' && tolower(word.at(i)) <= '9'){//lowercases words
-            if(tolower(word.at(i)) >= 'a' && tolower(word.at(i)) <= 'z'){
+            if (tolower(word.at(i)) >= 'a' && tolower(word.at(i)) <= 'z') {
                 lowerWord += tolower(word.at(i));
-            }else{//continues if punctuation
+            } else {//continues if punctuation
                 continue;
             }
         }
         //removes punctuation from string
-        for(int i = 0; i < word.size(); i++) {
+        for (int i = 0; i < word.size(); i++) {
             if (ispunct(word.at(i))) {
                 word = word.erase(i, 1); //erases any punctuation from word
             }
-        }if(lowerWord != ""){//check for empty in lowerWord
+        }
+        if (lowerWord != "") {//check for empty in lowerWord
             textContent.push_back(lowerWord);
         }
 
     }
 }
 
-void ReadInData::removeStopWords(vector<string> &stopWords,vector<string> &text) {
-
-    ifstream stopWordsFile("own_file_data_sample/stopwords.txt");
-    if (!stopWordsFile.is_open()) {
-        cout << "Error opening stopWordsFile" << endl;
-    }
-    char stopWordsBuffer[500];
-    //while (stopWordsFile.getline(stopWordsBuffer, 500)) {
-    while (!stopWordsFile.eof()) {
-        stopWordsFile.getline(stopWordsBuffer, 500);
-        stopWords.push_back(
-                stopWordsBuffer); //fills stopWords vector with the list of stopwords from the stopWords.txt file
-    }
-
-    stopWordsFile.close();
+void ReadInData::removeStopWords(set<string> &stopWords, vector<string> &text) {
 
     //loop through and erase stopwords that are found in text vector
-    for (int i = 0; i < stopWords.size(); i++) {
         for (int j = 0; j < text.size(); j++) {
-            if (text.at(j) == stopWords.at(i)) {
-                text.erase(text.begin() + j); //todo check if erasing stopwords
+            if (stopWords.count(text.at(j))) {
+                text.at(j) = " ";
             }
         }
-    }
+
+//bool result = std::equal(stopWords.begin(), stopWords.end(), text.begin());
+//if(result){
+//    text.erase
+//}
 
 }
 
 void ReadInData::testPrintOutput(vector<string> &text) {
     std::ofstream outputBeforeErase("data/outputBeforeErase.txt");
-    if(!outputBeforeErase.is_open()){
+    if (!outputBeforeErase.is_open()) {
         cout << "Output file before erase failed to open" << endl;
     }
     //writes to output file
-    for(auto& i : text){
+    for (auto &i: text) {
         outputBeforeErase << i << endl;
     }
 
@@ -168,11 +168,11 @@ void ReadInData::testPrintOutput(vector<string> &text) {
 
     std::ofstream textErased;
     textErased.open("data/output.txt");
-    if(!textErased.is_open()){
+    if (!textErased.is_open()) {
         cout << "outputfile failed to open" << endl;
     }
     //writes to output file
-    for(auto & i : text){
+    for (auto &i: text) {
         textErased << i << endl;
     }
 
