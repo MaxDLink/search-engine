@@ -1,7 +1,7 @@
 //
 // Created by Max Link on 6/22/22.
 // code for rapidjson filesystem readin https://rapidjson.org/md_doc_stream.html
-//
+//code for chrono clocks https://en.cppreference.com/w/cpp/chrono
 
 #include "ReadInData.h"
 #include "rapidjson/filereadstream.h"
@@ -40,10 +40,16 @@ void ReadInData::indexAllFiles(const char *path) {
     }
 
     stopWordsFile.close();
-    //loop over all the entries.
+    //loop over all the entries & store document ID & .json file link in map
+    int documentId = 0;
+    map<int, std::string> documentIdAndName;
     for (const auto &entry: it) {
 //        cout << "--- " << setw(60) << left << entry.path().c_str() << " ---" << endl;
         if (entry.is_regular_file() && entry.path().extension().string() == ".json") {
+            string jsonLink = entry.path().c_str();
+            documentIdAndName.emplace(documentId, jsonLink); //put documentID & file.json into map
+            documentId++;
+            // cout << "filename: " << entry.path().c_str() << endl;
             readJsonFile(entry.path().c_str(), stopWords); //call to readJsonFile function
         }
     }
@@ -115,10 +121,9 @@ void ReadInData::lowerCaseAndRemovePunct(Document &d, vector<string> &textConten
     string word;
     while (ss >> word) {//push all text into a vector to compare to stopwords vector
         string lowerWord;
-        for (int i = 0; i < word.size(); i++) {
-            //todo - include numbers in for word concatination???
+        for (int i = 0; i < word.size(); i++) {//todo - check lower casing for correct words being recorded
             //if(tolower(word.at(i)) >= 'a' && tolower(word.at(i)) <= 'z' || tolower(word.at(i)) >= '0' && tolower(word.at(i)) <= '9'){//lowercases words
-            if (tolower(word.at(i)) >= 'a' && tolower(word.at(i)) <= 'z') {
+            if (tolower(word.at(i)) >= 'a' && tolower(word.at(i)) <= 'z' || tolower(word.at(i)) >= '0' && tolower(word.at(i)) <= '9') {
                 lowerWord += tolower(word.at(i));
             } else {//continues if punctuation
                 continue;
@@ -135,6 +140,10 @@ void ReadInData::lowerCaseAndRemovePunct(Document &d, vector<string> &textConten
         }
 
     }
+    ///print text content to console
+//    for(int i = 0; i < textContent.size(); i++){
+//        cout << "WORD: " << textContent.at(i) << endl;
+//    }
 }
 
 void ReadInData::removeStopWords(set<string> &stopWords, vector<string> &text) {
