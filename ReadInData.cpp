@@ -142,7 +142,7 @@ void ReadInData::removeStopWords(set<string> &stopWords, vector<string> &text) {
     //loop through and erase stopwords that are found in text vector
         for (int j = 0; j < text.size(); j++) {
             if (stopWords.count(text.at(j))) {
-                text.at(j) = " ";
+                text.at(j) = " "; //todo - filter out blank spaces from text on file writing
             }
         }
 
