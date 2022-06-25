@@ -46,6 +46,7 @@ private:
 public:
     void indexAllFiles(const char *path);
 
+    void stemWords(vector<string> &textContent);
 };
 
 

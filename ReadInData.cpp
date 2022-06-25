@@ -108,7 +108,7 @@ void ReadInData::readJsonFile(const char *fileName, set<string> stopWords) {
     removeStopWords(stopWords, textContent);
 
     //todo - implement stemming
-
+    stemWords(textContent);
 ///    testPrintOutput(textContent);
 
     auto end = std::chrono::steady_clock::now();
@@ -193,5 +193,11 @@ void ReadInData::testPrintOutput(vector<string> &text) {
 //    for(auto t: text){
 //        cout << "text after stopWord removal: " << t << endl;
 //    }
+}
+
+void ReadInData::stemWords(vector<string>& textContent) {//todo - make word stemming function more generic?
+    for (int i = 0; i < textContent.size(); i++) {
+        Porter2Stemmer::stem(textContent.at(i));
+    }
 }
 

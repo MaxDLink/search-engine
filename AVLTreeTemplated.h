@@ -62,9 +62,9 @@ public:
 
     T max(T a, T b);
 
-    bool searchTree(AVLNode*& root, T valKey);
+    T searchTree(AVLNode*& root, T valKey);
 
-    bool searchTreeCall(T key);
+    T searchTreeCall(T key);
 };
 
 //overloaded constructor for AVLNode class
@@ -199,11 +199,13 @@ T AVLTreeTemplated<T>::max(T a, T b) {
 }
 
 template<typename T>
-bool AVLTreeTemplated<T>::searchTree(AVLTreeTemplated::AVLNode *&root, T valKey) {
+T AVLTreeTemplated<T>::searchTree(AVLTreeTemplated::AVLNode *&root, T valKey) {
     if(root == nullptr){
-        return false;
+        //return false;
+        return NULL; //todo - return 0 ok here? or should return different value? throw exception when val not found to keep generic?
     }else if(root->val == valKey){
-        return true;
+        //return true;
+        return root->val;
     }else if(root->val > valKey){
         return searchTree(root->left, valKey);
     }else{
@@ -213,7 +215,7 @@ bool AVLTreeTemplated<T>::searchTree(AVLTreeTemplated::AVLNode *&root, T valKey)
 }
 
 template<typename T>
-bool AVLTreeTemplated<T>::searchTreeCall(T key) {
+T AVLTreeTemplated<T>::searchTreeCall(T key) {
     return searchTree(root, key);
 }
 

@@ -15,5 +15,9 @@ references:
 
 6/24/22
 * created templated avl tree class with reference from 
+
+6/25/22
+* created search function for AVL tree templated class 
+* worked on stemming words
 * 
 

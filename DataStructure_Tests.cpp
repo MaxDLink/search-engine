@@ -13,12 +13,13 @@
 #include "catch.hpp"
 #include "DSVector.h"
 #include "AVLTreeTemplated.h"
-
+#include "stemmer.h"
+#include "string"
 TEST_CASE("Testing Templated AVL tree"){
 
     //AVL obj
     AVLTreeTemplated<int> tree;
-
+    AVLTreeTemplated<std::string> stringTree;
     SECTION("insert test"){
         tree.insert(5);
         tree.insert(6);
@@ -38,10 +39,22 @@ TEST_CASE("Testing Templated AVL tree"){
         tree.print();
     }SECTION("Testing AVLTree search function"){
         tree.insert(5);
-        bool found = tree.searchTreeCall(5);
-        REQUIRE(found == true);
-        bool secondFind = tree.searchTreeCall(6);
-        REQUIRE(secondFind == false);
+        int found = tree.searchTreeCall(5);
+        //REQUIRE(found == true);
+        REQUIRE(found == 5);
+        int secondFind = tree.searchTreeCall(6);
+        //REQUIRE(secondFind == false);
+        REQUIRE(secondFind == 0);
+        //std::string stringSearch = stringTree.searchTreeCall("hello");
+        //REQUIRE(stringSearch == " ");
     }
 
+}
+
+TEST_CASE("Testing stem"){
+    SECTION("Testing stemming of word"){
+        std::string wordToStem = "Running";
+        //REQUIRE(Porter2Stemmer::stem(wordToStem) == "Run");
+       //Porter2Stemmer::stem(wordToStem);
+    }
 }
