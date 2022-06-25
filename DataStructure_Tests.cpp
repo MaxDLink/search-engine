@@ -13,31 +13,19 @@
 
 #include "catch.hpp"
 #include "DSVector.h"
+#include "AVLTreeTemplated.h"
 
-TEST_CASE("DSVector of Integers", "[DSVec_Int]"){
+TEST_CASE("Testing Templated AVL tree"){
 
-    /**
-     * Things that are at the top of a test case but not inside a section are re-declared before the running of
-     * each section.
-     */
-    DSVector<int> empty_vector;
-    DSVector<int> test_vector;
-    test_vector.pushBack(10);
-    test_vector.pushBack(20);
+    //AVL obj
+    AVLTreeTemplated<int> tree;
 
-    SECTION("Testing Empty Vector") {
-        REQUIRE(empty_vector.getSize() == 0);
-        REQUIRE(test_vector.getSize() != 0);
-    }
+    SECTION("insert test"){
+        tree.insert(5);
+        tree.print();
+    }SECTION("Deletion test"){
 
-    SECTION("Testing 10 at first pos and 20 at second") {
-        REQUIRE(test_vector[0] == 10);
-        REQUIRE(test_vector[1] == 20);
-    }
 
-    SECTION("Testing that after pushing back a new element, it is in pos 3") {
-        test_vector.pushBack(30);
-        CHECK(test_vector[2] == 30);
     }
 
 }

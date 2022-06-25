@@ -1,6 +1,6 @@
 //
 // Created by Max Link on 6/23/22.
-//
+//baed AVL tree off of https://github.com/Ekan5h/AVLtree.git
 
 #ifndef INC_22SU_SEARCH_ENGINE_AVLTREENEW_H
 #define INC_22SU_SEARCH_ENGINE_AVLTREENEW_H
@@ -12,37 +12,41 @@ using std::cout;
 using std::endl;
 
 template<typename T>
-class AVLTreeTemplated {//todo - finish templating avl tree from https://github.com/Ekan5h/AVLtree.git
-    //todo - separate header & definitions
+class AVLTreeTemplated {
     //todo - rule of three for dynamic mem - copy constructor, overloaded assignment op, desturctor (postorder trav delete)
 private:
     class AVLNode {
+
     public:
         T val;
         AVLNode *left = nullptr;
         AVLNode *right = nullptr;
         int height = 0;
+
+        //constructor for AVLNode
+        AVLNode(); //todo - check if appropriate to make constructor inside AVLNode class
+        //overloaded constructor for AVLNode class //todo - check if appropriate for overloading in AVLNode class
+        AVLNode(T &valArg, AVLNode *&leftArg, AVLNode *&rightArg, int &heightArg);
+
     };
+
+    //constructor for AVLNode class
+    //AVLNode(T val, AVLNode *left, AVLNode *right, int height) : val(val), left(left), right(right), height(height) {}
 
     AVLNode *root = nullptr; //root of the tree
     //print function private
     void print(AVLNode *curr);
 
 public:
+    void chopDownTree(AVLNode *&curr);
+    //void chopDownTree();
+    //todo - overloaded assignment operator, copy constructor
 
     void print();
 
-    void insert(int x) {
-        insert(root, x);
-    }
+    void insert(T x);
 
-    int getHeight(AVLNode *curr) {
-        if (curr == nullptr) {
-            return -1;
-        } else {
-            return curr->height;
-        }
-    }
+    T getHeight(AVLNode *curr);
 
     //basic insert for a binary search tree
     void insert(AVLNode *&curr, int x);
@@ -59,6 +63,27 @@ public:
 
 };
 
+//overloaded constructor for AVLNode class
+template<typename T>
+AVLTreeTemplated<T>::AVLNode::AVLNode(T &valArg, AVLTreeTemplated::AVLNode *&leftArg,
+                                      AVLTreeTemplated::AVLNode *&rightArg,
+                                      int &heightArg) {
+    //initalizes values to passed in args
+    val = valArg;
+    left = leftArg;
+    right = rightArg;
+    height = heightArg;
+}
+
+template<typename T>
+AVLTreeTemplated<T>::AVLNode::AVLNode() {
+    //initialize all values to null in default constructor & height to zero
+    //val; //todo - initialize val  here?
+    left = nullptr;
+    right = nullptr;
+    height = 0;
+}
+
 template<typename T>
 void AVLTreeTemplated<T>::print(AVLNode *curr) {
     if (curr != nullptr) {
@@ -69,13 +94,40 @@ void AVLTreeTemplated<T>::print(AVLNode *curr) {
 }
 
 template<typename T>
+void AVLTreeTemplated<T>::chopDownTree(AVLNode *&curr) {//todo - check if this works as destructor
+    if (curr == nullptr) {
+        return;
+    }
+    chopDownTree(curr->left);
+    chopDownTree(curr->right);
+
+    delete (curr);
+}
+
+
+template<typename T>
 void AVLTreeTemplated<T>::print() {
     print(root);
 }
 
 template<typename T>
+void AVLTreeTemplated<T>::insert(T x) {
+    insert(root, x);
+}
+
+template<typename T>
+T AVLTreeTemplated<T>::getHeight(AVLNode *curr) {
+    if (curr == nullptr) {
+        return -1;
+    } else {
+        return curr->height;
+    }
+}
+
+template<typename T>
 void AVLTreeTemplated<T>::insert(AVLNode *&curr, int x) {
     if (curr == nullptr) {//found where new node goes. Base case.
+        //curr = new AVLNode(nullptr, nullptr, nullptr, 0);
         curr = new AVLNode;
         curr->val = x;
     } else if (x < curr->val) {//doing both in terms of less than operator
@@ -86,6 +138,8 @@ void AVLTreeTemplated<T>::insert(AVLNode *&curr, int x) {
             //figure out if case 1 or case 2 with > or <
             if (x < curr->left->val) { ; //case 1 rotate with left child
             } else { ; // case 2 double rotate with left child
+                //todo - case 2 rotation
+                doubleWithLeftChild(curr);
             }
         }
     } else if (curr->val < x) {
