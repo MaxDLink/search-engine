@@ -50,7 +50,7 @@ public:
     T getHeight(AVLNode *curr);
 
     //basic insert for a binary search tree
-    void insert(AVLNode *&curr, int x);
+    void insert(AVLNode *&curr, T x);
 
     void rotateWithRightChild(AVLNode *&k1);
 
@@ -62,6 +62,9 @@ public:
 
     T max(T a, T b);
 
+    bool searchTree(AVLNode*& root, T valKey);
+
+    bool searchTreeCall(T key);
 };
 
 //overloaded constructor for AVLNode class
@@ -133,7 +136,7 @@ T AVLTreeTemplated<T>::getHeight(AVLNode *curr) {
 }
 
 template<typename T>
-void AVLTreeTemplated<T>::insert(AVLNode *&curr, int x) {
+void AVLTreeTemplated<T>::insert(AVLNode *&curr, T x) {
     if (curr == nullptr) {//found where new node goes. Base case.
         //curr = new AVLNode(nullptr, nullptr, nullptr, 0);
         curr = new AVLNode;
@@ -181,18 +184,37 @@ void AVLTreeTemplated<T>::doubleWithRightChild(AVLNode *&k1) {
 
 template<typename T>
 void AVLTreeTemplated<T>::rotateWithLeftChild(AVLNode *&k2) {
-    //magic part 1 //todo - do magic
+    //magic part 1 //todo - finish rotateWithLeftChild
 
 }
 
 template<typename T>
 void AVLTreeTemplated<T>::doubleWithLeftChild(AVLNode *&k3) {
-    //magic part 2 //todo - do magic
+    //magic part 2 //todo - finish doubleWithLeftChild
 }
 
 template<typename T>
 T AVLTreeTemplated<T>::max(T a, T b) {
     (a < b) ? b : a;
+}
+
+template<typename T>
+bool AVLTreeTemplated<T>::searchTree(AVLTreeTemplated::AVLNode *&root, T valKey) {
+    if(root == nullptr){
+        return false;
+    }else if(root->val == valKey){
+        return true;
+    }else if(root->val > valKey){
+        return searchTree(root->left, valKey);
+    }else{
+        return searchTree(root->right, valKey);
+    }
+
+}
+
+template<typename T>
+bool AVLTreeTemplated<T>::searchTreeCall(T key) {
+    return searchTree(root, key);
 }
 
 

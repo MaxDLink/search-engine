@@ -19,7 +19,7 @@ TEST_CASE("Testing Templated AVL tree"){
     //AVL obj
     AVLTreeTemplated<int> tree;
 
-    SECTION("insert test"){//todo - add tree at function for testing
+    SECTION("insert test"){
         tree.insert(5);
         tree.insert(6);
         tree.insert(7);
@@ -36,6 +36,12 @@ TEST_CASE("Testing Templated AVL tree"){
         tree.chopDownTree();
         std::cout << std::endl << "print after deletion call: " << std::endl;
         tree.print();
+    }SECTION("Testing AVLTree search function"){
+        tree.insert(5);
+        bool found = tree.searchTreeCall(5);
+        REQUIRE(found == true);
+        bool secondFind = tree.searchTreeCall(6);
+        REQUIRE(secondFind == false);
     }
 
 }
