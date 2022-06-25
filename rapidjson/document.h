@@ -941,7 +941,7 @@ public:
     //! Assignment of constant string reference (no copy)
     /*! \param str Constant string reference to be assigned
         \note This overload is needed to avoid clashes with the generic primitive type assignment overload below.
-        \see GenericStringRef, operator=(T)
+        \see GenericStringRef, operator=(V)
     */
     GenericValue& operator=(StringRefType str) RAPIDJSON_NOEXCEPT {
         GenericValue s(str);
@@ -952,7 +952,7 @@ public:
     /*! \tparam T Either \ref Type, \c int, \c unsigned, \c int64_t, \c uint64_t
         \param value The value to be assigned.
 
-        \note The source type \c T explicitly disallows all pointer types,
+        \note The source type \c V explicitly disallows all pointer types,
             especially (\c const) \ref Ch*.  This helps avoiding implicitly
             referencing character strings with insufficient lifetime, use
             \ref SetString(const Ch*, Allocator&) (for copying) or
@@ -1096,12 +1096,12 @@ public:
     //! Equal-to operator with arbitrary types (symmetric version)
     /*! \return (rhs == lhs)
      */
-    template <typename T> friend RAPIDJSON_DISABLEIF_RETURN((internal::IsGenericValue<T>), (bool)) operator==(const T& lhs, const GenericValue& rhs) { return rhs == lhs; }
+    template <typename V> friend RAPIDJSON_DISABLEIF_RETURN((internal::IsGenericValue<V>), (bool)) operator==(const V& lhs, const GenericValue& rhs) { return rhs == lhs; }
 
     //! Not-Equal-to operator with arbitrary types (symmetric version)
     /*! \return !(rhs == lhs)
      */
-    template <typename T> friend RAPIDJSON_DISABLEIF_RETURN((internal::IsGenericValue<T>), (bool)) operator!=(const T& lhs, const GenericValue& rhs) { return !(rhs == lhs); }
+    template <typename V> friend RAPIDJSON_DISABLEIF_RETURN((internal::IsGenericValue<V>), (bool)) operator!=(const V& lhs, const GenericValue& rhs) { return !(rhs == lhs); }
     //@}
 #endif
 
@@ -1217,7 +1217,7 @@ public:
     /*! \pre IsObject() == true
         \tparam SourceAllocator Allocator of the \c name value
 
-        \note Compared to \ref operator[](T*), this version is faster because it does not need a StrLen().
+        \note Compared to \ref operator[](V*), this version is faster because it does not need a StrLen().
         And it can also handle strings with embedded null characters.
 
         \note Linear time complexity.
@@ -1397,7 +1397,7 @@ public:
         \param allocator    Allocator for reallocating memory. It must be the same one as used before. Commonly use GenericDocument::GetAllocator().
         \return The value itself for fluent API.
         \pre  IsObject()
-        \note This overload is needed to avoid clashes with the generic primitive type AddMember(GenericValue&,T,Allocator&) overload below.
+        \note This overload is needed to avoid clashes with the generic primitive type AddMember(GenericValue&,V,Allocator&) overload below.
         \note Amortized Constant time complexity.
     */
     GenericValue& AddMember(GenericValue& name, StringRefType value, Allocator& allocator) {
@@ -1412,7 +1412,7 @@ public:
         \param allocator    Allocator for reallocating memory. It must be the same one as used before. Commonly use GenericDocument::GetAllocator().
         \return The value itself for fluent API.
         \pre  IsObject()
-        \note This overload is needed to avoid clashes with the generic primitive type AddMember(GenericValue&,T,Allocator&) overload below.
+        \note This overload is needed to avoid clashes with the generic primitive type AddMember(GenericValue&,V,Allocator&) overload below.
         \note Amortized Constant time complexity.
     */
     GenericValue& AddMember(GenericValue& name, std::basic_string<Ch>& value, Allocator& allocator) {
@@ -1424,12 +1424,12 @@ public:
     //! Add any primitive value as member (name-value pair) to the object.
     /*! \tparam T Either \ref Type, \c int, \c unsigned, \c int64_t, \c uint64_t
         \param name A string value as name of member.
-        \param value Value of primitive type \c T as value of member
+        \param value Value of primitive type \c V as value of member
         \param allocator Allocator for reallocating memory. Commonly use GenericDocument::GetAllocator().
         \return The value itself for fluent API.
         \pre  IsObject()
 
-        \note The source type \c T explicitly disallows all pointer types,
+        \note The source type \c V explicitly disallows all pointer types,
             especially (\c const) \ref Ch*.  This helps avoiding implicitly
             referencing character strings with insufficient lifetime, use
             \ref AddMember(StringRefType, GenericValue&, Allocator&) or \ref
@@ -1483,7 +1483,7 @@ public:
         \param allocator    Allocator for reallocating memory. It must be the same one as used before. Commonly use GenericDocument::GetAllocator().
         \return The value itself for fluent API.
         \pre  IsObject()
-        \note This overload is needed to avoid clashes with the generic primitive type AddMember(StringRefType,T,Allocator&) overload below.
+        \note This overload is needed to avoid clashes with the generic primitive type AddMember(StringRefType,V,Allocator&) overload below.
         \note Amortized Constant time complexity.
     */
     GenericValue& AddMember(StringRefType name, StringRefType value, Allocator& allocator) {
@@ -1494,12 +1494,12 @@ public:
     //! Add any primitive value as member (name-value pair) to the object.
     /*! \tparam T Either \ref Type, \c int, \c unsigned, \c int64_t, \c uint64_t
         \param name A constant string reference as name of member.
-        \param value Value of primitive type \c T as value of member
+        \param value Value of primitive type \c V as value of member
         \param allocator Allocator for reallocating memory. Commonly use GenericDocument::GetAllocator().
         \return The value itself for fluent API.
         \pre  IsObject()
 
-        \note The source type \c T explicitly disallows all pointer types,
+        \note The source type \c V explicitly disallows all pointer types,
             especially (\c const) \ref Ch*.  This helps avoiding implicitly
             referencing character strings with insufficient lifetime, use
             \ref AddMember(StringRefType, GenericValue&, Allocator&) or \ref
@@ -1663,7 +1663,7 @@ public:
     //! Get an element from array by index.
     /*! \pre IsArray() == true
         \param index Zero-based index of element.
-        \see operator[](T*)
+        \see operator[](V*)
     */
     GenericValue& operator[](SizeType index) {
         RAPIDJSON_ASSERT(IsArray());
@@ -1739,13 +1739,13 @@ public:
 
     //! Append a primitive value at the end of the array.
     /*! \tparam T Either \ref Type, \c int, \c unsigned, \c int64_t, \c uint64_t
-        \param value Value of primitive type T to be appended.
+        \param value Value of primitive type V to be appended.
         \param allocator    Allocator for reallocating memory. It must be the same one as used before. Commonly use GenericDocument::GetAllocator().
         \pre IsArray() == true
         \return The value itself for fluent API.
         \note If the number of elements to be appended is known, calls Reserve() once first may be more efficient.
 
-        \note The source type \c T explicitly disallows all pointer types,
+        \note The source type \c V explicitly disallows all pointer types,
             especially (\c const) \ref Ch*.  This helps avoiding implicitly
             referencing character strings with insufficient lifetime, use
             \ref PushBack(GenericValue&, Allocator&) or \ref
@@ -1916,7 +1916,7 @@ public:
     //!@name Array
     //@{
 
-    //! Templated version for checking whether this value is type T.
+    //! Templated version for checking whether this value is type V.
     /*!
         \tparam T Either \c bool, \c int, \c unsigned, \c int64_t, \c uint64_t, \c double, \c float, \c const \c char*, \c std::basic_string<Ch>
     */

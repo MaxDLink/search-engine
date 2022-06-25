@@ -15,29 +15,30 @@
 #include "AVLTreeTemplated.h"
 #include "stemmer.h"
 #include "string"
-TEST_CASE("Testing Templated AVL tree"){
+
+TEST_CASE("Testing Templated AVL tree") {
 
     //AVL obj
     AVLTreeTemplated<int> tree;
     AVLTreeTemplated<std::string> stringTree;
-    SECTION("insert test"){
+    SECTION("insert test") {
         tree.insert(5);
         tree.insert(6);
         tree.insert(7);
         tree.insert(8);
         tree.print();
-    }SECTION("Deletion test"){
+    }SECTION("Deletion test") {
         std::cout << "DELETION TEST" << std::endl;
         tree.insert(5);
         tree.insert(6);
         tree.insert(7);
         tree.insert(8);
-        std::cout << std::endl << "Print before deletion: " <<std::endl;
+        std::cout << std::endl << "Print before deletion: " << std::endl;
         tree.print();
         tree.chopDownTree();
         std::cout << std::endl << "print after deletion call: " << std::endl;
         tree.print();
-    }SECTION("Testing AVLTree search function"){
+    }SECTION("Testing AVLTree search function") {
         tree.insert(5);
         int found = tree.searchTreeCall(5);
         //REQUIRE(found == true);
@@ -47,14 +48,17 @@ TEST_CASE("Testing Templated AVL tree"){
         REQUIRE(secondFind == 0);
         //std::string stringSearch = stringTree.searchTreeCall("hello");
         //REQUIRE(stringSearch == " ");
+    }SECTION("testing insertion of strings into avl tree") {
+       // stringTree.insert("hello");
+       // REQUIRE(stringTree.searchTreeCall("hello") == "hello");
     }
 
 }
 
-TEST_CASE("Testing stem"){
-    SECTION("Testing stemming of word"){
+TEST_CASE("Testing stem") {
+    SECTION("Testing stemming of word") {
         std::string wordToStem = "Running";
         //REQUIRE(Porter2Stemmer::stem(wordToStem) == "Run");
-       //Porter2Stemmer::stem(wordToStem);
+        //Porter2Stemmer::stem(wordToStem);
     }
 }

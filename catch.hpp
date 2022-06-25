@@ -1026,10 +1026,10 @@ struct AutoReg : NonCopyable {
 
     #ifndef CATCH_CONFIG_TRADITIONAL_MSVC_PREPROCESSOR
         #define INTERNAL_CATCH_TEMPLATE_TEST_CASE_METHOD_NO_REGISTRATION( ClassName, Name, Tags,... ) \
-            INTERNAL_CATCH_TEMPLATE_TEST_CASE_METHOD_NO_REGISTRATION_2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____C_L_A_S_S____ ), INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____ ) , ClassName, Name, Tags, typename T, __VA_ARGS__ )
+            INTERNAL_CATCH_TEMPLATE_TEST_CASE_METHOD_NO_REGISTRATION_2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____C_L_A_S_S____ ), INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____ ) , ClassName, Name, Tags, typename V, __VA_ARGS__ )
     #else
         #define INTERNAL_CATCH_TEMPLATE_TEST_CASE_METHOD_NO_REGISTRATION( ClassName, Name, Tags,... ) \
-            INTERNAL_CATCH_EXPAND_VARGS( INTERNAL_CATCH_TEMPLATE_TEST_CASE_METHOD_NO_REGISTRATION_2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____C_L_A_S_S____ ), INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____ ) , ClassName, Name, Tags, typename T, __VA_ARGS__ ) )
+            INTERNAL_CATCH_EXPAND_VARGS( INTERNAL_CATCH_TEMPLATE_TEST_CASE_METHOD_NO_REGISTRATION_2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____C_L_A_S_S____ ), INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____ ) , ClassName, Name, Tags, typename V, __VA_ARGS__ ) )
     #endif
 
     #ifndef CATCH_CONFIG_TRADITIONAL_MSVC_PREPROCESSOR
@@ -1165,7 +1165,7 @@ struct AutoReg : NonCopyable {
         INTERNAL_CATCH_TEMPLATE_PRODUCT_TEST_CASE2(INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____ ), INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____F_U_N_C____ ), Name, Tags, typename T,__VA_ARGS__)
 #else
     #define INTERNAL_CATCH_TEMPLATE_PRODUCT_TEST_CASE(Name, Tags, ...)\
-        INTERNAL_CATCH_EXPAND_VARGS( INTERNAL_CATCH_TEMPLATE_PRODUCT_TEST_CASE2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____ ), INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____F_U_N_C____ ), Name, Tags, typename T, __VA_ARGS__ ) )
+        INTERNAL_CATCH_EXPAND_VARGS( INTERNAL_CATCH_TEMPLATE_PRODUCT_TEST_CASE2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____ ), INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____F_U_N_C____ ), Name, Tags, typename V, __VA_ARGS__ ) )
 #endif
 
 #ifndef CATCH_CONFIG_TRADITIONAL_MSVC_PREPROCESSOR
@@ -1240,7 +1240,7 @@ struct AutoReg : NonCopyable {
         INTERNAL_CATCH_TEMPLATE_TEST_CASE_METHOD_2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____C_L_A_S_S____ ), INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____ ) , ClassName, Name, Tags, typename T, __VA_ARGS__ )
 #else
     #define INTERNAL_CATCH_TEMPLATE_TEST_CASE_METHOD( ClassName, Name, Tags,... ) \
-        INTERNAL_CATCH_EXPAND_VARGS( INTERNAL_CATCH_TEMPLATE_TEST_CASE_METHOD_2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____C_L_A_S_S____ ), INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____ ) , ClassName, Name, Tags, typename T, __VA_ARGS__ ) )
+        INTERNAL_CATCH_EXPAND_VARGS( INTERNAL_CATCH_TEMPLATE_TEST_CASE_METHOD_2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____C_L_A_S_S____ ), INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____ ) , ClassName, Name, Tags, typename V, __VA_ARGS__ ) )
 #endif
 
 #ifndef CATCH_CONFIG_TRADITIONAL_MSVC_PREPROCESSOR
@@ -1292,7 +1292,7 @@ struct AutoReg : NonCopyable {
         INTERNAL_CATCH_TEMPLATE_PRODUCT_TEST_CASE_METHOD_2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____ ), INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____F_U_N_C____ ), ClassName, Name, Tags, typename T, __VA_ARGS__ )
 #else
     #define INTERNAL_CATCH_TEMPLATE_PRODUCT_TEST_CASE_METHOD( ClassName, Name, Tags, ... )\
-        INTERNAL_CATCH_EXPAND_VARGS( INTERNAL_CATCH_TEMPLATE_PRODUCT_TEST_CASE_METHOD_2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____ ), INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____F_U_N_C____ ), ClassName, Name, Tags, typename T,__VA_ARGS__ ) )
+        INTERNAL_CATCH_EXPAND_VARGS( INTERNAL_CATCH_TEMPLATE_PRODUCT_TEST_CASE_METHOD_2( INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____ ), INTERNAL_CATCH_UNIQUE_NAME( ____C_A_T_C_H____T_E_M_P_L_A_T_E____T_E_S_T____F_U_N_C____ ), ClassName, Name, Tags, typename V,__VA_ARGS__ ) )
 #endif
 
 #ifndef CATCH_CONFIG_TRADITIONAL_MSVC_PREPROCESSOR
@@ -1596,8 +1596,8 @@ namespace Catch {
 
 #if defined(_MANAGED)
         //! Convert a CLR string to a utf8 std::string
-        template<typename T>
-        std::string clrReferenceToString( T^ ref ) {
+        template<typename V>
+        std::string clrReferenceToString( V^ ref ) {
             if (ref == nullptr)
                 return std::string("null");
             auto bytes = System::Text::Encoding::UTF8->GetBytes(ref->ToString());
@@ -1649,9 +1649,9 @@ namespace Catch {
         }
 
 #if defined(_MANAGED)
-        template <typename T>
-        std::string stringify( T^ e ) {
-            return ::Catch::StringMaker<T^>::convert(e);
+        template <typename V>
+        std::string stringify( V^ e ) {
+            return ::Catch::StringMaker<V^>::convert(e);
         }
 #endif
 
@@ -1814,9 +1814,9 @@ namespace Catch {
     };
 
 #if defined(_MANAGED)
-    template <typename T>
-    struct StringMaker<T^> {
-        static std::string convert( T^ ref ) {
+    template <typename V>
+    struct StringMaker<V^> {
+        static std::string convert( V^ ref ) {
             return ::Catch::Detail::clrReferenceToString(ref);
         }
     };
@@ -1897,9 +1897,9 @@ namespace Catch {
 #if defined(CATCH_CONFIG_ENABLE_OPTIONAL_STRINGMAKER) && defined(CATCH_CONFIG_CPP17_OPTIONAL)
 #include <optional>
 namespace Catch {
-    template<typename T>
-    struct StringMaker<std::optional<T> > {
-        static std::string convert(const std::optional<T>& optional) {
+    template<typename V>
+    struct StringMaker<std::optional<V> > {
+        static std::string convert(const std::optional<V>& optional) {
             ReusableStringStream rss;
             if (optional.has_value()) {
                 rss << ::Catch::Detail::stringify(*optional);
@@ -2006,8 +2006,8 @@ namespace Catch {
     };
 
 #if defined(_MANAGED) // Managed types are never ranges
-    template <typename T>
-    struct is_range<T^> {
+    template <typename V>
+    struct is_range<V^> {
         static const bool value = false;
     };
 #endif
@@ -2190,7 +2190,7 @@ namespace Catch { \
 #pragma warning(push)
 #pragma warning(disable:4389) // '==' : signed/unsigned mismatch
 #pragma warning(disable:4018) // more "signed/unsigned mismatch"
-#pragma warning(disable:4312) // Converting int to T* using reinterpret_cast (issue on x64 platform)
+#pragma warning(disable:4312) // Converting int to V* using reinterpret_cast (issue on x64 platform)
 #pragma warning(disable:4180) // qualifier applied to function type has no meaning
 #pragma warning(disable:4800) // Forcing result to true or false
 #endif
@@ -3513,7 +3513,7 @@ public:
 
     // The following functions create the actual matcher objects.
     // The user has to explicitly specify type to the function, because
-    // inferring std::function<bool(T const&)> is hard (but possible) and
+    // inferring std::function<bool(V const&)> is hard (but possible) and
     // requires a lot of TMP.
     template<typename T>
     Generic::PredicateMatcher<T> Predicate(std::function<bool(T const&)> const& predicate, std::string const& description = "") {
@@ -3660,7 +3660,7 @@ namespace Matchers {
             bool match(std::vector<T, AllocMatch> const &v) const override {
                 // !TBD: This currently works if all elements can be compared using !=
                 // - a more general approach would be via a compare template that defaults
-                // to using !=. but could be specialised for, e.g. std::vector<T, Alloc> etc
+                // to using !=. but could be specialised for, e.g. std::vector<V, Alloc> etc
                 // - then just call that directly
                 if (m_comparator.size() != v.size())
                     return false;
@@ -5489,15 +5489,15 @@ namespace Catch {
         bool shouldReportAllAssertions = false;
     };
 
-    template<typename T>
-    struct LazyStat : Option<T> {
-        LazyStat& operator=( T const& _value ) {
-            Option<T>::operator=( _value );
+    template<typename V>
+    struct LazyStat : Option<V> {
+        LazyStat& operator=( V const& _value ) {
+            Option<V>::operator=( _value );
             used = false;
             return *this;
         }
         void reset() {
-            Option<T>::reset();
+            Option<V>::reset();
             used = false;
         }
         bool used = false;
@@ -5799,13 +5799,13 @@ namespace Catch {
 
     template<typename DerivedT>
     struct CumulativeReporterBase : IStreamingReporter {
-        template<typename T, typename ChildNodeT>
+        template<typename V, typename ChildNodeT>
         struct Node {
-            explicit Node( T const& _value ) : value( _value ) {}
+            explicit Node( V const& _value ) : value( _value ) {}
             virtual ~Node() {}
 
             using ChildNodes = std::vector<std::shared_ptr<ChildNodeT>>;
-            T value;
+            V value;
             ChildNodes children;
         };
         struct SectionNode {
@@ -6040,17 +6040,17 @@ namespace Catch {
 
 namespace Catch {
 
-    template<typename T>
+    template<typename V>
     class ReporterRegistrar {
 
         class ReporterFactory : public IReporterFactory {
 
             IStreamingReporterPtr create( ReporterConfig const& config ) const override {
-                return std::unique_ptr<T>( new T( config ) );
+                return std::unique_ptr<V>( new V( config ) );
             }
 
             std::string getDescription() const override {
-                return T::getDescription();
+                return V::getDescription();
             }
         };
 
@@ -6061,13 +6061,13 @@ namespace Catch {
         }
     };
 
-    template<typename T>
+    template<typename V>
     class ListenerRegistrar {
 
         class ListenerFactory : public IReporterFactory {
 
             IStreamingReporterPtr create( ReporterConfig const& config ) const override {
-                return std::unique_ptr<T>( new T( config ) );
+                return std::unique_ptr<V>( new V( config ) );
             }
             std::string getDescription() const override {
                 return std::string();
@@ -6253,8 +6253,8 @@ namespace Catch {
 
             ScopedElement& writeText( std::string const& text, XmlFormatting fmt = XmlFormatting::Newline | XmlFormatting::Indent );
 
-            template<typename T>
-            ScopedElement& writeAttribute( std::string const& name, T const& attribute ) {
+            template<typename V>
+            ScopedElement& writeAttribute( std::string const& name, V const& attribute ) {
                 m_writer->writeAttribute( name, attribute );
                 return *this;
             }
@@ -6280,8 +6280,8 @@ namespace Catch {
 
         XmlWriter& writeAttribute( std::string const& name, bool attribute );
 
-        template<typename T>
-        XmlWriter& writeAttribute( std::string const& name, T const& attribute ) {
+        template<typename V>
+        XmlWriter& writeAttribute( std::string const& name, V const& attribute ) {
             ReusableStringStream rss;
             rss << attribute;
             return writeAttribute( name, rss.str() );
@@ -6482,8 +6482,8 @@ namespace Catch {
 namespace Catch {
     namespace Benchmark {
 #if defined(__GNUC__) || defined(__clang__)
-        template <typename T>
-        inline void keep_memory(T* p) {
+        template <typename V>
+        inline void keep_memory(V* p) {
             asm volatile("" : : "g"(p) : "memory");
         }
         inline void keep_memory() {
@@ -6496,8 +6496,8 @@ namespace Catch {
 #elif defined(_MSC_VER)
 
 #pragma optimize("", off)
-        template <typename T>
-        inline void keep_memory(T* p) {
+        template <typename V>
+        inline void keep_memory(V* p) {
             // thanks @milleniumbug
             *reinterpret_cast<char volatile*>(p) = *reinterpret_cast<char const volatile*>(p);
         }
@@ -6512,8 +6512,8 @@ namespace Catch {
 
 #endif
 
-        template <typename T>
-        inline void deoptimize_value(T&& x) {
+        template <typename V>
+        inline void deoptimize_value(V&& x) {
             keep_memory(&x);
         }
 
@@ -6541,13 +6541,13 @@ namespace Catch {
 namespace Catch {
     namespace Benchmark {
         namespace Detail {
-            template <typename T>
-            struct CompleteType { using type = T; };
+            template <typename V>
+            struct CompleteType { using type = V; };
             template <>
             struct CompleteType<void> { struct type {}; };
 
-            template <typename T>
-            using CompleteType_t = typename CompleteType<T>::type;
+            template <typename V>
+            using CompleteType_t = typename CompleteType<V>::type;
 
             template <typename Result>
             struct CompleteInvoker {
@@ -6685,11 +6685,11 @@ namespace Catch {
 namespace Catch {
     namespace Benchmark {
         namespace Detail {
-            template <typename T>
-            using Decay = typename std::decay<T>::type;
-            template <typename T, typename U>
+            template <typename V>
+            using Decay = typename std::decay<V>::type;
+            template <typename V, typename U>
             struct is_related
-                : std::is_same<Decay<T>, Decay<U>> {};
+                : std::is_same<Decay<V>, Decay<U>> {};
 
             /// We need to reinvent std::function because every piece of code that might add overhead
             /// in a measurement context needs to have consistent performance characteristics so that we
@@ -6727,8 +6727,8 @@ namespace Catch {
 
                 struct do_nothing { void operator()() const {} };
 
-                template <typename T>
-                BenchmarkFunction(model<T>* c) : f(c) {}
+                template <typename V>
+                BenchmarkFunction(model<V>* c) : f(c) {}
 
             public:
                 BenchmarkFunction()
@@ -7385,35 +7385,35 @@ namespace Catch {
 namespace Catch {
     namespace Benchmark {
         namespace Detail {
-            template <typename T, bool Destruct>
+            template <typename V, bool Destruct>
             struct ObjectStorage
             {
-                using TStorage = typename std::aligned_storage<sizeof(T), std::alignment_of<T>::value>::type;
+                using TStorage = typename std::aligned_storage<sizeof(V), std::alignment_of<V>::value>::type;
 
                 ObjectStorage() : data() {}
 
                 ObjectStorage(const ObjectStorage& other)
                 {
-                    new(&data) T(other.stored_object());
+                    new(&data) V(other.stored_object());
                 }
 
                 ObjectStorage(ObjectStorage&& other)
                 {
-                    new(&data) T(std::move(other.stored_object()));
+                    new(&data) V(std::move(other.stored_object()));
                 }
 
-                ~ObjectStorage() { destruct_on_exit<T>(); }
+                ~ObjectStorage() { destruct_on_exit<V>(); }
 
                 template <typename... Args>
                 void construct(Args&&... args)
                 {
-                    new (&data) T(std::forward<Args>(args)...);
+                    new (&data) V(std::forward<Args>(args)...);
                 }
 
                 template <bool AllowManualDestruction = !Destruct>
                 typename std::enable_if<AllowManualDestruction>::type destruct()
                 {
-                    stored_object().~T();
+                    stored_object().~V();
                 }
 
             private:
@@ -7424,23 +7424,23 @@ namespace Catch {
                 template <typename U>
                 void destruct_on_exit(typename std::enable_if<!Destruct, U>::type* = 0) { }
 
-                T& stored_object() {
-                    return *static_cast<T*>(static_cast<void*>(&data));
+                V& stored_object() {
+                    return *static_cast<V*>(static_cast<void*>(&data));
                 }
 
-                T const& stored_object() const {
-                    return *static_cast<T*>(static_cast<void*>(&data));
+                V const& stored_object() const {
+                    return *static_cast<V*>(static_cast<void*>(&data));
                 }
 
                 TStorage data;
             };
         }
 
-        template <typename T>
-        using storage_for = Detail::ObjectStorage<T, true>;
+        template <typename V>
+        using storage_for = Detail::ObjectStorage<V, true>;
 
-        template <typename T>
-        using destructable_object = Detail::ObjectStorage<T, false>;
+        template <typename V>
+        using destructable_object = Detail::ObjectStorage<V, false>;
     }
 }
 
@@ -8942,10 +8942,10 @@ namespace detail {
         Type m_type;
     };
 
-    template<typename T>
+    template<typename V>
     class ResultValueBase : public ResultBase {
     public:
-        auto value() const -> T const & {
+        auto value() const -> V const & {
             enforceOk();
             return m_value;
         }
@@ -8955,29 +8955,29 @@ namespace detail {
 
         ResultValueBase( ResultValueBase const &other ) : ResultBase( other ) {
             if( m_type == ResultBase::Ok )
-                new( &m_value ) T( other.m_value );
+                new( &m_value ) V( other.m_value );
         }
 
-        ResultValueBase( Type, T const &value ) : ResultBase( Ok ) {
-            new( &m_value ) T( value );
+        ResultValueBase( Type, V const &value ) : ResultBase( Ok ) {
+            new( &m_value ) V( value );
         }
 
         auto operator=( ResultValueBase const &other ) -> ResultValueBase & {
             if( m_type == ResultBase::Ok )
-                m_value.~T();
+                m_value.~V();
             ResultBase::operator=(other);
             if( m_type == ResultBase::Ok )
-                new( &m_value ) T( other.m_value );
+                new( &m_value ) V( other.m_value );
             return *this;
         }
 
         ~ResultValueBase() override {
             if( m_type == Ok )
-                m_value.~T();
+                m_value.~V();
         }
 
         union {
-            T m_value;
+            V m_value;
         };
     };
 
@@ -8987,12 +8987,12 @@ namespace detail {
         using ResultBase::ResultBase;
     };
 
-    template<typename T = void>
-    class BasicResult : public ResultValueBase<T> {
+    template<typename V = void>
+    class BasicResult : public ResultValueBase<V> {
     public:
         template<typename U>
         explicit BasicResult( BasicResult<U> const &other )
-        :   ResultValueBase<T>( other.type() ),
+        :   ResultValueBase<V>( other.type() ),
             m_errorMessage( other.errorMessage() )
         {
             assert( type() != ResultBase::Ok );
@@ -9022,13 +9022,13 @@ namespace detail {
         std::string m_errorMessage; // Only populated if resultType is an error
 
         BasicResult( ResultBase::Type type, std::string const &message )
-        :   ResultValueBase<T>(type),
+        :   ResultValueBase<V>(type),
             m_errorMessage(message)
         {
             assert( m_type != ResultBase::Ok );
         }
 
-        using ResultValueBase<T>::ResultValueBase;
+        using ResultValueBase<V>::ResultValueBase;
         using ResultBase::m_type;
     };
 
@@ -9061,8 +9061,8 @@ namespace detail {
         std::string right;
     };
 
-    template<typename T>
-    inline auto convertInto( std::string const &source, T& target ) -> ParserResult {
+    template<typename V>
+    inline auto convertInto( std::string const &source, V& target ) -> ParserResult {
         std::stringstream ss;
         ss << source;
         ss >> target;
@@ -9087,9 +9087,9 @@ namespace detail {
         return ParserResult::ok( ParseResultType::Matched );
     }
 #ifdef CLARA_CONFIG_OPTIONAL_TYPE
-    template<typename T>
-    inline auto convertInto( std::string const &source, CLARA_CONFIG_OPTIONAL_TYPE<T>& target ) -> ParserResult {
-        T temp;
+    template<typename V>
+    inline auto convertInto( std::string const &source, CLARA_CONFIG_OPTIONAL_TYPE<V>& target ) -> ParserResult {
+        V temp;
         auto result = convertInto( source, temp );
         if( result )
             target = std::move(temp);
@@ -9118,27 +9118,27 @@ namespace detail {
         virtual auto isFlag() const -> bool { return true; }
     };
 
-    template<typename T>
+    template<typename V>
     struct BoundValueRef : BoundValueRefBase {
-        T &m_ref;
+        V &m_ref;
 
-        explicit BoundValueRef( T &ref ) : m_ref( ref ) {}
+        explicit BoundValueRef( V &ref ) : m_ref( ref ) {}
 
         auto setValue( std::string const &arg ) -> ParserResult override {
             return convertInto( arg, m_ref );
         }
     };
 
-    template<typename T>
-    struct BoundValueRef<std::vector<T>> : BoundValueRefBase {
-        std::vector<T> &m_ref;
+    template<typename V>
+    struct BoundValueRef<std::vector<V>> : BoundValueRefBase {
+        std::vector<V> &m_ref;
 
-        explicit BoundValueRef( std::vector<T> &ref ) : m_ref( ref ) {}
+        explicit BoundValueRef( std::vector<V> &ref ) : m_ref( ref ) {}
 
         auto isContainer() const -> bool override { return true; }
 
         auto setValue( std::string const &arg ) -> ParserResult override {
-            T temp;
+            V temp;
             auto result = convertInto( arg, temp );
             if( result )
                 m_ref.push_back( temp );
@@ -9230,11 +9230,11 @@ namespace detail {
     template<typename DerivedT>
     class ComposableParserImpl : public ParserBase {
     public:
-        template<typename T>
-        auto operator|( T const &other ) const -> Parser;
+        template<typename V>
+        auto operator|( V const &other ) const -> Parser;
 
-		template<typename T>
-        auto operator+( T const &other ) const -> Parser;
+		template<typename V>
+        auto operator+( V const &other ) const -> Parser;
     };
 
     // Common code and state for Args and Opts
@@ -9249,9 +9249,9 @@ namespace detail {
         explicit ParserRefImpl( std::shared_ptr<BoundRef> const &ref ) : m_ref( ref ) {}
 
     public:
-        template<typename T>
-        ParserRefImpl( T &ref, std::string const &hint )
-        :   m_ref( std::make_shared<BoundValueRef<T>>( ref ) ),
+        template<typename V>
+        ParserRefImpl( V &ref, std::string const &hint )
+        :   m_ref( std::make_shared<BoundValueRef<V>>( ref ) ),
             m_hint( hint )
         {}
 
@@ -9379,8 +9379,8 @@ namespace detail {
         template<typename LambdaT>
         Opt( LambdaT const &ref, std::string const &hint ) : ParserRefImpl( ref, hint ) {}
 
-        template<typename T>
-        Opt( T &ref, std::string const &hint ) : ParserRefImpl( ref, hint ) {}
+        template<typename V>
+        Opt( V &ref, std::string const &hint ) : ParserRefImpl( ref, hint ) {}
 
         auto operator[]( std::string const &optName ) -> Opt & {
             m_optNames.push_back( optName );
@@ -9508,16 +9508,16 @@ namespace detail {
             return *this;
         }
 
-        template<typename T>
-        auto operator|( T const &other ) const -> Parser {
+        template<typename V>
+        auto operator|( V const &other ) const -> Parser {
             return Parser( *this ) |= other;
         }
 
         // Forward deprecated interface with '+' instead of '|'
-        template<typename T>
-        auto operator+=( T const &other ) -> Parser & { return operator|=( other ); }
-        template<typename T>
-        auto operator+( T const &other ) const -> Parser { return operator|( other ); }
+        template<typename V>
+        auto operator+=( V const &other ) -> Parser & { return operator|=( other ); }
+        template<typename V>
+        auto operator+( V const &other ) const -> Parser { return operator|( other ); }
 
         auto getHelpColumns() const -> std::vector<HelpColumns> {
             std::vector<HelpColumns> cols;
@@ -9638,8 +9638,8 @@ namespace detail {
     };
 
     template<typename DerivedT>
-    template<typename T>
-    auto ComposableParserImpl<DerivedT>::operator|( T const &other ) const -> Parser {
+    template<typename V>
+    auto ComposableParserImpl<DerivedT>::operator|( V const &other ) const -> Parser {
         return Parser() | static_cast<DerivedT const &>( *this ) | other;
     }
 } // namespace detail
@@ -10872,7 +10872,7 @@ namespace Catch {
         { SIGABRT, "SIGABRT - Abort (abnormal termination) signal" }
     };
 
-// Older GCCs trigger -Wmissing-field-initializers for T foo = {}
+// Older GCCs trigger -Wmissing-field-initializers for V foo = {}
 // which is zero initialization, but not explicit. We want to avoid
 // that.
 #if defined(__GNUC__)
@@ -11452,8 +11452,8 @@ namespace Catch {
 #include <string>
 
 namespace Catch {
-    template <typename T>
-    std::string to_string(T const& t) {
+    template <typename V>
+    std::string to_string(V const& t) {
 #if defined(CATCH_CONFIG_CPP11_TO_STRING)
         return std::to_string(t);
 #else
@@ -15045,8 +15045,8 @@ namespace Detail {
     }
 }
 
-template<typename T>
-std::string fpToString( T value, int precision ) {
+template<typename V>
+std::string fpToString( V value, int precision ) {
     if (Catch::isnan(value)) {
         return "nan";
     }
@@ -16398,8 +16398,8 @@ public:
         }
     }
 
-    template<typename T>
-    friend TablePrinter& operator << (TablePrinter& tp, T const& value) {
+    template<typename V>
+    friend TablePrinter& operator << (TablePrinter& tp, V const& value) {
         tp.m_oss << value;
         return tp;
     }

@@ -628,7 +628,7 @@ public:
 
 private:
     template <typename, typename>
-    friend class StdAllocator; // access to StdAllocator<!T>.*
+    friend class StdAllocator; // access to StdAllocator<!V>.*
 
     BaseAllocator baseAllocator_;
 };
@@ -677,7 +677,7 @@ public:
 
 private:
     template <typename, typename>
-    friend class StdAllocator; // access to StdAllocator<!T>.*
+    friend class StdAllocator; // access to StdAllocator<!V>.*
 
     BaseAllocator baseAllocator_;
 };
