@@ -38,6 +38,7 @@ private:
     void print(AVLNode *curr);
 
 public:
+    void chopDownTree();
     void chopDownTree(AVLNode *&curr);
     //void chopDownTree();
     //todo - overloaded assignment operator, copy constructor
@@ -94,6 +95,11 @@ void AVLTreeTemplated<T>::print(AVLNode *curr) {
 }
 
 template<typename T>
+void AVLTreeTemplated<T>::chopDownTree() {
+    chopDownTree(root);
+}
+
+template<typename T>
 void AVLTreeTemplated<T>::chopDownTree(AVLNode *&curr) {//todo - check if this works as destructor
     if (curr == nullptr) {
         return;
@@ -101,7 +107,9 @@ void AVLTreeTemplated<T>::chopDownTree(AVLNode *&curr) {//todo - check if this w
     chopDownTree(curr->left);
     chopDownTree(curr->right);
 
-    delete (curr);
+    delete curr;
+    curr = nullptr; //todo - is this null needed?
+
 }
 
 
