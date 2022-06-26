@@ -37,23 +37,23 @@ using std::set;
 class ReadInData {
 private:
     void readJsonFile(const char *fileName, set<string> stopWords,  AVLMap<string, set<long>> &personTree,
-                      AVLMap<string, int> &orgTree,
-                      AVLMap<string, int> &textTree, int &documentId);
+                      AVLMap<string, set<long>> &orgTree,
+                      AVLMap<string, set<long>> &textTree, long &documentId);
 
-    void lowerCaseAndRemovePunct(Document &d, vector<string> &textContent, AVLMap<string, int> &textTree, int &documentId);
+    void lowerCaseAndRemovePunct(Document &d, vector<string> &textContent, AVLMap<string, set<long>> &textTree, long documentId);
 
-    void removeStopWords(std::set<string> &stopWords, vector<string> &text, AVLMap<string, int> &textTree);
+    void removeStopWords(std::set<string> &stopWords, vector<string> &text, AVLMap<string, set<long>> &textTree);
 
     void testPrintOutput(vector<string> &text);
 
 public:
-    void indexAllFiles(const char *path, std::set<std::string> &stopWords, AVLMap<string, set<long>> &personTree);
+    void indexAllFiles(const char *path, std::set<std::string> &stopWords, AVLMap<string, set<long>> &personTree, AVLMap<string, set<long>> &orgTree, AVLMap<string, set<long>> &textTree);
 
-    void stemWords(vector<string> &textContent, AVLMap<string, int> &textTree);
+    void stemWords(vector<string> &textContent, AVLMap<string, set<long>> &textTree);
 
     void readInStopWords(std::set<std::string> &stopWords);
 
-    void wordRetrieveViaQuery(std::vector<std::string> &query, AVLMap<string, set<long>> &personTree);
+    void wordRetrieveViaQuery(std::vector<std::string> &query, AVLMap<string, set<long>> &tree);
 
     };
 

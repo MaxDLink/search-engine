@@ -37,15 +37,19 @@ int main(int argc,
          char *argv[]) {
     std::vector<std::string> query;
     std::set<std::string> stopWords;
+    //trees
     AVLMap<string, set<long>> personTree;
+    AVLMap<string, set<long>> orgTree;
+    AVLMap<string, set<long>> textTree;
+    //data object
     ReadInData data;
     data.readInStopWords(stopWords);
-    data.indexAllFiles("../../sample_data_sets/size-10", stopWords, personTree);
+    data.indexAllFiles("../../sample_data_sets/size-10", stopWords, personTree, orgTree, textTree);
 //    data.indexAllFiles("../../fulldataset/", stopWords);
     //calls userInterface
     Interface userInterface;
     query = userInterface.userInterface(stopWords);
-    data.wordRetrieveViaQuery(query, personTree);
+    data.wordRetrieveViaQuery(query, textTree);
 
 //reads in data
 

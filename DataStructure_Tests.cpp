@@ -11,11 +11,8 @@
  * separate one for your DSVector.
  */
 #include "catch.hpp"
-#include "DSVector.h"
-#include "AVLTreeTemplated.h"
-#include "stemmer.h"
-#include "string"
-#include "AVLMap.h"
+#include <set>
+using namespace std;
 
 //TEST_CASE("Testing Templated AVL tree") {
 //    //AVL obj
@@ -56,26 +53,26 @@
 //}
 
 TEST_CASE("Testing AVLMap class"){
-    AVLMap <int, std::string> mapTree;
+//    AVLMap <int, std::string> mapTree;
 
     SECTION("testing insert with AVLMap"){
-        int docId = 100;
-        std::string word = "tree";
-        //int val = 1;
-        //mapTree.insert(docId, word); //todo - fix string insertion (getHeight issue?)
-        mapTree.insert(docId, word);
-        mapTree.insert(101, word);
-        std::string found = mapTree.searchTreeCall(docId);
-        REQUIRE(found == "tree"); //retrieve val via ID
-//        mapTree.insert(5, 8);
+//        int docId = 100;
+//        std::string word = "tree";
+//        //int val = 1;
+//        //mapTree.insert(docId, word); //todo - fix string insertion (getHeight issue?)
+//        mapTree.insert(docId, word);
+//        mapTree.insert(101, word);
+//        std::string found = mapTree.searchTreeCall(docId);
+//        REQUIRE(found == "tree"); //retrieve val via ID
+////        mapTree.insert(5, 8);
 
     }
 }
 
-TEST_CASE("Testing stem") {
-    SECTION("Testing stemming of word") {
-        std::string wordToStem = "Running";
-        //REQUIRE(Porter2Stemmer::stem(wordToStem) == "Run");
-        //Porter2Stemmer::stem(wordToStem);
-    }
-}
+//TEST_CASE("Testing stem") {
+//    SECTION("Testing stemming of word") {
+//        std::string wordToStem = "Running";
+//        //REQUIRE(Porter2Stemmer::stem(wordToStem) == "Run");
+//        //Porter2Stemmer::stem(wordToStem);
+//    }
+//}

@@ -75,5 +75,6 @@ std::vector<std::string> Interface::userInterface(std::set<std::string> &stopWor
         std::cout << std::endl;
         return query;
     }
+    return query;
     std::cout << "exiting program" << std::endl;
 }

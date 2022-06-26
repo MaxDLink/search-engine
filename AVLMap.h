@@ -187,8 +187,17 @@ void AVLMap<K, T>::insert(AVLNode *&curr, K key, T val) {
 
         // curr->val += val; //todo - create dupe function
         // curr->val.merge(val);
-
         curr->height = max(getHeight(curr->left), getHeight(curr->right)) + 1;
+
+        if (key == "year") {
+            std::cout << "KEY val " << curr->key;
+            // toto print insert
+            for (std::set<long>::iterator s = curr->val.begin(); s != curr->val.end(); s++) {
+                cout << ' ' << *s << ' ';
+            }
+            std::cout << std::endl;
+        }
+
     }
 }
 
