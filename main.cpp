@@ -27,6 +27,8 @@
 #include "ReadInData.h"
 #include "Interface.h"
 #include "tempTestAVLTree.h"
+
+#include "ProjectTimingDemo.h"
 //todo - parse words out into individual words
 //todo - lowercase words & take out punctuation
 //todo - throw in AVL tree
@@ -35,6 +37,13 @@ using namespace std;
 
 int main(int argc,
          char *argv[]) {
+
+    string queryWord = argv[1];
+    string absolutePathToDataFilesDir = argv[2];
+    ProjectTimingDemo ptd(queryWord, absolutePathToDataFilesDir);
+    return 0;
+
+
     std::vector<std::string> query;
     std::set<std::string> stopWords;
     //trees
