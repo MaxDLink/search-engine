@@ -52,10 +52,10 @@ using namespace std;
 //
 //}
 
-TEST_CASE("Testing AVLMap class"){
-//    AVLMap <int, std::string> mapTree;
+TEST_CASE("Testing AVLTree class"){
+//    AVLTree <int, std::string> mapTree;
 
-    SECTION("testing insert with AVLMap"){
+    SECTION("testing insert with AVLTree"){
 //        int docId = 100;
 //        std::string word = "tree";
 //        //int val = 1;

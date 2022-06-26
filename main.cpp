@@ -39,6 +39,8 @@ int main(int argc,
          char *argv[]) {
 
     string queryWord = argv[1];
+//    vector<string> queryWord;
+//    queryWord.emplace_back(argv[1]);
     string absolutePathToDataFilesDir = argv[2];
     ProjectTimingDemo ptd(queryWord, absolutePathToDataFilesDir);
     return 0;
@@ -47,9 +49,9 @@ int main(int argc,
     std::vector<std::string> query;
     std::set<std::string> stopWords;
     //trees
-    AVLMap<string, set<long>> personTree;
-    AVLMap<string, set<long>> orgTree;
-    AVLMap<string, set<long>> textTree;
+    AVLTree<string, set<long>> personTree;
+    AVLTree<string, set<long>> orgTree;
+    AVLTree<string, set<long>> textTree;
     //data object
     ReadInData data;
     data.readInStopWords(stopWords);

@@ -22,7 +22,7 @@
 #include "stemmer.h"
 #include <map>
 #include <set>
-#include "AVLMap.h"
+#include "AVLTree.h"
 using namespace rapidjson;
 using std::cout;
 using std::endl;
@@ -36,24 +36,24 @@ using std::map;
 using std::set;
 class ReadInData {
 private:
-    void readJsonFile(const char *fileName, set<string> stopWords,  AVLMap<string, set<long>> &personTree,
-                      AVLMap<string, set<long>> &orgTree,
-                      AVLMap<string, set<long>> &textTree, long &documentId);
+    void readJsonFile(const char *fileName, set<string> stopWords, AVLTree<string, set<long>> &personTree,
+                      AVLTree<string, set<long>> &orgTree,
+                      AVLTree<string, set<long>> &textTree, long &documentId);
 
-    void lowerCaseAndRemovePunct(Document &d, vector<string> &textContent, AVLMap<string, set<long>> &textTree, long documentId);
+    void lowerCaseAndRemovePunct(Document &d, vector<string> &textContent, AVLTree<string, set<long>> &textTree, long documentId);
 
-    void removeStopWords(std::set<string> &stopWords, vector<string> &text, AVLMap<string, set<long>> &textTree);
+    void removeStopWords(std::set<string> &stopWords, vector<string> &text, AVLTree<string, set<long>> &textTree);
 
     void testPrintOutput(vector<string> &text);
 
 public:
-    void indexAllFiles(const char *path, std::set<std::string> &stopWords, AVLMap<string, set<long>> &personTree, AVLMap<string, set<long>> &orgTree, AVLMap<string, set<long>> &textTree);
+    void indexAllFiles(const char *path, std::set<std::string> &stopWords, AVLTree<string, set<long>> &personTree, AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree);
 
-    void stemWords(vector<string> &textContent, AVLMap<string, set<long>> &textTree);
+    void stemWords(vector<string> &textContent, AVLTree<string, set<long>> &textTree);
 
     void readInStopWords(std::set<std::string> &stopWords);
 
-    void wordRetrieveViaQuery(std::vector<std::string> &query, AVLMap<string, set<long>> &tree);
+    void wordRetrieveViaQuery(std::vector<std::string> &query, AVLTree<string, set<long>> &tree);
 
     };
 

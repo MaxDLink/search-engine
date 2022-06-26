@@ -7,14 +7,14 @@
 
 #include <string>
 #include <set>
-#include "AVLMap.h"
+#include "AVLTree.h"
 using namespace std;
 
 class ProjectTimingDemo {
 
 private:
-    AVLMap<std::string, std::set<long>> textTree;
-    AVLMap<std::string, std::set<long>> emptyTree;
+    AVLTree<std::string, std::set<long>> textTree;
+    AVLTree<std::string, std::set<long>> emptyTree;
 
 public:
     ProjectTimingDemo(std::string query, std::string absolutePathToDataFilesDir);

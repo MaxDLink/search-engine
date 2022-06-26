@@ -2,8 +2,8 @@
 // Created by Max Link on 6/25/22.
 //
 
-#ifndef INC_22SU_SEARCH_ENGINE_AVLMAP_H
-#define INC_22SU_SEARCH_ENGINE_AVLMAP_H
+#ifndef INC_22SU_SEARCH_ENGINE_AVLTREE_H
+#define INC_22SU_SEARCH_ENGINE_AVLTREE_H
 
 
 //
@@ -17,7 +17,7 @@ using std::cout;
 using std::endl;
 
 template<typename K, typename V>
-class AVLMap {
+class AVLTree {
     //todo - rule of three for dynamic mem - copy constructor, overloaded assignment op, desturctor (postorder trav delete)
 private:
     class AVLNode {
@@ -76,9 +76,9 @@ public:
 
 //overloaded constructor for AVLNode class
 template<typename K, typename V>
-AVLMap<K, V>::AVLNode::AVLNode(K &keyArg, V &valArg, AVLMap::AVLNode *&leftArg,
-                               AVLMap::AVLNode *&rightArg,
-                               int &heightArg) {
+AVLTree<K, V>::AVLNode::AVLNode(K &keyArg, V &valArg, AVLTree::AVLNode *&leftArg,
+                                AVLTree::AVLNode *&rightArg,
+                                int &heightArg) {
     //initalizes values to passed in args
     key = keyArg;
     val = valArg;
@@ -88,7 +88,7 @@ AVLMap<K, V>::AVLNode::AVLNode(K &keyArg, V &valArg, AVLMap::AVLNode *&leftArg,
 }
 
 template<typename K, typename V>
-AVLMap<K, V>::AVLNode::AVLNode() {
+AVLTree<K, V>::AVLNode::AVLNode() {
     //initialize all values to null in default constructor & height to zero
     //val; //todo - initialize val  here?
     left = nullptr;
@@ -97,7 +97,7 @@ AVLMap<K, V>::AVLNode::AVLNode() {
 }
 
 template<typename K, typename V>
-void AVLMap<K, V>::print(AVLNode *curr) {
+void AVLTree<K, V>::print(AVLNode *curr) {
     if (curr != nullptr) {
         print(curr->left);
         cout << curr->key << " ";
@@ -113,12 +113,12 @@ void AVLMap<K, V>::print(AVLNode *curr) {
 }
 
 template<typename K, typename V>
-void AVLMap<K, V>::chopDownTree() {
+void AVLTree<K, V>::chopDownTree() {
     chopDownTree(root); //todo - delete key value in chopDownTree
 }
 
 template<typename K, typename V>
-void AVLMap<K, V>::chopDownTree(AVLNode *&curr) {//todo - check if this works as destructor
+void AVLTree<K, V>::chopDownTree(AVLNode *&curr) {//todo - check if this works as destructor
     if (curr == nullptr) {
         return;
     }
@@ -132,17 +132,17 @@ void AVLMap<K, V>::chopDownTree(AVLNode *&curr) {//todo - check if this works as
 
 
 template<typename K, typename V>
-void AVLMap<K, V>::print() {
+void AVLTree<K, V>::print() {
     print(root);
 }
 
 template<typename K, typename V>
-void AVLMap<K, V>::insert(K key, V val) {
+void AVLTree<K, V>::insert(K key, V val) {
     insert(root, key, val);
 }
 
 template<typename K, typename V>
-int AVLMap<K, V>::getHeight(AVLNode *curr) {//todo - key value include in getHeight?
+int AVLTree<K, V>::getHeight(AVLNode *curr) {//todo - key value include in getHeight?
     if (curr == nullptr) {
         return -1; //todo - change from -1 to different value to work with all types?
     } else {
@@ -151,7 +151,7 @@ int AVLMap<K, V>::getHeight(AVLNode *curr) {//todo - key value include in getHei
 }
 
 template<typename K, typename T>
-void AVLMap<K, T>::insert(AVLNode *&curr, K key, T val) {
+void AVLTree<K, T>::insert(AVLNode *&curr, K key, T val) {
     if (curr == nullptr) {//found where new node goes. Base case.
         //curr = new AVLNode(nullptr, nullptr, nullptr, 0);
         curr = new AVLNode;
@@ -184,17 +184,16 @@ void AVLMap<K, T>::insert(AVLNode *&curr, K key, T val) {
         // januari 1,2,...
         curr->height = max(getHeight(curr->left), getHeight(curr->right)) + 1;
         curr->val = val;
-        std::cout << "KEY " << curr->key;
-        for (std::set<long>::iterator s = curr->val.begin(); s != curr->val.end(); s++) {
-            cout << ' ' << *s << ' ';
-        }
-        std::cout << std::endl;
-
+//        std::cout << "KEY " << curr->key;
+//        for (std::set<long>::iterator s = curr->val.begin(); s != curr->val.end(); s++) {
+//            cout << ' ' << *s << ' ';
+//        }
+//        std::cout << std::endl;
     }
 }
 
 template<typename K, typename T>
-void AVLMap<K, T>::rotateWithRightChild(AVLNode *&k1) {//pointers by reference into the tree
+void AVLTree<K, T>::rotateWithRightChild(AVLNode *&k1) {//pointers by reference into the tree
     AVLNode *k2 = k1->right; //k2 like temp variable in a swap function
     k1->right = k2->left; //k1's right pointer point to k2's left child
     k2->left = k1;
@@ -204,29 +203,29 @@ void AVLMap<K, T>::rotateWithRightChild(AVLNode *&k1) {//pointers by reference i
 }
 
 template<typename K, typename T>
-void AVLMap<K, T>::doubleWithRightChild(AVLNode *&k1) {
+void AVLTree<K, T>::doubleWithRightChild(AVLNode *&k1) {
     rotateWithLeftChild(k1->right); //converts case 3 into case 4
     rotateWithRightChild(k1); //do case 4 rotation
 }
 
 template<typename K, typename T>
-void AVLMap<K, T>::rotateWithLeftChild(AVLNode *&k2) {
+void AVLTree<K, T>::rotateWithLeftChild(AVLNode *&k2) {
     //magic part 1 //todo - finish rotateWithLeftChild
 
 }
 
 template<typename K, typename T>
-void AVLMap<K, T>::doubleWithLeftChild(AVLNode *&k3) {
+void AVLTree<K, T>::doubleWithLeftChild(AVLNode *&k3) {
     //magic part 2 //todo - finish doubleWithLeftChild
 }
 
 template<typename K, typename T>
-int AVLMap<K, T>::max(int a, int b) {
+int AVLTree<K, T>::max(int a, int b) {
     return (a < b) ? b : a;
 }
 
 template<typename K, typename T>
-T AVLMap<K, T>::searchTree(AVLMap::AVLNode *&root, K &key) {
+T AVLTree<K, T>::searchTree(AVLTree::AVLNode *&root, K &key) {
     if (root == nullptr) {
         //return false;
         T obj;
@@ -243,9 +242,9 @@ T AVLMap<K, T>::searchTree(AVLMap::AVLNode *&root, K &key) {
 }
 
 template<typename K, typename T>
-T AVLMap<K, T>::searchTreeCall(K key) {
+T AVLTree<K, T>::searchTreeCall(K key) {
     return searchTree(root, key);
 }
 
 
-#endif //INC_22SU_SEARCH_ENGINE_AVLMAP_H
+#endif //INC_22SU_SEARCH_ENGINE_AVLTREE_H
