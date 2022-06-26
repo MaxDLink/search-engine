@@ -129,7 +129,7 @@ void AVLTreeTemplated<T>::insert(T x) {
 template<typename T>
 T AVLTreeTemplated<T>::getHeight(AVLNode *curr) {
     if (curr == nullptr) {
-        return -1;
+        return NULL; //todo - change back to -1?
     } else {
         return curr->height;
     }

@@ -1,9 +1,14 @@
 //
+// Created by Max Link on 6/25/22.
+//
+
+#ifndef INC_22SU_SEARCH_ENGINE_AVLMAP_H
+#define INC_22SU_SEARCH_ENGINE_AVLMAP_H
+
+
+//
 // Created by Max Link on 6/23/22.
 //baed AVL tree off of https://github.com/Ekan5h/AVLtree.git
-
-#ifndef INC_22SU_SEARCH_ENGINE_AVLTREENEW_H
-#define INC_22SU_SEARCH_ENGINE_AVLTREENEW_H
 
 #include <iostream>
 
@@ -12,7 +17,7 @@ using std::cout;
 using std::endl;
 
 template<typename K, typename V>
-class AVLTemplatedMap {
+class AVLMap {
     //todo - rule of three for dynamic mem - copy constructor, overloaded assignment op, desturctor (postorder trav delete)
 private:
     class AVLNode {
@@ -46,12 +51,12 @@ public:
 
     void print();
 
-    void insert(V x);
+    void insert(K key, V val);
 
-    V getHeight(AVLNode *curr);
+    int getHeight(AVLNode *curr);
 
     //basic insert for a binary search tree
-    void insert(AVLNode *&curr, V x);
+    void insert(AVLNode *&curr, K Key, V Val);
 
     void rotateWithRightChild(AVLNode *&k1);
 
@@ -61,18 +66,18 @@ public:
 
     void doubleWithLeftChild(AVLNode *&k3);
 
-    V max(V a, V b);
+    int max(int a, int b);
 
-    V searchTree(AVLNode*& root, V valKey);
+    V searchTree(AVLNode*& root, K& key);
 
-    V searchTreeCall(V key);
+    V searchTreeCall(K key);
 };
 
 //overloaded constructor for AVLNode class
-template<typename K, typename T>
-AVLTemplatedMap<K, T>::AVLNode::AVLNode(K &keyArg, T &valArg, AVLTemplatedMap::AVLNode *&leftArg,
-                                         AVLTemplatedMap::AVLNode *&rightArg,
-                                         int &heightArg) {
+template<typename K, typename V>
+AVLMap<K, V>::AVLNode::AVLNode(K &keyArg, V &valArg, AVLMap::AVLNode *&leftArg,
+                               AVLMap::AVLNode *&rightArg,
+                               int &heightArg) {
     //initalizes values to passed in args
     key = keyArg;
     val = valArg;
@@ -81,8 +86,8 @@ AVLTemplatedMap<K, T>::AVLNode::AVLNode(K &keyArg, T &valArg, AVLTemplatedMap::A
     height = heightArg;
 }
 
-template<typename K, typename T>
-AVLTemplatedMap<K, T>::AVLNode::AVLNode() {
+template<typename K, typename V>
+AVLMap<K, V>::AVLNode::AVLNode() {
     //initialize all values to null in default constructor & height to zero
     //val; //todo - initialize val  here?
     left = nullptr;
@@ -90,8 +95,8 @@ AVLTemplatedMap<K, T>::AVLNode::AVLNode() {
     height = 0;
 }
 
-template<typename K, typename T>
-void AVLTemplatedMap<K, T>::print(AVLNode *curr) {
+template<typename K, typename V>
+void AVLMap<K, V>::print(AVLNode *curr) {
     if (curr != nullptr) {
         print(curr->left);
         cout << curr->val << " ";
@@ -100,13 +105,13 @@ void AVLTemplatedMap<K, T>::print(AVLNode *curr) {
     }
 }
 
-template<typename K, typename T>
-void AVLTemplatedMap<K, T>::chopDownTree() {
+template<typename K, typename V>
+void AVLMap<K, V>::chopDownTree() {
     chopDownTree(root); //todo - delete key value in chopDownTree
 }
 
-template<typename K, typename T>
-void AVLTemplatedMap<K, T>::chopDownTree(AVLNode *&curr) {//todo - check if this works as destructor
+template<typename K, typename V>
+void AVLMap<K, V>::chopDownTree(AVLNode *&curr) {//todo - check if this works as destructor
     if (curr == nullptr) {
         return;
     }
@@ -119,47 +124,48 @@ void AVLTemplatedMap<K, T>::chopDownTree(AVLNode *&curr) {//todo - check if this
 }
 
 
-template<typename K, typename T>
-void AVLTemplatedMap<K, T>::print() {
+template<typename K, typename V>
+void AVLMap<K, V>::print() {
     print(root);
 }
 
-template<typename K, typename T>
-void AVLTemplatedMap<K, T>::insert(T x) {
-    insert(root, x);
+template<typename K, typename V>
+void AVLMap<K, V>::insert(K key, V val) {
+    insert(root, key, val);
 }
 
-template<typename K, typename T>
-T AVLTemplatedMap<K, T>::getHeight(AVLNode *curr) {//todo - keyvalue include in getHeight?
+template<typename K, typename V>
+int AVLMap<K, V>::getHeight(AVLNode *curr) {//todo - key value include in getHeight?
     if (curr == nullptr) {
-        return -1;
+        return -1; //todo - change from -1 to different value to work with all types?
     } else {
         return curr->height;
     }
 }
 
 template<typename K, typename T>
-void AVLTemplatedMap<K, T>::insert(AVLNode *&curr, T x) {
+void AVLMap<K, T>::insert(AVLNode *&curr, K key, T val) {
     if (curr == nullptr) {//found where new node goes. Base case.
         //curr = new AVLNode(nullptr, nullptr, nullptr, 0);
         curr = new AVLNode;
-        curr->val = x;
-    } else if (x < curr->val) {//doing both in terms of less than operator
-        insert(curr->left, x);
-        //balancing stuff here - stack unwinding here after new node was inserted
-        //inserting from the left so subtract left side from right side
+        curr->val = val;
+        curr->key = key;
+    } else if (val < curr->val) {//doing both in terms of less than operator
+        insert(curr->left, key, val);
+       // balancing stuff here - stack unwinding here after new node was inserted
+       // inserting from the left so subtract left side from right side
         if (getHeight(curr->left) - getHeight(curr->right) == 2) {
             //figure out if case 1 or case 2 with > or <
-            if (x < curr->left->val) { ; //case 1 rotate with left child
+            if (val < curr->left->val) { ; //case 1 rotate with left child
             } else { ; // case 2 double rotate with left child
                 //todo - case 2 rotation
                 doubleWithLeftChild(curr);
             }
         }
-    } else if (curr->val < x) {
-        insert(curr->right, x);
+    } else if (curr->val < val) {
+        insert(curr->right, key, val);
         if (getHeight(curr->right) - getHeight(curr->left) == 2) {
-            if (curr->right->val < x)
+            if (curr->right->val < val)
                 rotateWithRightChild(curr);
             else
                 doubleWithRightChild(curr);
@@ -170,7 +176,7 @@ void AVLTemplatedMap<K, T>::insert(AVLNode *&curr, T x) {
 }
 
 template<typename K, typename T>
-void AVLTemplatedMap<K, T>::rotateWithRightChild(AVLNode *&k1) {//pointers by reference into the tree
+void AVLMap<K, T>::rotateWithRightChild(AVLNode *&k1) {//pointers by reference into the tree
     AVLNode *k2 = k1->right; //k2 like temp variable in a swap function
     k1->right = k2->left; //k1's right pointer point to k2's left child
     k2->left = k1;
@@ -180,48 +186,47 @@ void AVLTemplatedMap<K, T>::rotateWithRightChild(AVLNode *&k1) {//pointers by re
 }
 
 template<typename K, typename T>
-void AVLTemplatedMap<K, T>::doubleWithRightChild(AVLNode *&k1) {
+void AVLMap<K, T>::doubleWithRightChild(AVLNode *&k1) {
     rotateWithLeftChild(k1->right); //converts case 3 into case 4
     rotateWithRightChild(k1); //do case 4 rotation
 }
 
 template<typename K, typename T>
-void AVLTemplatedMap<K, T>::rotateWithLeftChild(AVLNode *&k2) {
+void AVLMap<K, T>::rotateWithLeftChild(AVLNode *&k2) {
     //magic part 1 //todo - finish rotateWithLeftChild
 
 }
 
 template<typename K, typename T>
-void AVLTemplatedMap<K, T>::doubleWithLeftChild(AVLNode *&k3) {
+void AVLMap<K, T>::doubleWithLeftChild(AVLNode *&k3) {
     //magic part 2 //todo - finish doubleWithLeftChild
 }
 
 template<typename K, typename T>
-T AVLTemplatedMap<K, T>::max(T a, T b) {
+int AVLMap<K, T>::max(int a, int b) {
     (a < b) ? b : a;
 }
 
 template<typename K, typename T>
-T AVLTemplatedMap<K, T>::searchTree(AVLTemplatedMap::AVLNode *&root, T valKey) {
+T AVLMap<K, T>::searchTree(AVLMap::AVLNode *&root, K& key) {
     if(root == nullptr){
         //return false;
         return NULL; //todo - return 0 ok here? or should return different value? throw exception when val not found to keep generic?
-    }else if(root->val == valKey){
+    }else if(root->key == key){
         //return true;
         return root->val;
-    }else if(root->val > valKey){
-        return searchTree(root->left, valKey);
+    }else if(root->key > key){
+        return searchTree(root->left, key);
     }else{
-        return searchTree(root->right, valKey);
+        return searchTree(root->right, key);
     }
 
 }
 
 template<typename K, typename T>
-T AVLTemplatedMap<K, T>::searchTreeCall(T key) {
+T AVLMap<K, T>::searchTreeCall(K key) {
     return searchTree(root, key);
 }
 
 
-#endif //INC_22SU_SEARCH_ENGINE_AVLTREENEW_H
-
+#endif //INC_22SU_SEARCH_ENGINE_AVLMAP_H
