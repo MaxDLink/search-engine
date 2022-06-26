@@ -59,7 +59,6 @@ void Interface::userInterface(std::set<std::string> &stopWords) {
                 for (int j = 0; j < query.size(); j++) {
                     if (stopWords.count(query.at(j))) {
                         query.at(j) = " "; //todo - filter out blank spaces from text on file writing
-
                     }
                 }
                 //stem word

@@ -50,6 +50,8 @@ public:
     void indexAllFiles(const char *path, std::set<std::string> &stopWords);
 
     void stemWords(vector<string> &textContent, AVLMap<string, int> &textTree);
+
+    void readInStopWords(std::set<std::string> &stopWords);
 };
 
 

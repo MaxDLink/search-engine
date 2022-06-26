@@ -31,19 +31,20 @@ void ReadInData::indexAllFiles(const char *path, std::set<std::string> &stopWord
     AVLMap<string, int> orgTree;
     AVLMap<string, int> textTree;
 
-    ifstream stopWordsFile("own_file_data_sample/stopwords.txt");
-    if (!stopWordsFile.is_open()) {
-        cout << "Error opening stopWordsFile" << endl;
-    }
-    char stopWordsBuffer[500];
-    //while (stopWordsFile.getline(stopWordsBuffer, 500)) {
-    while (!stopWordsFile.eof()) {
-        stopWordsFile.getline(stopWordsBuffer, 500);
-        string buffer = stopWordsBuffer;
-        stopWords.insert(buffer); //fills stopWords vector with the list of stopwords from the stopWords.txt file
-    }
-
-    stopWordsFile.close();
+    readInStopWords(stopWords);
+//    ifstream stopWordsFile("own_file_data_sample/stopwords.txt");
+//    if (!stopWordsFile.is_open()) {
+//        cout << "Error opening stopWordsFile" << endl;
+//    }
+//    char stopWordsBuffer[500];
+//    //while (stopWordsFile.getline(stopWordsBuffer, 500)) {
+//    while (!stopWordsFile.eof()) {
+//        stopWordsFile.getline(stopWordsBuffer, 500);
+//        string buffer = stopWordsBuffer;
+//        stopWords.insert(buffer); //fills stopWords vector with the list of stopwords from the stopWords.txt file
+//    }
+//
+//    stopWordsFile.close();
     //loop over all the entries & store document ID & .json file link in map
     int documentId = 0;
     map<int, std::string> documentIdAndName;
@@ -231,3 +232,18 @@ void ReadInData::stemWords(vector<string>& textContent, AVLMap<string, int> &tex
     }
 }
 
+void ReadInData::readInStopWords(std::set<std::string> &stopWords){
+    ifstream stopWordsFile("own_file_data_sample/stopwords.txt");
+    if (!stopWordsFile.is_open()) {
+        cout << "Error opening stopWordsFile" << endl;
+    }
+    char stopWordsBuffer[500];
+    //while (stopWordsFile.getline(stopWordsBuffer, 500)) {
+    while (!stopWordsFile.eof()) {
+        stopWordsFile.getline(stopWordsBuffer, 500);
+        string buffer = stopWordsBuffer;
+        stopWords.insert(buffer); //fills stopWords vector with the list of stopwords from the stopWords.txt file
+    }
+
+    stopWordsFile.close();
+}

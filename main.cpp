@@ -36,16 +36,19 @@ using namespace std;
 int main(int argc,
          char *argv[]) {
     std::set<std::string> stopWords;
+    ReadInData data;
+    data.readInStopWords(stopWords);
+    data.indexAllFiles("../../sample_data_sets/size-10", stopWords);
     //calls userInterface
     Interface userInterface;
     userInterface.userInterface(stopWords);
 
 //reads in data
-    ReadInData data;
+
 //data.indexAllFiles("sample_data/");
     //data.indexAllFiles("own_file_data_sample/");
     //data.indexAllFiles("../../fulldataset/");
-    data.indexAllFiles("../../sample_data_sets/size-10", stopWords);
+    //data.indexAllFiles("../../sample_data_sets/size-10", stopWords);
 //    tempTestAVLTree<float> t;
 //    t.insert(1.3);
 //    t.insert(2.4);
