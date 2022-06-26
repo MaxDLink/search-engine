@@ -35,13 +35,17 @@ using namespace std;
 
 int main(int argc,
          char *argv[]) {
+    std::vector<std::string> query;
     std::set<std::string> stopWords;
+    AVLMap<string, set<long>> personTree;
     ReadInData data;
     data.readInStopWords(stopWords);
-    data.indexAllFiles("../../sample_data_sets/size-10", stopWords);
+    data.indexAllFiles("../../sample_data_sets/size-10", stopWords, personTree);
+//    data.indexAllFiles("../../fulldataset/", stopWords);
     //calls userInterface
     Interface userInterface;
-    userInterface.userInterface(stopWords);
+    query = userInterface.userInterface(stopWords);
+    data.wordRetrieveViaQuery(query, personTree);
 
 //reads in data
 

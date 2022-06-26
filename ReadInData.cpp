@@ -17,7 +17,7 @@
  * you want to parse.
  */
 
-void ReadInData::indexAllFiles(const char *path, std::set<std::string> &stopWords) {
+void ReadInData::indexAllFiles(const char *path, std::set<std::string> &stopWords,AVLMap<string, set<long>> &personTree) {
     auto start = std::chrono::steady_clock::now();
 
     //recursive_director_iterator used to "access" folder at parameter -path-
@@ -27,7 +27,6 @@ void ReadInData::indexAllFiles(const char *path, std::set<std::string> &stopWord
     //vector<string> stopWords;
     //std::set<std::string> stopWords;
     //creation of AVLTrees to hold persons, orgs, & text
-    AVLMap<string, set<long>> personTree;
     AVLMap<string, int> orgTree;
     AVLMap<string, int> textTree;
 
@@ -246,4 +245,18 @@ void ReadInData::readInStopWords(std::set<std::string> &stopWords){
     }
 
     stopWordsFile.close();
+}
+
+void ReadInData::wordRetrieveViaQuery(vector<std::string> &query, AVLMap<string, set<long>> &personTree) {
+    for(int i = 0; i < query.size(); i++){ //todo - put in org tree & text tree
+        //set<long> docIds = personTree.searchTreeCall(query.at(i));
+        set<long> docId = personTree.searchTreeCall(query.at(i));
+        for (long const& Id : docId)
+        {
+            std::cout << "DOCUMENTS THAT INCLUDE QUERY: " << Id << std::endl;
+        }
+       // cout << "DOCUMENTS THAT INCLUDE QUERY: " <<  personTree.searchTreeCall(query.at(i)) << std::endl;
+       // cout << "DOCUMENTS THAT INCLUDE QUERY: " <<  personTree.searchTreeCall(query.at(i)) << std::endl;
+
+    }
 }

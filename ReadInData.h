@@ -47,12 +47,15 @@ private:
     void testPrintOutput(vector<string> &text);
 
 public:
-    void indexAllFiles(const char *path, std::set<std::string> &stopWords);
+    void indexAllFiles(const char *path, std::set<std::string> &stopWords, AVLMap<string, set<long>> &personTree);
 
     void stemWords(vector<string> &textContent, AVLMap<string, int> &textTree);
 
     void readInStopWords(std::set<std::string> &stopWords);
-};
+
+    void wordRetrieveViaQuery(std::vector<std::string> &query, AVLMap<string, set<long>> &personTree);
+
+    };
 
 
 #endif //INC_22SU_SEARCH_ENGINE_READINDATA_H

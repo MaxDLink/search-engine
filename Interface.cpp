@@ -8,8 +8,9 @@
 #include <sstream>
 #include <vector>
 #include <set>
-void Interface::userInterface(std::set<std::string> &stopWords) {
+std::vector<std::string> Interface::userInterface(std::set<std::string> &stopWords) {
     std::string userInput = "1";
+    std::vector<std::string> query;
     while (userInput != "0") {
         std::cout << "1. clear index" << std::endl << "2. manage persistent index" << std::endl
                   << "3. parse to populate index" << std::endl << "4. parse to read from persistence file" << std::endl
@@ -28,7 +29,6 @@ void Interface::userInterface(std::set<std::string> &stopWords) {
             std::cout << "parsing to read from persistence file" << std::endl;
         } else if (userInput == "5") {
             std::cout << "enter query here: " << std::flush;
-            std::vector<std::string> query;
             getline(std::cin, userInput);
             //lowercase & remove capitals
             std::istringstream ss(userInput);
@@ -68,11 +68,12 @@ void Interface::userInterface(std::set<std::string> &stopWords) {
                 }
             }
             for(auto q : query)
-            std::cout << q << std::endl;
+                std::cout << q << std::endl;
         } else if (userInput == "6") {
             std::cout << "outputting stats" << std::endl;
         }
         std::cout << std::endl;
+        return query;
     }
     std::cout << "exiting program" << std::endl;
 }

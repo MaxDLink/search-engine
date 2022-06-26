@@ -10,7 +10,7 @@ class Interface {
 private:
 
 public:
-    void userInterface(std::set<std::string> &stopWords);
+    std::vector<std::string> userInterface(std::set<std::string> &stopWords);
 };
 
 
