@@ -27,7 +27,7 @@ void ReadInData::indexAllFiles(const char *path) {
     //vector<string> stopWords;
     std::set<std::string> stopWords;
     //creation of AVLTrees to hold persons, orgs, & text
-    AVLMap<string, int> personTree;
+    AVLMap<string, set<long>> personTree;
     AVLMap<string, int> orgTree;
     AVLMap<string, int> textTree;
 
@@ -67,10 +67,10 @@ void ReadInData::indexAllFiles(const char *path) {
     personTree.print();
     cout << endl;
     cout << "ORG TREE: " << endl;
-    orgTree.print();
+    //orgTree.print();
     cout << endl;
     cout << "TEXT TREE: " << endl;
-    textTree.print();
+    //textTree.print();
 
 }
 
@@ -79,7 +79,7 @@ void ReadInData::indexAllFiles(const char *path) {
  * entities.
  * @param fileName filename with relative or absolute path included.
  */
-void ReadInData::readJsonFile(const char *fileName, set<string> stopWords,  AVLMap<string, int> &personTree,
+void ReadInData::readJsonFile(const char *fileName, set<string> stopWords,  AVLMap<string, set<long>> &personTree,
 AVLMap<string, int> &orgTree,
 AVLMap<string, int> &textTree, int &documentId) {
 
@@ -107,7 +107,10 @@ AVLMap<string, int> &textTree, int &documentId) {
     for (auto &p: persons) {
 //        cout << "    > " << setw(30) << left << p["name"].GetString()
 //             << setw(10) << left << p["sentiment"].GetString() << endl;
-        personTree.insert(p["name"].GetString(), documentId); //insert person names into person tree
+        string key = p["name"].GetString();
+        set<long> docIds = personTree.searchTreeCall(key);
+        docIds.insert(documentId);
+        personTree.insert(key, docIds); // no operation noop when same; inserts if new    //insert person names into person tree
     }
     auto orgs = d["entities"]["organizations"].GetArray();
 //    cout << "Organization Entities:" << endl;

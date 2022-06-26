@@ -36,7 +36,7 @@ using std::map;
 using std::set;
 class ReadInData {
 private:
-    void readJsonFile(const char *fileName, set<string> stopWords,  AVLMap<string, int> &personTree,
+    void readJsonFile(const char *fileName, set<string> stopWords,  AVLMap<string, set<long>> &personTree,
                       AVLMap<string, int> &orgTree,
                       AVLMap<string, int> &textTree, int &documentId);
 

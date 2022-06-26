@@ -100,7 +100,12 @@ void AVLMap<K, V>::print(AVLNode *curr) {
     if (curr != nullptr) {
         print(curr->left);
         cout << curr->key << " ";
-        cout << curr->val << " ";
+        //cout << curr->val[0] << " ";
+        std::for_each(curr->val.begin(),
+                      curr->val.end(),
+                      [](const int &e) {
+                          std::cout << e << " ";
+                      });
         cout << endl;
         print(curr->right);
     }
@@ -177,9 +182,11 @@ void AVLMap<K, T>::insert(AVLNode *&curr, K key, T val) {
         // januari 1
         // januari 1,2
         // januari 1,2,...
-        cout << curr->key << ":" << curr->val << ", " << val << endl;
+        //cout << curr->key << ":" << curr->val << ", " << val << endl;
 
-        // curr->val += val; //todo - array push
+        // curr->val += val; //todo - create dupe function
+        // curr->val.merge(val);
+
         curr->height = max(getHeight(curr->left), getHeight(curr->right)) + 1;
     }
 }
@@ -220,7 +227,8 @@ template<typename K, typename T>
 T AVLMap<K, T>::searchTree(AVLMap::AVLNode *&root, K& key) {
     if(root == nullptr){
         //return false;
-        return NULL; //todo - return 0 ok here? or should return different value? throw exception when val not found to keep generic?
+        T obj;
+        return obj; //todo - return 0 ok here? or should return different value? throw exception when val not found to keep generic?
     }else if(root->key == key){
         //return true;
         return root->val;
