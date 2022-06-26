@@ -22,7 +22,7 @@
 #include "stemmer.h"
 #include <map>
 #include <set>
-#include "AVLTreeTemplated.h"
+#include "AVLMap.h"
 using namespace rapidjson;
 using std::cout;
 using std::endl;
@@ -36,9 +36,9 @@ using std::map;
 using std::set;
 class ReadInData {
 private:
-    void readJsonFile(const char *fileName, set<string> stopWords,  AVLTreeTemplated<string> &personTree,
-                      AVLTreeTemplated<string> &orgTree,
-                      AVLTreeTemplated<string> &textTree);
+    void readJsonFile(const char *fileName, set<string> stopWords,  AVLMap<int, string> &personTree,
+                      AVLMap<int, string> &orgTree,
+                      AVLMap<int, string> &textTree, int &documentId);
 
     void lowerCaseAndRemovePunct(Document &d, vector<string> &textContent);
 

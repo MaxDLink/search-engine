@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <map>
 #include <string>
-#include "AVLTreeTemplated.h"
+#include "AVLMap.h"
 /**
  * example code for how to traverse the filesystem using std::filesystem
  * @param path an absolute or relative path to a folder containing files
@@ -27,9 +27,9 @@ void ReadInData::indexAllFiles(const char *path) {
     //vector<string> stopWords;
     std::set<std::string> stopWords;
     //creation of AVLTrees to hold persons, orgs, & text
-    AVLTreeTemplated<string> personTree;
-    AVLTreeTemplated<string> orgTree;
-    AVLTreeTemplated<string> textTree;
+    AVLMap<int, string> personTree;
+    AVLMap<int, string> orgTree;
+    AVLMap<int, string> textTree;
 
     ifstream stopWordsFile("own_file_data_sample/stopwords.txt");
     if (!stopWordsFile.is_open()) {
@@ -55,7 +55,7 @@ void ReadInData::indexAllFiles(const char *path) {
             documentIdAndName.emplace(documentId, jsonLink); //put documentID & file.json into map
             documentId++;
             // cout << "filename: " << entry.path().c_str() << endl;
-            readJsonFile(entry.path().c_str(), stopWords, personTree, orgTree, textTree); //call to readJsonFile function
+            readJsonFile(entry.path().c_str(), stopWords, personTree, orgTree, textTree, documentId); //call to readJsonFile function
         }
     }
 
@@ -69,9 +69,9 @@ void ReadInData::indexAllFiles(const char *path) {
  * entities.
  * @param fileName filename with relative or absolute path included.
  */
-void ReadInData::readJsonFile(const char *fileName, set<string> stopWords,  AVLTreeTemplated<string> &personTree,
-AVLTreeTemplated<string> &orgTree,
-AVLTreeTemplated<string> &textTree) {
+void ReadInData::readJsonFile(const char *fileName, set<string> stopWords,  AVLMap<int, string> &personTree,
+AVLMap<int, string> &orgTree,
+AVLMap<int, string> &textTree, int &documentId) {
 
     auto start = std::chrono::steady_clock::now();
 
@@ -97,14 +97,14 @@ AVLTreeTemplated<string> &textTree) {
     for (auto &p: persons) {
 //        cout << "    > " << setw(30) << left << p["name"].GetString()
 //             << setw(10) << left << p["sentiment"].GetString() << endl;
-        //personTree.insert(p["name"].GetString()); //insert person names into person tree
+        personTree.insert(documentId, p["name"].GetString()); //insert person names into person tree
     }
     auto orgs = d["entities"]["organizations"].GetArray();
 //    cout << "Organization Entities:" << endl;
     for (auto &org: orgs) {
 //        cout << "    > " << setw(30) << left << org["name"].GetString()
 //             << setw(10) << left << org["sentiment"].GetString() << endl;
-        //orgTree.insert(org["name"].GetString()); //insert org names into org tree
+        orgTree.insert(documentId, org["name"].GetString()); //insert org names into org tree
     }
 
     //vector<string> stopWords;
@@ -121,7 +121,7 @@ AVLTreeTemplated<string> &textTree) {
     //putting words in avl tree
     //todo - 3 different avl trees (person, org, & text)
     for(int i = 0; i < textContent.size(); i++){
-        textTree.insert(textContent.at(i)); //inserting text content into text tree
+        textTree.insert(documentId, textContent.at(i)); //inserting text content into text tree
     }
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = end-start;
