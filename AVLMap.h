@@ -99,8 +99,9 @@ template<typename K, typename V>
 void AVLMap<K, V>::print(AVLNode *curr) {
     if (curr != nullptr) {
         print(curr->left);
-        cout << curr->val << " ";
         cout << curr->key << " ";
+        cout << curr->val << " ";
+        cout << endl;
         print(curr->right);
     }
 }
@@ -148,29 +149,37 @@ void AVLMap<K, T>::insert(AVLNode *&curr, K key, T val) {
     if (curr == nullptr) {//found where new node goes. Base case.
         //curr = new AVLNode(nullptr, nullptr, nullptr, 0);
         curr = new AVLNode;
-        curr->val = val;
         curr->key = key;
-    } else if (val < curr->val) {//doing both in terms of less than operator
+        curr->val = val;
+    } else if (key < curr->key) {//doing both in terms of less than operator
         insert(curr->left, key, val);
        // balancing stuff here - stack unwinding here after new node was inserted
        // inserting from the left so subtract left side from right side
         if (getHeight(curr->left) - getHeight(curr->right) == 2) {
             //figure out if case 1 or case 2 with > or <
-            if (val < curr->left->val) { ; //case 1 rotate with left child
+            if (key < curr->left->key) { ; //case 1 rotate with left child
             } else { ; // case 2 double rotate with left child
                 //todo - case 2 rotation
                 doubleWithLeftChild(curr);
             }
         }
-    } else if (curr->val < val) {
+    } else if (curr->key < key) {
         insert(curr->right, key, val);
         if (getHeight(curr->right) - getHeight(curr->left) == 2) {
-            if (curr->right->val < val)
+            if (curr->right->key < key)
                 rotateWithRightChild(curr);
             else
                 doubleWithRightChild(curr);
         }
     } else { ; //todo - handle duplicates here
+        //what is in cur?
+        //if it is existing, curr->val += val
+        // januari 1
+        // januari 1,2
+        // januari 1,2,...
+        cout << curr->key << ":" << curr->val << ", " << val << endl;
+
+        // curr->val += val; //todo - array push
         curr->height = max(getHeight(curr->left), getHeight(curr->right)) + 1;
     }
 }
@@ -204,7 +213,7 @@ void AVLMap<K, T>::doubleWithLeftChild(AVLNode *&k3) {
 
 template<typename K, typename T>
 int AVLMap<K, T>::max(int a, int b) {
-    (a < b) ? b : a;
+    return (a < b) ? b : a;
 }
 
 template<typename K, typename T>

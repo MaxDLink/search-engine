@@ -27,9 +27,9 @@ void ReadInData::indexAllFiles(const char *path) {
     //vector<string> stopWords;
     std::set<std::string> stopWords;
     //creation of AVLTrees to hold persons, orgs, & text
-    AVLMap<int, string> personTree;
-    AVLMap<int, string> orgTree;
-    AVLMap<int, string> textTree;
+    AVLMap<string, int> personTree;
+    AVLMap<string, int> orgTree;
+    AVLMap<string, int> textTree;
 
     ifstream stopWordsFile("own_file_data_sample/stopwords.txt");
     if (!stopWordsFile.is_open()) {
@@ -62,6 +62,16 @@ void ReadInData::indexAllFiles(const char *path) {
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = end-start;
     std::cout << "Total parsing elapsed time: " << elapsed_seconds.count() << "s\n";
+
+    cout << "PERSON TREE" << endl;
+    personTree.print();
+    cout << endl;
+    cout << "ORG TREE: " << endl;
+    orgTree.print();
+    cout << endl;
+    cout << "TEXT TREE: " << endl;
+    textTree.print();
+
 }
 
 /**
@@ -69,9 +79,9 @@ void ReadInData::indexAllFiles(const char *path) {
  * entities.
  * @param fileName filename with relative or absolute path included.
  */
-void ReadInData::readJsonFile(const char *fileName, set<string> stopWords,  AVLMap<int, string> &personTree,
-AVLMap<int, string> &orgTree,
-AVLMap<int, string> &textTree, int &documentId) {
+void ReadInData::readJsonFile(const char *fileName, set<string> stopWords,  AVLMap<string, int> &personTree,
+AVLMap<string, int> &orgTree,
+AVLMap<string, int> &textTree, int &documentId) {
 
     auto start = std::chrono::steady_clock::now();
 
@@ -97,14 +107,14 @@ AVLMap<int, string> &textTree, int &documentId) {
     for (auto &p: persons) {
 //        cout << "    > " << setw(30) << left << p["name"].GetString()
 //             << setw(10) << left << p["sentiment"].GetString() << endl;
-        personTree.insert(documentId, p["name"].GetString()); //insert person names into person tree
+        personTree.insert(p["name"].GetString(), documentId); //insert person names into person tree
     }
     auto orgs = d["entities"]["organizations"].GetArray();
 //    cout << "Organization Entities:" << endl;
     for (auto &org: orgs) {
 //        cout << "    > " << setw(30) << left << org["name"].GetString()
 //             << setw(10) << left << org["sentiment"].GetString() << endl;
-        orgTree.insert(documentId, org["name"].GetString()); //insert org names into org tree
+        orgTree.insert(org["name"].GetString(), documentId); //insert org names into org tree
     }
 
     //vector<string> stopWords;
@@ -121,8 +131,9 @@ AVLMap<int, string> &textTree, int &documentId) {
     //putting words in avl tree
     //todo - 3 different avl trees (person, org, & text)
     for(int i = 0; i < textContent.size(); i++){
-        textTree.insert(documentId, textContent.at(i)); //inserting text content into text tree
+        textTree.insert(textContent.at(i), documentId); //inserting text content into text tree
     }
+
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = end-start;
     std::cout << "jsonFileParse elapsed time: " << elapsed_seconds.count() << "s\n";

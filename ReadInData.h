@@ -36,9 +36,9 @@ using std::map;
 using std::set;
 class ReadInData {
 private:
-    void readJsonFile(const char *fileName, set<string> stopWords,  AVLMap<int, string> &personTree,
-                      AVLMap<int, string> &orgTree,
-                      AVLMap<int, string> &textTree, int &documentId);
+    void readJsonFile(const char *fileName, set<string> stopWords,  AVLMap<string, int> &personTree,
+                      AVLMap<string, int> &orgTree,
+                      AVLMap<string, int> &textTree, int &documentId);
 
     void lowerCaseAndRemovePunct(Document &d, vector<string> &textContent);
 
