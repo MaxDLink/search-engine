@@ -138,7 +138,8 @@ AVLMap<string, set<long>> &textTree, long &documentId) {
     //todo - 3 different avl trees (person, org, & text)
     for(int i = 0; i < textContent.size(); i++){
         string key = textContent.at(i);
-        set<long> docIds = textTree.searchTreeCall(key);
+        if (key == " ") continue; // stop words are now set to " " so skip
+        set<long> docIds = textTree.searchTreeCall(key); // todo by ref
         docIds.insert(documentId);
         textTree.insert(key, docIds);
     }
@@ -238,7 +239,7 @@ void ReadInData::stemWords(vector<string>& textContent, AVLMap<string, set<long>
 }
 
 void ReadInData::readInStopWords(std::set<std::string> &stopWords){
-    ifstream stopWordsFile("own_file_data_sample/stopwords.txt");
+    ifstream stopWordsFile("data/stopwords.txt");
     if (!stopWordsFile.is_open()) {
         cout << "Error opening stopWordsFile" << endl;
     }

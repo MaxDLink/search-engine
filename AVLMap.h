@@ -177,26 +177,18 @@ void AVLMap<K, T>::insert(AVLNode *&curr, K key, T val) {
             else
                 doubleWithRightChild(curr);
         }
-    } else { ; //todo - handle duplicates here
-        //what is in cur?
-        //if it is existing, curr->val += val
+    } else { // key is already in the tree
+        // update the value to the new passed in val V
         // januari 1
         // januari 1,2
         // januari 1,2,...
-        //cout << curr->key << ":" << curr->val << ", " << val << endl;
-
-        // curr->val += val; //todo - create dupe function
-        // curr->val.merge(val);
         curr->height = max(getHeight(curr->left), getHeight(curr->right)) + 1;
-
-        if (key == "year") {
-            std::cout << "KEY val " << curr->key;
-            // toto print insert
-            for (std::set<long>::iterator s = curr->val.begin(); s != curr->val.end(); s++) {
-                cout << ' ' << *s << ' ';
-            }
-            std::cout << std::endl;
+        curr->val = val;
+        std::cout << "KEY " << curr->key;
+        for (std::set<long>::iterator s = curr->val.begin(); s != curr->val.end(); s++) {
+            cout << ' ' << *s << ' ';
         }
+        std::cout << std::endl;
 
     }
 }

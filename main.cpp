@@ -49,7 +49,11 @@ int main(int argc,
     //calls userInterface
     Interface userInterface;
     query = userInterface.userInterface(stopWords);
-    data.wordRetrieveViaQuery(query, textTree);
+    if (query.at(0) == " ") { // todo handle empty query strings after processing
+        cout << "query was a stop word" << endl;
+    } else {
+        data.wordRetrieveViaQuery(query, textTree);
+    }
 
 //reads in data
 
