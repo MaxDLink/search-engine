@@ -17,7 +17,7 @@
  * you want to parse.
  */
 
-void ReadInData::indexAllFiles(const char *path) {
+void ReadInData::indexAllFiles(const char *path, std::set<std::string> &stopWords) {
     auto start = std::chrono::steady_clock::now();
 
     //recursive_director_iterator used to "access" folder at parameter -path-
@@ -25,7 +25,7 @@ void ReadInData::indexAllFiles(const char *path) {
     auto it = std::filesystem::recursive_directory_iterator(path);
     //make stopwords vector
     //vector<string> stopWords;
-    std::set<std::string> stopWords;
+    //std::set<std::string> stopWords;
     //creation of AVLTrees to hold persons, orgs, & text
     AVLMap<string, set<long>> personTree;
     AVLMap<string, int> orgTree;
@@ -123,26 +123,26 @@ AVLMap<string, int> &textTree, int &documentId) {
     //vector<string> stopWords;
     vector<string> textContent;
 
-    lowerCaseAndRemovePunct(d, textContent);
+    lowerCaseAndRemovePunct(d, textContent, textTree, documentId);
 
-    removeStopWords(stopWords, textContent);
+    removeStopWords(stopWords, textContent, textTree);
 
     //todo - implement stemming
-    stemWords(textContent);
+    stemWords(textContent, textTree);
 ///    testPrintOutput(textContent);
 
     //putting words in avl tree
     //todo - 3 different avl trees (person, org, & text)
-    for(int i = 0; i < textContent.size(); i++){
-        textTree.insert(textContent.at(i), documentId); //inserting text content into text tree
-    }
+//    for(int i = 0; i < textContent.size(); i++){
+//        textTree.insert(textContent.at(i), documentId); //inserting text content into text tree
+//    }
 
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = end-start;
     std::cout << "jsonFileParse elapsed time: " << elapsed_seconds.count() << "s\n";
 }
 
-void ReadInData::lowerCaseAndRemovePunct(Document &d, vector<string> &textContent) {
+void ReadInData::lowerCaseAndRemovePunct(Document &d, vector<string> &textContent, AVLMap<string, int> &textTree, int &documentId) {
     ///compare vector of stopwords to vector of text & only print text that is not in stopwords vector
     //get text as a string
     auto text = d["text"].GetString();
@@ -166,6 +166,8 @@ void ReadInData::lowerCaseAndRemovePunct(Document &d, vector<string> &textConten
         }
         if (lowerWord != "") {//check for empty in lowerWord
             textContent.push_back(lowerWord);
+            //textTree.insert(lowerWord, documentId); //inserts lower cased words to tree with given documentId
+            //todo - avl tree instead of textContent vector
         }
 
     }
@@ -175,12 +177,13 @@ void ReadInData::lowerCaseAndRemovePunct(Document &d, vector<string> &textConten
 //    }
 }
 
-void ReadInData::removeStopWords(set<string> &stopWords, vector<string> &text) {
+void ReadInData::removeStopWords(set<string> &stopWords, vector<string> &text, AVLMap<string, int> &textTree) {
 
     //loop through and erase stopwords that are found in text vector
         for (int j = 0; j < text.size(); j++) {
             if (stopWords.count(text.at(j))) {
                 text.at(j) = " "; //todo - filter out blank spaces from text on file writing
+
             }
         }
 
@@ -221,9 +224,10 @@ void ReadInData::testPrintOutput(vector<string> &text) {
 //    }
 }
 
-void ReadInData::stemWords(vector<string>& textContent) {//todo - make word stemming function more generic?
+void ReadInData::stemWords(vector<string>& textContent, AVLMap<string, int> &textTree) {//todo - make word stemming function more generic?
     for (int i = 0; i < textContent.size(); i++) {
         Porter2Stemmer::stem(textContent.at(i));
+        //todo - stem avlmap instead of textContent
     }
 }
 

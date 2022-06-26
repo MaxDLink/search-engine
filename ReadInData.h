@@ -40,16 +40,16 @@ private:
                       AVLMap<string, int> &orgTree,
                       AVLMap<string, int> &textTree, int &documentId);
 
-    void lowerCaseAndRemovePunct(Document &d, vector<string> &textContent);
+    void lowerCaseAndRemovePunct(Document &d, vector<string> &textContent, AVLMap<string, int> &textTree, int &documentId);
 
-    void removeStopWords(std::set<string> &stopWords, vector<string> &text);
+    void removeStopWords(std::set<string> &stopWords, vector<string> &text, AVLMap<string, int> &textTree);
 
     void testPrintOutput(vector<string> &text);
 
 public:
-    void indexAllFiles(const char *path);
+    void indexAllFiles(const char *path, std::set<std::string> &stopWords);
 
-    void stemWords(vector<string> &textContent);
+    void stemWords(vector<string> &textContent, AVLMap<string, int> &textTree);
 };
 
 
