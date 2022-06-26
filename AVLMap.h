@@ -45,6 +45,7 @@ private:
 
 public:
     void chopDownTree();
+
     void chopDownTree(AVLNode *&curr);
     //void chopDownTree();
     //todo - overloaded assignment operator, copy constructor
@@ -68,7 +69,7 @@ public:
 
     int max(int a, int b);
 
-    V searchTree(AVLNode*& root, K& key);
+    V searchTree(AVLNode *&root, K &key);
 
     V searchTreeCall(K key);
 };
@@ -158,8 +159,8 @@ void AVLMap<K, T>::insert(AVLNode *&curr, K key, T val) {
         curr->val = val;
     } else if (key < curr->key) {//doing both in terms of less than operator
         insert(curr->left, key, val);
-       // balancing stuff here - stack unwinding here after new node was inserted
-       // inserting from the left so subtract left side from right side
+        // balancing stuff here - stack unwinding here after new node was inserted
+        // inserting from the left so subtract left side from right side
         if (getHeight(curr->left) - getHeight(curr->right) == 2) {
             //figure out if case 1 or case 2 with > or <
             if (key < curr->left->key) { ; //case 1 rotate with left child
@@ -224,17 +225,17 @@ int AVLMap<K, T>::max(int a, int b) {
 }
 
 template<typename K, typename T>
-T AVLMap<K, T>::searchTree(AVLMap::AVLNode *&root, K& key) {
-    if(root == nullptr){
+T AVLMap<K, T>::searchTree(AVLMap::AVLNode *&root, K &key) {
+    if (root == nullptr) {
         //return false;
         T obj;
-        return obj; //todo - return 0 ok here? or should return different value? throw exception when val not found to keep generic?
-    }else if(root->key == key){
+        return obj; //returns empty object of type T to work with any null object //todo - return 0 ok here? or should return different value? throw exception when val not found to keep generic?
+    } else if (root->key == key) {
         //return true;
         return root->val;
-    }else if(root->key > key){
+    } else if (root->key > key) {
         return searchTree(root->left, key);
-    }else{
+    } else {
         return searchTree(root->right, key);
     }
 
