@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 # The configure_file statements below ensure that files are copied into the data
 # folder that will be created in the build folder.
 file(COPY sample_data/ DESTINATION sample_data/)
-file(COPY own_file_data_sample/ DESTINATION own_file_data_sample)
+#file(COPY own_file_data_sample/ DESTINATION own_file_data_sample)
 file(COPY data/ DESTINATION data)
 foreach(file IN LISTS input01)
     configure_file(${file} ${file} COPYONLY)
