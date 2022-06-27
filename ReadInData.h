@@ -36,9 +36,11 @@ using std::map;
 using std::set;
 class ReadInData {
 private:
+//    void readJsonFile(const char *fileName, set<string> stopWords, AVLTree<string, set<long>> personTree,
+//                      AVLTree<string, set<long>> orgTree, AVLTree<string, set<long>> textTree, long &documentId);
+
     void readJsonFile(const char *fileName, set<string> stopWords, AVLTree<string, set<long>> &personTree,
-                      AVLTree<string, set<long>> &orgTree,
-                      AVLTree<string, set<long>> &textTree, long &documentId);
+                      AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree, long &documentId);
 
     void lowerCaseAndRemovePunct(Document &d, vector<string> &textContent, AVLTree<string, set<long>> &textTree, long documentId, set<string> &stopWords);
 
@@ -49,15 +51,14 @@ private:
 public:
     void indexAllFiles(const char *path, set<std::string> &stopWords, AVLTree<string, set<long>> &personTree,
                        AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree,
-                       set<string> &documentIDAndName);
+                       map<long, string> &documentIDAndName);
 
     void stemWords(vector<string> &textContent, AVLTree<string, set<long>> &textTree);
 
     void readInStopWords(std::set<std::string> &stopWords);
 
-    void wordRetrieveViaQuery(std::vector<std::string> &query, AVLTree<string, set<long>> &tree, set<string> &documentIdAndName);
-
-    };
+    void wordRetrieveViaQuery(std::vector<std::string> &query, AVLTree<string, set<long>> &tree, map<long, string> &documentIdAndName);
+};
 
 
 #endif //INC_22SU_SEARCH_ENGINE_READINDATA_H

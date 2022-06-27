@@ -19,7 +19,7 @@ private:
     AVLTree<std::string, std::set<long>> textTree;
     AVLTree<std::string, std::set<long>> emptyTree;
 public:
-    ProjectTimingDemo(std::string query, std::string absolutePathToDataFilesDir, set<string> &documentIdAndName);
+    ProjectTimingDemo(std::string query, std::string absolutePathToDataFilesDir, map<long, string> &documentIdAndName);
 };
 
 

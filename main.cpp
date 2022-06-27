@@ -19,6 +19,7 @@
 #include <iomanip>
 #include <vector>
 #include <sstream>
+#include <map>
 //RapidJSON headers we need for our parsing.
 #include "rapidjson/istreamwrapper.h"
 #include "rapidjson/document.h"
@@ -39,10 +40,8 @@ int main(int argc,
          char *argv[]) {
 
     string queryWord = argv[1];
-//    vector<string> queryWord;
-//    queryWord.emplace_back(argv[1]);
-    set<string> documentIdAndName;
     string absolutePathToDataFilesDir = argv[2];
+    map<long, string> documentIdAndName;
     ProjectTimingDemo ptd(queryWord, absolutePathToDataFilesDir, documentIdAndName);
     return 0;
 

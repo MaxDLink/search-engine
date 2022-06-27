@@ -12,6 +12,8 @@
 #include <string>
 #include "AVLTree.h"
 
+using namespace std;
+
 /**
  * example code for how to traverse the filesystem using std::filesystem
  * @param path an absolute or relative path to a folder containing files
@@ -20,8 +22,8 @@
 
 void
 ReadInData::indexAllFiles(const char *path, set<std::string> &stopWords, AVLTree<string, set<long>> &personTree,
-                          AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree,
-                          set<string> &documentIDAndName) {
+                               AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree,
+                               map<long, string> &documentIDAndName) {
 //    auto start = std::chrono::steady_clock::now();
     auto start = std::chrono::steady_clock::now();
 
@@ -53,10 +55,10 @@ ReadInData::indexAllFiles(const char *path, set<std::string> &stopWords, AVLTree
     for (const auto &entry: it) {
 //        cout << "--- " << setw(60) << left << entry.path().c_str() << " ---" << endl;
         if (entry.is_regular_file() && entry.path().extension().string() == ".json") {
-            string jsonLink = entry.path().c_str();
+            string jsonLink = entry.path();
 //            cout << ".json file: " << jsonLink << endl;
             documentId++;
-            documentIDAndName.insert(jsonLink); //put documentID & file.json into map
+            documentIDAndName.insert(pair<int, string>(documentId, jsonLink));
             //documentId++; //todo - enable documentId++ again here?
             readJsonFile(entry.path().c_str(), stopWords, personTree, orgTree, textTree,
                          documentId); //call to readJsonFile function
@@ -203,21 +205,21 @@ void ReadInData::readInStopWords(std::set<std::string> &stopWords) {
     stopWordsFile.close();
 }
 
-void ReadInData::wordRetrieveViaQuery(vector<std::string> &query, AVLTree<string, set<long>> &tree, set<string> &documentIdAndName) {
+void ReadInData::wordRetrieveViaQuery(vector<std::string> &query, AVLTree<string, set<long>> &tree, map<long, string> &documentIdAndName) {
     for (int i = 0; i < query.size(); i++) { //todo - put in org tree & text tree
         set<long> docId = tree.searchTreeCall(query.at(i));
         //std::cout << query.at(i) << ": ";
-        std::cout << "Query: " << query.at(i);
-        //todo - enable id print again here?
-//        for (long const &Id: docId) {
-//            std::cout << Id << ' ';
-//        }
+        std::cout << "Query: " << query.at(i) << " ";
+        for (long const &Id: docId) {
+            std::cout << Id << ' ';
+        }
         cout << std::endl;
 
-        for (const auto &d : documentIdAndName) {//todo - change documentIdAndName back to map after speed test to correlate long id & filepath?
-            std::cout << "Document: " << d << '\n';
+        for (long const &Id: docId) {
+            std::cout << documentIdAndName[Id] << endl;
         }
-
         //cout << std::endl;
     }
 }
+
+

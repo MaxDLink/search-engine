@@ -32,7 +32,7 @@ QueryParser::QueryParser(std::string query, std::__1::set<std::string> stopWords
     }
     //removes punctuation from string
     for (int i = 0; i < word.size(); i++) {
-        if (ispunct(word.at(i))) {
+        if (ispunct(word.at(i))) {//todo - change is punct to not use .erase
             word = word.erase(i, 1); //erases any punctuation from word
         }
     }
@@ -41,7 +41,7 @@ QueryParser::QueryParser(std::string query, std::__1::set<std::string> stopWords
 //    }
     //if current word is not a stop word then stem & pushback to query vector
     if (!stopWords.count(lowerWord)) {
-        //stem word
+        //stem word //todo - add trim later to lowerWord
         Porter2Stemmer::stem(lowerWord);
         queryVector.push_back(lowerWord); //todo - if error change back to query
     }
