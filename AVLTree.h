@@ -31,6 +31,14 @@ private:
 
         //constructor for AVLNode
         AVLNode(); //todo - check if appropriate to make constructor inside AVLNode class
+
+        //copy constructor
+
+        //assignment operator for AVLNode
+        ///V &operator=(const AVLNode *&other); //todo - fixme
+
+        //destructor for AVLNode
+        ///~AVLTree(); //todo - fixme
         //overloaded constructor for AVLNode class //todo - check if appropriate for overloading in AVLNode class
         AVLNode(K &keyArg, V &valArg, AVLNode *&leftArg, AVLNode *&rightArg, int &heightArg);
 
@@ -47,7 +55,7 @@ public:
     void chopDownTree();
 
     void chopDownTree(AVLNode *&curr);
-    //void chopDownTree();
+
     //todo - overloaded assignment operator, copy constructor
 
     void print();
@@ -96,6 +104,44 @@ AVLTree<K, V>::AVLNode::AVLNode() {
     height = 0;
 }
 
+//template<typename K, typename V> //todo - fixme
+//V &AVLTree<K, V>::operator=(const AVLTree::AVLNode *&other) {
+////    AVLNode* newLeft = nullptr;
+////    AVLNode* newRight = nullptr;
+////
+////    try{
+////        newLeft = new AVLNode(*other.left);
+////        newRight = new AVLNode(*other.right);
+////    }
+////    catch(...){
+////        //clean up temp objects if there was a problem in try
+////        delete newLeft;
+////        delete newRight;
+////        throw;
+////    }
+////    //todo - fix block
+////    val = other.val;
+////    std::swap(left, newLeft);
+////    std::swap(right, newRight);
+////
+////    //now that copied over delete old data
+////    delete newLeft;
+////    delete newRight;
+////
+////    return *this;
+//    //todo - fix swap
+//    other.swap(*this);
+//
+//    return *this;
+//}
+
+//template<typename K, typename V> //todo - fixme
+//AVLTree<K, V>::AVLNode::~AVLTree() {
+//    //chopDownTree(root);
+//
+//    //todo - rebalance tree after deletion?
+//}
+
 template<typename K, typename V>
 void AVLTree<K, V>::print(AVLNode *curr) {
     if (curr != nullptr) {
@@ -129,7 +175,6 @@ void AVLTree<K, V>::chopDownTree(AVLNode *&curr) {//todo - check if this works a
     curr = nullptr; //todo - is this null needed?
 
 }
-
 
 template<typename K, typename V>
 void AVLTree<K, V>::print() {
@@ -199,7 +244,8 @@ void AVLTree<K, T>::insert(AVLNode *&curr, K key, T val) {
     }
 }
 
-template<typename K, typename T> //todo - rename to leftRotation?
+template<typename K, typename T>
+//todo - rename to leftRotation?
 void AVLTree<K, T>::rotateWithRightChild(AVLNode *&k1) {//right-right imbalance
     AVLNode *k2 = k1->right; //k2 like temp variable in a swap function
     k1->right = k2->left; //k1's right pointer point to k2's left child
@@ -211,7 +257,8 @@ void AVLTree<K, T>::rotateWithRightChild(AVLNode *&k1) {//right-right imbalance
     k1 = k2; //move k1 into the place of alpha
 }
 
-template<typename K, typename T> //todo - fixme
+template<typename K, typename T>
+//todo - fixme
 void AVLTree<K, T>::doubleWithRightChild(AVLNode *&k1) { //L-R imbalance
     rotateWithLeftChild(k1->right);
     rotateWithRightChild(k1);
@@ -225,11 +272,12 @@ void AVLTree<K, T>::doubleWithRightChild(AVLNode *&k1) { //L-R imbalance
 //    rotateWithLeftChild(k3);
 }
 
-template<typename K, typename T> //todo - rename to rightRotation?
+template<typename K, typename T>
+//todo - rename to rightRotation?
 void AVLTree<K, T>::rotateWithLeftChild(AVLNode *&k2) {//left-left imbalance
 //    //magic part 1
-    AVLNode* k1 = k2->left;
-    k2 ->left = k1->right;
+    AVLNode *k1 = k2->left;
+    k2->left = k1->right;
     k1->right = k2;
     k2->height = 0;
     k1->height = max(getHeight(k1->left), getHeight(k1->right)) + 1; //+1 because one level deeper than lowest children
