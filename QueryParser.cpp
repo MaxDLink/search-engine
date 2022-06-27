@@ -43,7 +43,7 @@ QueryParser::QueryParser(std::string query, std::__1::set<std::string> stopWords
     if (!stopWords.count(lowerWord)) {
         //stem word
         Porter2Stemmer::stem(lowerWord);
-        queryVector.push_back(query);
+        queryVector.push_back(lowerWord); //todo - if error change back to query
     }
 }
 

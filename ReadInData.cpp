@@ -148,6 +148,7 @@ void ReadInData::readJsonFile(const char *fileName, set<string> stopWords, AVLTr
 
         if (!stopWords.count(lowerWord)) {
             Porter2Stemmer::stem(lowerWord);
+            //Porter2Stemmer::trim(lowerWord); //todo - take stemming away? enable after speed check?
             set<long> docIds = textTree.searchTreeCall(lowerWord);
             docIds.insert(documentId);
             textTree.insert(lowerWord, docIds);
