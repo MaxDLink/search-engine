@@ -44,7 +44,7 @@ std::cout << "FileReadStream: " << elapsed_seconds.count() << "s\n";
  ./cmake-build-release/22su_search_engine year   408.10s user 0.97s system 99% cpu 6:50.44 total
 
  */
-ProjectTimingDemo::ProjectTimingDemo(string query, string absolutePathToDataFilesDir, map<int, std::string> &documentIdAndName) {
+ProjectTimingDemo::ProjectTimingDemo(string query, string absolutePathToDataFilesDir, set<string> &documentIdAndName) {
     std::set<std::string> stopWords;
     ReadInData data;
     data.readInStopWords(stopWords);

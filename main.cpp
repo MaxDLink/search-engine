@@ -41,7 +41,7 @@ int main(int argc,
     string queryWord = argv[1];
 //    vector<string> queryWord;
 //    queryWord.emplace_back(argv[1]);
-    map<int, std::string> documentIdAndName;
+    set<string> documentIdAndName;
     string absolutePathToDataFilesDir = argv[2];
     ProjectTimingDemo ptd(queryWord, absolutePathToDataFilesDir, documentIdAndName);
     return 0;

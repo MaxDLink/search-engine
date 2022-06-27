@@ -21,7 +21,7 @@
 void
 ReadInData::indexAllFiles(const char *path, set<std::string> &stopWords, AVLTree<string, set<long>> &personTree,
                           AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree,
-                          map<int, string> &documentIDAndName) {
+                          set<string> &documentIDAndName) {
 //    auto start = std::chrono::steady_clock::now();
     auto start = std::chrono::steady_clock::now();
 
@@ -56,7 +56,7 @@ ReadInData::indexAllFiles(const char *path, set<std::string> &stopWords, AVLTree
             string jsonLink = entry.path().c_str();
 //            cout << ".json file: " << jsonLink << endl;
             documentId++;
-            documentIDAndName.emplace(documentId, jsonLink); //put documentID & file.json into map
+            documentIDAndName.insert(jsonLink); //put documentID & file.json into map
             //documentId++; //todo - enable documentId++ again here?
             readJsonFile(entry.path().c_str(), stopWords, personTree, orgTree, textTree,
                          documentId); //call to readJsonFile function
@@ -203,7 +203,7 @@ void ReadInData::readInStopWords(std::set<std::string> &stopWords) {
     stopWordsFile.close();
 }
 
-void ReadInData::wordRetrieveViaQuery(vector<std::string> &query, AVLTree<string, set<long>> &tree, map<int, std::string> &documentIdAndName) {
+void ReadInData::wordRetrieveViaQuery(vector<std::string> &query, AVLTree<string, set<long>> &tree, set<string> &documentIdAndName) {
     for (int i = 0; i < query.size(); i++) { //todo - put in org tree & text tree
         set<long> docId = tree.searchTreeCall(query.at(i));
         //std::cout << query.at(i) << ": ";
@@ -214,8 +214,8 @@ void ReadInData::wordRetrieveViaQuery(vector<std::string> &query, AVLTree<string
 //        }
         cout << std::endl;
 
-        for (const auto &d : documentIdAndName) {
-            std::cout << "Document: " << d.second << '\n';
+        for (const auto &d : documentIdAndName) {//todo - change documentIdAndName back to map after speed test to correlate long id & filepath?
+            std::cout << "Document: " << d << '\n';
         }
 
         //cout << std::endl;
