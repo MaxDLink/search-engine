@@ -11,14 +11,18 @@
 #include <map>
 #include <string>
 #include "AVLTree.h"
+
 /**
  * example code for how to traverse the filesystem using std::filesystem
  * @param path an absolute or relative path to a folder containing files
  * you want to parse.
  */
 
-void ReadInData::indexAllFiles(const char *path, std::set<std::string> &stopWords, AVLTree<string, set<long>> &personTree, AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree) {
+void
+ReadInData::indexAllFiles(const char *path, std::set<std::string> &stopWords, AVLTree<string, set<long>> &personTree,
+                          AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree) {
 //    auto start = std::chrono::steady_clock::now();
+    auto start = std::chrono::steady_clock::now();
 
     //recursive_director_iterator used to "access" folder at parameter -path-
     //we are using the recursive iterator so it will go into subfolders.
@@ -52,7 +56,9 @@ void ReadInData::indexAllFiles(const char *path, std::set<std::string> &stopWord
 //            cout << ".json file: " << jsonLink << endl;
             documentIdAndName.emplace(documentId, jsonLink); //put documentID & file.json into map
             documentId++;
-            readJsonFile(entry.path().c_str(), stopWords, personTree, orgTree, textTree, documentId); //call to readJsonFile function
+            readJsonFile(entry.path().c_str(), stopWords, personTree, orgTree, textTree,
+                         documentId); //call to readJsonFile function
+
         }
     }
 
@@ -70,6 +76,9 @@ void ReadInData::indexAllFiles(const char *path, std::set<std::string> &stopWord
 //    cout << "TEXT TREE: " << endl;
     //textTree.print();
 
+    auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end - start;
+    std::cout << "Time to index all files: " << elapsed_seconds.count() << "s\n";
 }
 
 /**
@@ -80,25 +89,17 @@ void ReadInData::indexAllFiles(const char *path, std::set<std::string> &stopWord
 void ReadInData::readJsonFile(const char *fileName, set<string> stopWords, AVLTree<string, set<long>> &personTree,
                               AVLTree<string, set<long>> &orgTree,
                               AVLTree<string, set<long>> &textTree, long &documentId) {
-
-//    auto start = std::chrono::steady_clock::now();
-
-
-//    https://en.cppreference.com/w/cpp/chrono
-
-
     FILE *fp = fopen(fileName, "r");
 
-    char readBuffer[65536];
+    char readBuffer[128000];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
-
     Document d;
     d.ParseStream(is);
     fclose(fp);
 
+// toto enable title
 //    auto val = d["title"].GetString();
 //    cout << "Title: " << val << endl;
-
 
 // todo PERSONS
 //    auto persons = d["entities"]["persons"].GetArray();
@@ -127,80 +128,30 @@ void ReadInData::readJsonFile(const char *fileName, set<string> stopWords, AVLTr
 
     //vector<string> stopWords;
     vector<string> textContent;
-
-    lowerCaseAndRemovePunct(d, textContent, textTree, documentId);
-
-    removeStopWords(stopWords, textContent, textTree);
-
-    //todo - implement stemming
-    stemWords(textContent, textTree);
-///    testPrintOutput(textContent);
-
-    //putting words in avl tree
-    //todo - 3 different avl trees (person, org, & text)
-    for(int i = 0; i < textContent.size(); i++){
-        string key = textContent.at(i);
-        if (key == " ") continue; // stop words are now set to " " so skip
-        set<long> docIds = textTree.searchTreeCall(key);
-        docIds.insert(documentId);
-        textTree.insert(key, docIds);
-    }
-
-//    auto end = std::chrono::steady_clock::now();
-//    std::chrono::duration<double> elapsed_seconds = end-start;
-//    std::cout << "jsonFileParse elapsed time: " << elapsed_seconds.count() << "s\n";
-}
-
-void ReadInData::lowerCaseAndRemovePunct(Document &d, vector<string> &textContent, AVLTree<string, set<long>> &textTree, long documentId) {
-    ///compare vector of stopwords to vector of text & only print text that is not in stopwords vector
-    //get text as a string
     auto text = d["text"].GetString();
     std::istringstream ss(text);
-    string word;
-    while (ss >> word) {//push all text into a vector to compare to stopwords vector
-        string lowerWord;
-        for (int i = 0; i < word.size(); i++) {//todo - check lower casing for correct words being recorded
-            //if(tolower(word.at(i)) >= 'a' && tolower(word.at(i)) <= 'z' || tolower(word.at(i)) >= '0' && tolower(word.at(i)) <= '9'){//lowercases words
-            if (tolower(word.at(i)) >= 'a' && tolower(word.at(i)) <= 'z' || tolower(word.at(i)) >= '0' && tolower(word.at(i)) <= '9') {
-                lowerWord += tolower(word.at(i));
-            } else {//continues if punctuation
-                continue;
-            }
-        }
-        //removes punctuation from string
-        for (int i = 0; i < word.size(); i++) {
-            if (ispunct(word.at(i))) {
-                word = word.erase(i, 1); //erases any punctuation from word
-            }
-        }
-        if (lowerWord != "") {//check for empty in lowerWord
-            textContent.push_back(lowerWord);
-            //textTree.insert(lowerWord, documentId); //inserts lower cased words to tree with given documentId
-            //todo - avl tree instead of textContent vector
-        }
+    string lowerWord;
+    while (ss >> lowerWord) { //push all text into a vector to compare to stopwords vector
+        // tolower & punctuation & capital word removal
+        std::transform(lowerWord.begin(), lowerWord.end(), lowerWord.begin(),
+                       [](unsigned char c) {
+                           c = std::tolower(c);
+                           if (c >= 'a' && c <= 'z' || c >= '0' && c <= '9') {
+                               return c;
+                           } else {
+                               return (unsigned char) ' ';
+                           }
+                       }); // todo put same in Query Parser
 
+
+        if (!stopWords.count(lowerWord)) {
+            Porter2Stemmer::stem(lowerWord);
+            set<long> docIds = textTree.searchTreeCall(lowerWord);
+            docIds.insert(documentId);
+            textTree.insert(lowerWord, docIds);
+//            cout << lowerWord << endl;
+        }
     }
-//    ///print text content to console
-//    for(int i = 0; i < textContent.size(); i++){
-//        cout << "WORD: " << textContent.at(i) << endl;
-//    }
-}
-
-void ReadInData::removeStopWords(set<string> &stopWords, vector<string> &text, AVLTree<string, set<long>> &textTree) {
-
-    //loop through and erase stopwords that are found in text vector
-        for (int j = 0; j < text.size(); j++) {
-            if (stopWords.count(text.at(j))) {
-                text.at(j) = " "; //todo - filter out blank spaces from text on file writing
-
-            }
-        }
-
-//bool result = std::equal(stopWords.begin(), stopWords.end(), text.begin());
-//if(result){
-//    text.erase
-//}
-
 }
 
 void ReadInData::testPrintOutput(vector<string> &text) {
@@ -233,20 +184,13 @@ void ReadInData::testPrintOutput(vector<string> &text) {
 //    }
 }
 
-void ReadInData::stemWords(vector<string>& textContent, AVLTree<string, set<long>> &textTree) {//todo - make word stemming function more generic?
-    for (int i = 0; i < textContent.size(); i++) {
-        Porter2Stemmer::stem(textContent.at(i));
-        //todo - stem avlmap instead of textContent
-    }
-}
-
-void ReadInData::readInStopWords(std::set<std::string> &stopWords){
+void ReadInData::readInStopWords(std::set<std::string> &stopWords) {
     ifstream stopWordsFile("data/stopwords.txt");
     if (!stopWordsFile.is_open()) {
         cout << "Error opening stopWordsFile" << endl;
     }
     char stopWordsBuffer[500];
-    //while (stopWordsFile.getline(stopWordsBuffer, 500)) {
+
     while (!stopWordsFile.eof()) {
         stopWordsFile.getline(stopWordsBuffer, 500);
         string buffer = stopWordsBuffer;
@@ -257,17 +201,12 @@ void ReadInData::readInStopWords(std::set<std::string> &stopWords){
 }
 
 void ReadInData::wordRetrieveViaQuery(vector<std::string> &query, AVLTree<string, set<long>> &tree) {
-    for(int i = 0; i < query.size(); i++){ //todo - put in org tree & text tree
-        //set<long> docIds = personTree.searchTreeCall(query.at(i));
+    for (int i = 0; i < query.size(); i++) { //todo - put in org tree & text tree
         set<long> docId = tree.searchTreeCall(query.at(i));
-        std:cout << query.at(i) << ": ";
-        for (long const& Id : docId)
-        {
-            std::cout  << Id << ' ';
+        std::cout << query.at(i) << ": ";
+        for (long const &Id: docId) {
+            std::cout << Id << ' ';
         }
         cout << std::endl;
-       // cout << "DOCUMENTS THAT INCLUDE QUERY: " <<  personTree.searchTreeCall(query.at(i)) << std::endl;
-       // cout << "DOCUMENTS THAT INCLUDE QUERY: " <<  personTree.searchTreeCall(query.at(i)) << std::endl;
-
     }
 }

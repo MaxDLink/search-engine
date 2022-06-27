@@ -40,7 +40,7 @@ private:
                       AVLTree<string, set<long>> &orgTree,
                       AVLTree<string, set<long>> &textTree, long &documentId);
 
-    void lowerCaseAndRemovePunct(Document &d, vector<string> &textContent, AVLTree<string, set<long>> &textTree, long documentId);
+    void lowerCaseAndRemovePunct(Document &d, vector<string> &textContent, AVLTree<string, set<long>> &textTree, long documentId, set<string> &stopWords);
 
     void removeStopWords(std::set<string> &stopWords, vector<string> &text, AVLTree<string, set<long>> &textTree);
 

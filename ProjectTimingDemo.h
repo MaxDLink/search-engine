@@ -18,8 +18,6 @@ private:
 
 public:
     ProjectTimingDemo(std::string query, std::string absolutePathToDataFilesDir);
-
-
 };
 
 
