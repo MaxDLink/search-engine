@@ -169,7 +169,8 @@ void AVLTree<K, T>::insert(AVLNode *&curr, K key, T val) {
                 rotateWithLeftChild(curr);
             } else { ; // case 2 double rotate with left child
                 //todo - case 2 rotation
-                ///doubleWithLeftChild(curr);
+                doubleWithLeftChild(curr);
+                //doubleWithRightChild(curr);
                 //curr = doubleWithLeftChild;
             }
         }
@@ -178,10 +179,10 @@ void AVLTree<K, T>::insert(AVLNode *&curr, K key, T val) {
         //todo - correct height
         curr->height = max(getHeight(curr->left), getHeight(curr->right)) + 1;
         if (getHeight(curr->right) - getHeight(curr->left) == 2) {
-            if (curr->right->key < key)
+            if (curr->right->key < key)//todo - change back to if tree problems originally: curr->right->key < key
                 rotateWithRightChild(curr);
             else
-               ; ///doubleWithRightChild(curr);
+                doubleWithRightChild(curr);
         }
     } else { // key is already in the tree
         // update the value to the new passed in val V
@@ -198,7 +199,7 @@ void AVLTree<K, T>::insert(AVLNode *&curr, K key, T val) {
     }
 }
 
-template<typename K, typename T>
+template<typename K, typename T> //todo - rename to leftRotation?
 void AVLTree<K, T>::rotateWithRightChild(AVLNode *&k1) {//right-right imbalance
     AVLNode *k2 = k1->right; //k2 like temp variable in a swap function
     k1->right = k2->left; //k1's right pointer point to k2's left child
@@ -210,18 +211,26 @@ void AVLTree<K, T>::rotateWithRightChild(AVLNode *&k1) {//right-right imbalance
     k1 = k2; //move k1 into the place of alpha
 }
 
-template<typename K, typename T> //todo - check left right imbalance
+template<typename K, typename T> //todo - fixme
 void AVLTree<K, T>::doubleWithRightChild(AVLNode *&k1) { //L-R imbalance
-    rotateWithLeftChild(k1->left); //converts case 3 into case 4
-    rotateWithRightChild(k1); //do case 4 rotation
+    rotateWithLeftChild(k1->right);
+    rotateWithRightChild(k1);
+    //    rotateWithLeftChild(k1);
+//    rotateWithRightChild(k1->right); ///fixed
+    //rotateWithLeftChild(k1);
+//    rotateWithLeftChild(k1); //converts case 3 into case 4
+//    rotateWithRightChild(k1); //do case 4 rotation
+//
+//    rotateWithRightChild(k3->left);
+//    rotateWithLeftChild(k3);
 }
 
-template<typename K, typename T>
-void AVLTree<K, T>::rotateWithLeftChild(AVLNode *&k2) {//left-left imbalance todo - finish left rotation
-//    //magic part 1 //todo - finish rotateWithLeftChild
+template<typename K, typename T> //todo - rename to rightRotation?
+void AVLTree<K, T>::rotateWithLeftChild(AVLNode *&k2) {//left-left imbalance
+//    //magic part 1
     AVLNode* k1 = k2->left;
-    k2 ->left = k1->right; ///todo - height should be increased by 1?
-    k1->right = k2; //todo - height should change here (k2 height shoould change to zero)
+    k2 ->left = k1->right;
+    k1->right = k2;
     k2->height = 0;
     k1->height = max(getHeight(k1->left), getHeight(k1->right)) + 1; //+1 because one level deeper than lowest children
     k2->height = max(getHeight(k2->left), getHeight(k2->right)) + 1;
@@ -230,10 +239,12 @@ void AVLTree<K, T>::rotateWithLeftChild(AVLNode *&k2) {//left-left imbalance tod
 
 }
 
-template<typename K, typename T> //todo - check right left imbalance - correct function order so runs
-void AVLTree<K, T>::doubleWithLeftChild(AVLNode *&k3) {
-    rotateWithLeftChild(k3->left); //converts case 3 into case 4 ///test 2
-    rotateWithRightChild(k3); //do case 4 rotation ///test 1
+template<typename K, typename T>
+void AVLTree<K, T>::doubleWithLeftChild(AVLNode *&k3) {///done
+//    rotateWithLeftChild(k3->right); //converts case 3 into case 4 ///test 2
+//    rotateWithRightChild(k3); //do case 4 rotation ///test 1
+    rotateWithRightChild(k3->left);
+    rotateWithLeftChild(k3);
 }
 
 template<typename K, typename T>

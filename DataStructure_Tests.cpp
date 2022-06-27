@@ -59,24 +59,22 @@ TEST_CASE("Testing AVLTree class"){
     AVLTree<int, int> intTree;
     SECTION("testing insert with AVLTree"){
 
-    }SECTION("Testing AVL Tree balancing R-R case"){///done - height is correctly calculated
+    }SECTION("Testing AVL Tree balancing Left rotation"){///done - height is correctly calculated
 //        Tree.insert("a", 0);
 //        Tree.insert("b", 1);
 //        Tree.insert("c", 2);
-    }SECTION("Testing AVL Tree balancing L-L case"){///done - height is correctly calculated
+    }SECTION("Testing AVL Tree balancing Right rotation"){///done - height is correctly calculated
 //        Tree.insert("c", 0);
 //        Tree.insert("b", 1);
 //        Tree.insert("a", 2);
-    }SECTION("Testing AVL Tree balancing L-R case"){
-        intTree.insert(30, 0);
-        intTree.insert(20, 1);
-        intTree.insert(25, 2);
-    }SECTION("Testing AVL Tree balancing R-L case"){
+    }SECTION("Testing AVL Tree balancing L-R case"){///done
+//        intTree.insert(30, 0);
+//        intTree.insert(20, 1);
+//        intTree.insert(25, 2);
+    }SECTION("Testing AVL Tree balancing R-L case"){///done
 //        Tree.insert("a", 0);
-//        Tree.insert("b", 1);
-//        Tree.insert("c", 2);
-//        Tree.insert("b", 1);
-//        Tree.insert("a", 2);
+//        Tree.insert("c", 1);
+//        Tree.insert("b", 2);
     }
 }
 //
