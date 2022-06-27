@@ -44,13 +44,13 @@ std::cout << "FileReadStream: " << elapsed_seconds.count() << "s\n";
  ./cmake-build-release/22su_search_engine year   408.10s user 0.97s system 99% cpu 6:50.44 total
 
  */
-ProjectTimingDemo::ProjectTimingDemo(string query, string absolutePathToDataFilesDir) {
+ProjectTimingDemo::ProjectTimingDemo(string query, string absolutePathToDataFilesDir, map<int, std::string> &documentIdAndName) {
     std::set<std::string> stopWords;
-
     ReadInData data;
     data.readInStopWords(stopWords);
     // todo tune read speed char readBuffer[65536];
-    data.indexAllFiles(absolutePathToDataFilesDir.c_str(), stopWords, emptyTree, emptyTree, textTree);
+    data.indexAllFiles(absolutePathToDataFilesDir.c_str(), stopWords, emptyTree, emptyTree, textTree,
+                       documentIdAndName);
 
 
     QueryParser qp(query, stopWords); // todo implement stem etc.
@@ -58,6 +58,6 @@ ProjectTimingDemo::ProjectTimingDemo(string query, string absolutePathToDataFile
     if (wordVector.empty()) {
         cout << "query was a stop word" << endl;
     } else {
-        data.wordRetrieveViaQuery(wordVector, textTree);
+        data.wordRetrieveViaQuery(wordVector, textTree, documentIdAndName);
     }
 }

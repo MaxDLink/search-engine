@@ -41,8 +41,9 @@ int main(int argc,
     string queryWord = argv[1];
 //    vector<string> queryWord;
 //    queryWord.emplace_back(argv[1]);
+    map<int, std::string> documentIdAndName;
     string absolutePathToDataFilesDir = argv[2];
-    ProjectTimingDemo ptd(queryWord, absolutePathToDataFilesDir);
+    ProjectTimingDemo ptd(queryWord, absolutePathToDataFilesDir, documentIdAndName);
     return 0;
 
 
@@ -55,15 +56,15 @@ int main(int argc,
     //data object
     ReadInData data;
     data.readInStopWords(stopWords);
-    data.indexAllFiles("../../sample_data_sets/size-10", stopWords, personTree, orgTree, textTree);
+    data.indexAllFiles("../../sample_data_sets/size-10", stopWords, personTree, orgTree, textTree, documentIdAndName);
 //    data.indexAllFiles("../../fulldataset/", stopWords);
     //calls userInterface
     Interface userInterface;
     query = userInterface.userInterface(stopWords);
     if (query.at(0) == " ") { // todo handle empty query strings after processing
         cout << "query was a stop word" << endl;
-    } else {
-        data.wordRetrieveViaQuery(query, textTree);
+    } else {//todo  -take documentID&Name out here if errors
+        data.wordRetrieveViaQuery(query, textTree, documentIdAndName);
     }
 
 //reads in data

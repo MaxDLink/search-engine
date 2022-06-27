@@ -47,13 +47,15 @@ private:
     void testPrintOutput(vector<string> &text);
 
 public:
-    void indexAllFiles(const char *path, std::set<std::string> &stopWords, AVLTree<string, set<long>> &personTree, AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree);
+    void indexAllFiles(const char *path, set<std::string> &stopWords, AVLTree<string, set<long>> &personTree,
+                       AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree,
+                       map<int, string> &map1);
 
     void stemWords(vector<string> &textContent, AVLTree<string, set<long>> &textTree);
 
     void readInStopWords(std::set<std::string> &stopWords);
 
-    void wordRetrieveViaQuery(std::vector<std::string> &query, AVLTree<string, set<long>> &tree);
+    void wordRetrieveViaQuery(std::vector<std::string> &query, AVLTree<string, set<long>> &tree, map<int, std::string> &documentIdAndName);
 
     };
 

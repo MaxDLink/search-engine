@@ -8,16 +8,18 @@
 #include <string>
 #include <set>
 #include "AVLTree.h"
+#include <map>
 using namespace std;
 
 class ProjectTimingDemo {
 
 private:
+    //ProjectTimingDemo(string query, string absolutePathToDataFilesDir, map<int, std::string> &documentIdAndName);
+
     AVLTree<std::string, std::set<long>> textTree;
     AVLTree<std::string, std::set<long>> emptyTree;
-
 public:
-    ProjectTimingDemo(std::string query, std::string absolutePathToDataFilesDir);
+    ProjectTimingDemo(std::string query, std::string absolutePathToDataFilesDir, map<int, std::string> &documentIdAndName);
 };
 
 

@@ -19,8 +19,9 @@
  */
 
 void
-ReadInData::indexAllFiles(const char *path, std::set<std::string> &stopWords, AVLTree<string, set<long>> &personTree,
-                          AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree) {
+ReadInData::indexAllFiles(const char *path, set<std::string> &stopWords, AVLTree<string, set<long>> &personTree,
+                          AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree,
+                          map<int, string> &documentIDAndName) {
 //    auto start = std::chrono::steady_clock::now();
     auto start = std::chrono::steady_clock::now();
 
@@ -47,15 +48,16 @@ ReadInData::indexAllFiles(const char *path, std::set<std::string> &stopWords, AV
 //
 //    stopWordsFile.close();
     //loop over all the entries & store document ID & .json file link in map
-    long documentId = 0;
-    map<int, std::string> documentIdAndName;
+    long documentId = 0; //todo - uncomment documentID&Name if errors
+    //map<int, std::string> documentIdAndName;
     for (const auto &entry: it) {
 //        cout << "--- " << setw(60) << left << entry.path().c_str() << " ---" << endl;
         if (entry.is_regular_file() && entry.path().extension().string() == ".json") {
             string jsonLink = entry.path().c_str();
 //            cout << ".json file: " << jsonLink << endl;
-            documentIdAndName.emplace(documentId, jsonLink); //put documentID & file.json into map
             documentId++;
+            documentIDAndName.emplace(documentId, jsonLink); //put documentID & file.json into map
+            //documentId++; //todo - enable documentId++ again here?
             readJsonFile(entry.path().c_str(), stopWords, personTree, orgTree, textTree,
                          documentId); //call to readJsonFile function
 
@@ -200,13 +202,21 @@ void ReadInData::readInStopWords(std::set<std::string> &stopWords) {
     stopWordsFile.close();
 }
 
-void ReadInData::wordRetrieveViaQuery(vector<std::string> &query, AVLTree<string, set<long>> &tree) {
+void ReadInData::wordRetrieveViaQuery(vector<std::string> &query, AVLTree<string, set<long>> &tree, map<int, std::string> &documentIdAndName) {
     for (int i = 0; i < query.size(); i++) { //todo - put in org tree & text tree
         set<long> docId = tree.searchTreeCall(query.at(i));
-        std::cout << query.at(i) << ": ";
-        for (long const &Id: docId) {
-            std::cout << Id << ' ';
-        }
+        //std::cout << query.at(i) << ": ";
+        std::cout << "Query: " << query.at(i);
+        //todo - enable id print again here?
+//        for (long const &Id: docId) {
+//            std::cout << Id << ' ';
+//        }
         cout << std::endl;
+
+        for (const auto &d : documentIdAndName) {
+            std::cout << "Document: " << d.second << '\n';
+        }
+
+        //cout << std::endl;
     }
 }
