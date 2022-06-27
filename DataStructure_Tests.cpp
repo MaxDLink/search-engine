@@ -12,6 +12,8 @@
  */
 #include "catch.hpp"
 #include <set>
+#include "AVLTree.h"
+#include "stemmer.h"
 using namespace std;
 
 //TEST_CASE("Testing Templated AVL tree") {
@@ -53,26 +55,35 @@ using namespace std;
 //}
 
 TEST_CASE("Testing AVLTree class"){
-//    AVLTree <int, std::string> mapTree;
-
+    AVLTree <std::string, int> Tree;
+    AVLTree<int, int> intTree;
     SECTION("testing insert with AVLTree"){
-//        int docId = 100;
-//        std::string word = "tree";
-//        //int val = 1;
-//        //mapTree.insert(docId, word); //todo - fix string insertion (getHeight issue?)
-//        mapTree.insert(docId, word);
-//        mapTree.insert(101, word);
-//        std::string found = mapTree.searchTreeCall(docId);
-//        REQUIRE(found == "tree"); //retrieve val via ID
-////        mapTree.insert(5, 8);
 
+    }SECTION("Testing AVL Tree balancing R-R case"){///done - height is correctly calculated
+//        Tree.insert("a", 0);
+//        Tree.insert("b", 1);
+//        Tree.insert("c", 2);
+    }SECTION("Testing AVL Tree balancing L-L case"){///done - height is correctly calculated
+//        Tree.insert("c", 0);
+//        Tree.insert("b", 1);
+//        Tree.insert("a", 2);
+    }SECTION("Testing AVL Tree balancing L-R case"){
+//        intTree.insert(30, 0);
+//        intTree.insert(20, 1);
+//        intTree.insert(25, 2);
+    }SECTION("Testing AVL Tree balancing R-L case"){
+//        Tree.insert("a", 0);
+//        Tree.insert("b", 1);
+//        Tree.insert("c", 2);
+//        Tree.insert("b", 1);
+//        Tree.insert("a", 2);
     }
 }
-
+//
 //TEST_CASE("Testing stem") {
 //    SECTION("Testing stemming of word") {
 //        std::string wordToStem = "Running";
-//        //REQUIRE(Porter2Stemmer::stem(wordToStem) == "Run");
-//        //Porter2Stemmer::stem(wordToStem);
+//        std::string stemmedWord = Porter2Stemmer::stem(wordToStem);
+//        REQUIRE(Porter2Stemmer::stem(wordToStem) == "Run");
 //    }
 //}

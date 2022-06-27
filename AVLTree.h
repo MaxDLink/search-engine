@@ -159,18 +159,24 @@ void AVLTree<K, T>::insert(AVLNode *&curr, K key, T val) {
         curr->val = val;
     } else if (key < curr->key) {//doing both in terms of less than operator
         insert(curr->left, key, val);
+        //todo - height correct
+        curr->height = max(getHeight(curr->left), getHeight(curr->right)) + 1;
         // balancing stuff here - stack unwinding here after new node was inserted
         // inserting from the left so subtract left side from right side
         if (getHeight(curr->left) - getHeight(curr->right) == 2) {
             //figure out if case 1 or case 2 with > or <
             if (key < curr->left->key) { ; //case 1 rotate with left child
+                rotateWithLeftChild(curr);
             } else { ; // case 2 double rotate with left child
                 //todo - case 2 rotation
                 doubleWithLeftChild(curr);
+                //curr = doubleWithLeftChild;
             }
         }
     } else if (curr->key < key) {
         insert(curr->right, key, val);
+        //todo - correct height
+        curr->height = max(getHeight(curr->left), getHeight(curr->right)) + 1;
         if (getHeight(curr->right) - getHeight(curr->left) == 2) {
             if (curr->right->key < key)
                 rotateWithRightChild(curr);
@@ -193,30 +199,41 @@ void AVLTree<K, T>::insert(AVLNode *&curr, K key, T val) {
 }
 
 template<typename K, typename T>
-void AVLTree<K, T>::rotateWithRightChild(AVLNode *&k1) {//pointers by reference into the tree
+void AVLTree<K, T>::rotateWithRightChild(AVLNode *&k1) {//right-right imbalance
     AVLNode *k2 = k1->right; //k2 like temp variable in a swap function
     k1->right = k2->left; //k1's right pointer point to k2's left child
     k2->left = k1;
+    //getHeight compares k1->left height & k2->right height & returns greatest height & adds one to account for being one level deeper than lowest child
+    //know that max height can only be one level deeper than lowest child in a balanced tree so add one to max height
     k1->height = max(getHeight(k1->left), getHeight(k1->right)) + 1; //+1 because one level deeper than lowest children
-    k2->height = max(getHeight(k2->right), k1->height) + 1;
+    k2->height = max(getHeight(k2->left), getHeight(k1->right)) + 1;
     k1 = k2; //move k1 into the place of alpha
 }
 
-template<typename K, typename T>
-void AVLTree<K, T>::doubleWithRightChild(AVLNode *&k1) {
-    rotateWithLeftChild(k1->right); //converts case 3 into case 4
+template<typename K, typename T> //todo - check left right imbalance
+void AVLTree<K, T>::doubleWithRightChild(AVLNode *&k1) { //L-R imbalance
+    rotateWithLeftChild(k1->left); //converts case 3 into case 4
     rotateWithRightChild(k1); //do case 4 rotation
 }
 
 template<typename K, typename T>
-void AVLTree<K, T>::rotateWithLeftChild(AVLNode *&k2) {
-    //magic part 1 //todo - finish rotateWithLeftChild
+void AVLTree<K, T>::rotateWithLeftChild(AVLNode *&k2) {//left-left imbalance todo - finish left rotation
+//    //magic part 1 //todo - finish rotateWithLeftChild
+    AVLNode* k1 = k2->left;
+    k2 ->left = k1->right; ///todo - height should be increased by 1?
+    k1->right = k2; //todo - height should change here (k2 height shoould change to zero)
+    k2->height = 0;
+    k1->height = max(getHeight(k1->left), getHeight(k1->right)) + 1; //+1 because one level deeper than lowest children
+    k2->height = max(getHeight(k2->left), getHeight(k2->right)) + 1;
+    k2 = k1;
+
 
 }
 
-template<typename K, typename T>
+template<typename K, typename T> //todo - check right left imbalance - correct function order so runs
 void AVLTree<K, T>::doubleWithLeftChild(AVLNode *&k3) {
-    //magic part 2 //todo - finish doubleWithLeftChild
+    rotateWithLeftChild(k3->left); //converts case 3 into case 4 ///test 2
+    rotateWithRightChild(k3); //do case 4 rotation ///test 1
 }
 
 template<typename K, typename T>
@@ -227,11 +244,9 @@ int AVLTree<K, T>::max(int a, int b) {
 template<typename K, typename T>
 T AVLTree<K, T>::searchTree(AVLTree::AVLNode *&root, K &key) {
     if (root == nullptr) {
-        //return false;
         T obj;
-        return obj; //returns empty object of type T to work with any null object //todo - return 0 ok here? or should return different value? throw exception when val not found to keep generic?
+        return obj; //returns empty object of type T
     } else if (root->key == key) {
-        //return true;
         return root->val;
     } else if (root->key > key) {
         return searchTree(root->left, key);
