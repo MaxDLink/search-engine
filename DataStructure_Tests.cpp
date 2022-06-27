@@ -68,9 +68,9 @@ TEST_CASE("Testing AVLTree class"){
 //        Tree.insert("b", 1);
 //        Tree.insert("a", 2);
     }SECTION("Testing AVL Tree balancing L-R case"){
-//        intTree.insert(30, 0);
-//        intTree.insert(20, 1);
-//        intTree.insert(25, 2);
+        intTree.insert(30, 0);
+        intTree.insert(20, 1);
+        intTree.insert(25, 2);
     }SECTION("Testing AVL Tree balancing R-L case"){
 //        Tree.insert("a", 0);
 //        Tree.insert("b", 1);

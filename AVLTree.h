@@ -169,7 +169,7 @@ void AVLTree<K, T>::insert(AVLNode *&curr, K key, T val) {
                 rotateWithLeftChild(curr);
             } else { ; // case 2 double rotate with left child
                 //todo - case 2 rotation
-                doubleWithLeftChild(curr);
+                ///doubleWithLeftChild(curr);
                 //curr = doubleWithLeftChild;
             }
         }
@@ -181,7 +181,7 @@ void AVLTree<K, T>::insert(AVLNode *&curr, K key, T val) {
             if (curr->right->key < key)
                 rotateWithRightChild(curr);
             else
-                doubleWithRightChild(curr);
+               ; ///doubleWithRightChild(curr);
         }
     } else { // key is already in the tree
         // update the value to the new passed in val V
