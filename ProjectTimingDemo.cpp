@@ -46,20 +46,30 @@ std::cout << "FileReadStream: " << elapsed_seconds.count() << "s\n";
  */
 ProjectTimingDemo:: ProjectTimingDemo(string query, string absolutePathToDataFilesDir) {
     std::set<std::string> stopWords;
-    map<long, string> documentIdAndName;
-    map<long, string> documentIdAndTitle;
+    map<long, string> documentIdAndName; // todo into index
+    map<long, string> documentIdAndTitle; // todo into index
 
-    ReadInData data;
+    // todo rename Index
+    ReadInData data; // todo copy as ReadStopWords
     data.readInStopWords(stopWords);
+
     data.indexAllFiles(absolutePathToDataFilesDir.c_str(), stopWords, personTree, orgTree, textTree,
                        documentIdAndName, documentIdAndTitle);
 
+    // user input UI
 
     QueryParser qp(query, stopWords); // todo implement stem etc.
+
     std::vector<std::string> wordVector = qp.termVector();
+//    std::vector<std::string> wordVector = qp.wordVector();
+//    std::vector<std::string> wordVector = qp.personVector();
+//    std::vector<std::string> wordVector = qp.orgVector();
+//    std::vector<std::string> wordVector = qp.notWordVector();
+
     if (wordVector.empty()) {
         cout << "query was a stop word" << endl;
     } else {
+//        index.search(qp);
         data.wordRetrieveViaQuery(wordVector, textTree, documentIdAndName, documentIdAndTitle);
     }
 }

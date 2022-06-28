@@ -13,6 +13,19 @@ QueryParser::QueryParser(std::string query, std::__1::set<std::string> stopWords
     //lowercase & remove capitals
     std::string word = query;
     std::string lowerWord;
+
+// lower case, no punct
+// only for terms (not person and org)
+//    std::transform(lowerWord.begin(), lowerWord.end(), lowerWord.begin(),
+//                   [](unsigned char c) {
+//                       c = std::tolower(c);
+//                       if (c >= 'a' && c <= 'z' || c >= '0' && c <= '9') {
+//                           return c;
+//                       } else {
+//                           return (unsigned char) ' ';
+//                       }
+//                   });
+
     for (int i = 0; i < word.size(); i++) {//todo - check lower casing for correct words being recorded
         //if(tolower(word.at(i)) >= 'a' && tolower(word.at(i)) <= 'z' || tolower(word.at(i)) >= '0' && tolower(word.at(i)) <= '9'){//lowercases words
         if (tolower(word.at(i)) >= 'a' && tolower(word.at(i)) <= 'z' ||
