@@ -143,30 +143,42 @@ void Index::load() { // todo (copy assignment operator)
 void Index::search(string &query, set<std::string> &stopWords) {
     QueryParser qp(query, stopWords);
 
-    std::vector<std::string> wordVector = qp.termVector();
-//    std::vector<std::string> wordVector = qp.wordVector();
-//    std::vector<std::string> wordVector = qp.personVector();
-//    std::vector<std::string> wordVector = qp.orgVector();
-//    std::vector<std::string> wordVector = qp.notWordVector();
+    vector<string> words = qp.getWordList();
+    vector<string> people = qp.getPersonList();
+    vector<string> orgs = qp.getOrgList();
+    vector<string> cannot = qp.getNotWordList();
 
-//    if (wordVector.empty()) {
-//        cout << "query was a stop word" << endl;
-//    } else {
-//        // todo use qp        index.search(qp);
-//    }
-    vector<string> words = qp.termVector();
-    for (int i = 0; i < words.size(); i++) { //todo - put in org tree & person tree
-        set<long> docId = textTree.searchTreeCall(words.at(i));
-        //std::cout << words.at(i) << ": ";
-        std::cout << "Query: " << words.at(i) << " ";
-        for (long const &Id: docId) {
-            std::cout << Id << ' ';
-        }
-        cout << std::endl;
+    set<long> wordDocIds = getDocIds(words, qp.isWordListAnd());
+    for (long const &Id: wordDocIds) { std::cout << Id << ' '; } cout << std::endl;
+    for (long const &Id: wordDocIds) { std::cout << documentIDAndTitle[Id] << ", " << documentIDAndName[Id] << endl; }
+//    set<long> peopleDocIds = getDocIds(people, qp.isPersonListAnd());
+//    set<long> orgDocIds = getDocIds(orgs, qp.isOrgListAnd());
+//    set<long> notDocIds = getDocIds(cannot, qp.isNotWordListAnd());
+}
 
-        for (long const &Id: docId) {
-            std::cout << documentIDAndTitle[Id] << ", " << documentIDAndName[Id] << endl;
+set<long> Index::getDocIds(vector<string> words, bool isAnd) {
+    set<long> result;
+    vector<long> intersection;
+
+    if (words.size() >0 ) {
+        result = textTree.searchTreeCall(words.at(0));
+    }
+
+    for (int i = 1; i < words.size(); i++) {
+        set<long> wordDocIds = textTree.searchTreeCall(words.at(i));
+        if (isAnd) {
+            std::set_intersection(result.begin(), result.end(),
+                                  wordDocIds.begin(), wordDocIds.end(),
+                                  std::back_inserter(intersection));
+            // need to save for next call through
+            result.clear();
+            for (int k = 0; k < intersection.size(); k++) {
+                result.insert(intersection.at(k));
+            }
+        } else {
+            result.merge(wordDocIds); // or
         }
     }
+    return result;
 }
 

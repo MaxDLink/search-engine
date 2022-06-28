@@ -31,14 +31,15 @@ using namespace std;
 
 class Index {
 private:
-    void readJsonFile(string fileName, set<string> stopWords, long &documentId);
-
     AVLTree<string, set<long>> personTree;
     AVLTree<string, set<long>> orgTree;
     AVLTree<string, set<long>> textTree;
 
     map<long, string> documentIDAndName;
     map<long, string> documentIDAndTitle;
+
+    void readJsonFile(string fileName, set<string> stopWords, long &documentId);
+    set<long> getDocIds(vector<string> words, bool isAnd);
 
 public:
     void indexAllFiles(string path, set<string> &stopWords);

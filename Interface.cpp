@@ -14,6 +14,9 @@
 using namespace std;
 
 void Interface::userInterface(string &path, set<string> &stopWords, Index &index) {
+    string notUsed = "1"; index.search(notUsed, stopWords); return; // todo bypass interface
+
+
     string userInput = "1";
     while (userInput != "0") {
         cout << "1. Clear" << endl << "2. Save" << endl
