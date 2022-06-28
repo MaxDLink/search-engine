@@ -41,30 +41,29 @@ int main(int argc,
 
     string queryWord = argv[1];
     string absolutePathToDataFilesDir = argv[2];
-    map<long, string> documentIdAndName;
-    ProjectTimingDemo ptd(queryWord, absolutePathToDataFilesDir, documentIdAndName);
+    ProjectTimingDemo ptd(queryWord, absolutePathToDataFilesDir);
     return 0;
 
-
-    std::vector<std::string> query;
-    std::set<std::string> stopWords;
-    //trees
-    AVLTree<string, set<long>> personTree;
-    AVLTree<string, set<long>> orgTree;
-    AVLTree<string, set<long>> textTree;
-    //data object
-    ReadInData data;
-    data.readInStopWords(stopWords);
-    data.indexAllFiles("../../sample_data_sets/size-10", stopWords, personTree, orgTree, textTree, documentIdAndName);
-//    data.indexAllFiles("../../fulldataset/", stopWords);
-    //calls userInterface
-    Interface userInterface;
-    query = userInterface.userInterface(stopWords);
-    if (query.at(0) == " ") { // todo handle empty query strings after processing
-        cout << "query was a stop word" << endl;
-    } else {//todo  -take documentID&Name out here if errors
-        data.wordRetrieveViaQuery(query, textTree, documentIdAndName);
-    }
+//
+//    std::vector<std::string> query;
+//    std::set<std::string> stopWords;
+//    //trees
+//    AVLTree<string, set<long>> personTree;
+//    AVLTree<string, set<long>> orgTree;
+//    AVLTree<string, set<long>> textTree;
+//    //data object
+//    ReadInData data;
+//    data.readInStopWords(stopWords);
+//    data.indexAllFiles("../../sample_data_sets/size-10", stopWords, personTree, orgTree, textTree, documentIdAndName);
+////    data.indexAllFiles("../../fulldataset/", stopWords);
+//    //calls userInterface
+//    Interface userInterface;
+//    query = userInterface.userInterface(stopWords);
+//    if (query.at(0) == " ") { // todo handle empty query strings after processing
+//        cout << "query was a stop word" << endl;
+//    } else {//todo  -take documentID&Name out here if errors
+//        data.wordRetrieveViaQuery(query, textTree, documentIdAndName);
+//    }
 
 //reads in data
 

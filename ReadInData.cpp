@@ -22,63 +22,27 @@ using namespace std;
 
 void
 ReadInData::indexAllFiles(const char *path, set<std::string> &stopWords, AVLTree<string, set<long>> &personTree,
-                               AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree,
-                               map<long, string> &documentIDAndName) {
-//    auto start = std::chrono::steady_clock::now();
+                          AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree,
+                          map<long, string> &documentIDAndName, map<long, string> &documentIDAndTitle) {
+
     auto start = std::chrono::steady_clock::now();
 
     //recursive_director_iterator used to "access" folder at parameter -path-
     //we are using the recursive iterator so it will go into subfolders.
     auto it = std::filesystem::recursive_directory_iterator(path);
-    //make stopwords vector
-    //vector<string> stopWords;
-    //std::set<std::string> stopWords;
-    //creation of AVLTrees to hold persons, orgs, & text
 
-    // readInStopWords(stopWords);
-//    ifstream stopWordsFile("own_file_data_sample/stopwords.txt");
-//    if (!stopWordsFile.is_open()) {
-//        cout << "Error opening stopWordsFile" << endl;
-//    }
-//    char stopWordsBuffer[500];
-//    //while (stopWordsFile.getline(stopWordsBuffer, 500)) {
-//    while (!stopWordsFile.eof()) {
-//        stopWordsFile.getline(stopWordsBuffer, 500);
-//        string buffer = stopWordsBuffer;
-//        stopWords.insert(buffer); //fills stopWords vector with the list of stopwords from the stopWords.txt file
-//    }
-//
-//    stopWordsFile.close();
     //loop over all the entries & store document ID & .json file link in map
-    long documentId = 0; //todo - uncomment documentID&Name if errors
-    //map<int, std::string> documentIdAndName;
+    long documentId = 0;
     for (const auto &entry: it) {
-//        cout << "--- " << setw(60) << left << entry.path().c_str() << " ---" << endl;
         if (entry.is_regular_file() && entry.path().extension().string() == ".json") {
             string jsonLink = entry.path();
-//            cout << ".json file: " << jsonLink << endl;
             documentId++;
             documentIDAndName.insert(pair<int, string>(documentId, jsonLink));
-            //documentId++; //todo - enable documentId++ again here?
             readJsonFile(entry.path().c_str(), stopWords, personTree, orgTree, textTree,
-                         documentId); //call to readJsonFile function
+                         documentId, documentIDAndTitle); //call to readJsonFile function
 
         }
     }
-
-//    todo chrono
-//    auto end = std::chrono::steady_clock::now();
-//    std::chrono::duration<double> elapsed_seconds = end-start;
-//    std::cout << "Total parsing elapsed time: " << elapsed_seconds.count() << "s\n";
-
-//    cout << "PERSON TREE" << endl;
-//    personTree.print();
-//    cout << endl;
-//    cout << "ORG TREE: " << endl;
-//    //orgTree.print();
-//    cout << endl;
-//    cout << "TEXT TREE: " << endl;
-    //textTree.print();
 
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
@@ -91,8 +55,9 @@ ReadInData::indexAllFiles(const char *path, set<std::string> &stopWords, AVLTree
  * @param fileName filename with relative or absolute path included.
  */
 void ReadInData::readJsonFile(const char *fileName, set<string> stopWords, AVLTree<string, set<long>> &personTree,
-                              AVLTree<string, set<long>> &orgTree,
-                              AVLTree<string, set<long>> &textTree, long &documentId) {
+                              AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree,
+                              long &documentId,
+                              map<long, string> &documentIDAndTitle) {
     FILE *fp = fopen(fileName, "r");
 
     char readBuffer[128000];
@@ -101,34 +66,37 @@ void ReadInData::readJsonFile(const char *fileName, set<string> stopWords, AVLTr
     d.ParseStream(is);
     fclose(fp);
 
-// toto enable title
-//    auto val = d["title"].GetString();
-//    cout << "Title: " << val << endl;
+    // TITLE
+    auto title = d["title"].GetString();
+    documentIDAndTitle.insert(pair(documentId, title));
 
-// todo PERSONS
-//    auto persons = d["entities"]["persons"].GetArray();
-////    cout << "  Person Entities:" << endl;
-//    for (auto &p: persons) {
-////        cout << "    > " << setw(30) << left << p["name"].GetString()
-////             << setw(10) << left << p["sentiment"].GetString() << endl;
-//        string key = p["name"].GetString();
-//        set<long> docIds = personTree.searchTreeCall(key);
-//        docIds.insert(documentId);
-//        personTree.insert(key, docIds); // no operation noop when same; inserts if new    //insert person names into person tree
-//    }
+    // PERSONS
+    auto persons = d["entities"]["persons"].GetArray();
+    for (auto &p: persons) {
+        string key = p["name"].GetString();
+        std::transform(key.begin(), key.end(), key.begin(),
+                       [](unsigned char c) {
+                           return std::tolower(c);
+                       });
+        set<long> docIds = personTree.searchTreeCall(key);
+        docIds.insert(documentId);
+        personTree.insert(key,
+                          docIds); // no operation noop when same; inserts if new    //insert person names into person tree
+    }
 
-    // TODO enable orgs
-//    auto orgs = d["entities"]["organizations"].GetArray();
-//    cout << "Organization Entities:" << endl;
-//    for (auto &org: orgs) {
-//        cout << "    > " << setw(30) << left << org["name"].GetString()
-//             << setw(10) << left << org["sentiment"].GetString() << endl;
-//        string key = p["name"].GetString();
-//        set<long> docIds = personTree.searchTreeCall(key);
-//        docIds.insert(documentId);
-//        personTree.insert(key, docIds);
-//        orgTree.insert(org["name"].GetString(), documentId); //insert org names into org tree
-//    }
+    // ORGS
+    auto orgs = d["entities"]["organizations"].GetArray();
+    for (auto &o: orgs) {
+        string key = o["name"].GetString();
+        std::transform(key.begin(), key.end(), key.begin(),
+                       [](unsigned char c) {
+                           return std::tolower(c);
+                       });
+        set<long> docIds = orgTree.searchTreeCall(key);
+        docIds.insert(documentId);
+        orgTree.insert(key,
+                       docIds); // no operation noop when same; inserts if new    //insert person names into person tree
+    }
 
     //vector<string> stopWords;
     vector<string> textContent;
@@ -150,43 +118,11 @@ void ReadInData::readJsonFile(const char *fileName, set<string> stopWords, AVLTr
 
         if (!stopWords.count(lowerWord)) {
             Porter2Stemmer::stem(lowerWord);
-            //Porter2Stemmer::trim(lowerWord); //todo - take stemming away? enable after speed check?
             set<long> docIds = textTree.searchTreeCall(lowerWord);
             docIds.insert(documentId);
             textTree.insert(lowerWord, docIds);
-//            cout << lowerWord << endl;
         }
     }
-}
-
-void ReadInData::testPrintOutput(vector<string> &text) {
-    std::ofstream outputBeforeErase("data/outputBeforeErase.txt");
-    if (!outputBeforeErase.is_open()) {
-        cout << "Output file before erase failed to open" << endl;
-    }
-    //writes to output file
-    for (auto &i: text) {
-        outputBeforeErase << i << endl;
-    }
-
-    outputBeforeErase.close();
-
-
-    std::ofstream textErased;
-    textErased.open("data/output.txt");
-    if (!textErased.is_open()) {
-        cout << "outputfile failed to open" << endl;
-    }
-    //writes to output file
-    for (auto &i: text) {
-        textErased << i << endl;
-    }
-
-    textErased.close();
-    ///print text after stop word removal
-//    for(auto t: text){
-//        cout << "text after stopWord removal: " << t << endl;
-//    }
 }
 
 void ReadInData::readInStopWords(std::set<std::string> &stopWords) {
@@ -205,7 +141,9 @@ void ReadInData::readInStopWords(std::set<std::string> &stopWords) {
     stopWordsFile.close();
 }
 
-void ReadInData::wordRetrieveViaQuery(vector<std::string> &query, AVLTree<string, set<long>> &tree, map<long, string> &documentIdAndName) {
+void ReadInData::wordRetrieveViaQuery(vector<std::string> &query, AVLTree<string, set<long>> &tree,
+                                      map<long, string> &documentIdAndName,
+                                      map<long, string> &documentIdAndTitle) {
     for (int i = 0; i < query.size(); i++) { //todo - put in org tree & text tree
         set<long> docId = tree.searchTreeCall(query.at(i));
         //std::cout << query.at(i) << ": ";
@@ -216,7 +154,7 @@ void ReadInData::wordRetrieveViaQuery(vector<std::string> &query, AVLTree<string
         cout << std::endl;
 
         for (long const &Id: docId) {
-            std::cout << documentIdAndName[Id] << endl;
+            std::cout << documentIdAndTitle[Id] << ", " << documentIdAndName[Id] << endl;
         }
         //cout << std::endl;
     }

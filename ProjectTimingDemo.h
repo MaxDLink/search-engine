@@ -14,12 +14,11 @@ using namespace std;
 class ProjectTimingDemo {
 
 private:
-    //ProjectTimingDemo(string query, string absolutePathToDataFilesDir, map<int, std::string> &documentIdAndName);
-
     AVLTree<std::string, std::set<long>> textTree;
-    AVLTree<std::string, std::set<long>> emptyTree;
+    AVLTree<std::string, std::set<long>> personTree;
+    AVLTree<std::string, std::set<long>> orgTree;
 public:
-    ProjectTimingDemo(std::string query, std::string absolutePathToDataFilesDir, map<long, string> &documentIdAndName);
+    ProjectTimingDemo(std::string query, std::string absolutePathToDataFilesDir);
 };
 
 
