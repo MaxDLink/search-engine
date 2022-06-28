@@ -42,6 +42,7 @@ private:
     set<long> getDocIds(vector<string> words, bool isAnd);
 
 public:
+
     void indexAllFiles(string path, set<string> &stopWords);
 
     void search(string &query, set<std::string> &stopWords);
@@ -49,6 +50,8 @@ public:
     void save();
     void load();
     void stats();
+
+    Index();
 };
 
 

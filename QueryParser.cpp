@@ -8,14 +8,16 @@
 #include <sstream>
 #include <string>
 #include "stemmer.h"
+#include "vector"
+#include "sstream"
 
 using namespace std;
 
-QueryParser::QueryParser(string query, set<string> stopWords) {
+QueryParser::QueryParser(string &query, set<string> stopWords) {
     //lowercase & remove capitals
+    istringstream queryAsStream(query); //todo - either leave this or change query to istringstream later
     string word = query;
     string lowerWord;
-
 // todo parse the queries
     // i want to find a puppy PERSON steve or bill ORG dobe basset NOT cat mouse rat
     // i want to find a puppy AND bird  PERSON steve AND bill ORG dobe OR basset NOT cat mouse rat
@@ -26,23 +28,31 @@ QueryParser::QueryParser(string query, set<string> stopWords) {
 
     //string query
     //v currWl = wordList
-    // string mode = "word"
-    //while (token = getline(query, " ")) {
-//       if (token == "PERSON" ) {
-//           currWl = personList
-//                   mode == "person"
-//       } else if (token == "AND") {
-//        currWl.isAnd = true
-//    } else if (mode == word){
-//           lower case it etc..
-//           put in curr list
-//           currWl.push_back(token)
-//       } else if (mode == "person" || mode == "org" ) {
-//           tolower
-//           currWl.push_back(token)
-//       }
-    //}
+    vector<string> currWl;
+    string mode = "word"; //mode starts off as word to take in general words
+    string token;
+    //string mode; ///todo - set equal to word at first and then change to person mode or org mode accordingly
+    char feed[50];
+    while (queryAsStream >> token) {///todo - take token in by space with istream or get line
+        if (token == "PERSON") {
+            currWl = personList; //todo figure out what currWl should be set to
+            mode = "person"; //detected person keyword so set mode to person
+        } else if (token == "AND") {
+           /// currWl.isAnd = true;
+           wordListAnd = true; //detected AND keyword so set wordListAnd == true. if false means that an OR was detected
+        } else if (mode == word) {
+            //lower
+            //case it etc.. put in curr list
+            //currWl.push_back(token)
+        } else if (mode == "person" || mode == "org") {
+            //tolower
+            //currWl.push_back(token);
+        } else{///todo - either temp else or something here later
+            ;
+        }
+    }
 
+    ///lowercase junk
 // save for lower case, no punct for search word list (not person org)
 // only for terms (not person and org)
 //    transform(lowerWord.begin(), lowerWord.end(), lowerWord.begin(),
@@ -88,26 +98,30 @@ vector<string> QueryParser::getWordList() {
     //
     return wordList;
 }
+
 vector<string> QueryParser::getPersonList() {
     // todo remove stub in data
     personList.push_back("hoge");
     //
     return personList;
 }
+
 vector<string> QueryParser::getOrgList() {
     // todo remove stub in data
     // orgList.push_back("hoge");
     //
     return orgList;
 }
+
 vector<string> QueryParser::getNotWordList() {
     // todo remove stub in data
     // notWordList.push_back("notThisWord");
     //
     return notWordList;
 }
+
 bool QueryParser::isWordListAnd() {
-    return true; // todo
+    return true; // todo - take out & use dynamic wordListAnd bool instead
     return wordListAnd;
 }
 

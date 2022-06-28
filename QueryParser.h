@@ -27,7 +27,7 @@ private:
     bool notWordListAnd;
 
 public:
-    QueryParser(string query, set<string> stopWords);
+    QueryParser(string &query, set<string> stopWords);
     vector<string> getWordList();
     vector<string> getPersonList();
     vector<string> getOrgList();

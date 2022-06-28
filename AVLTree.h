@@ -20,6 +20,9 @@ template<typename K, typename V>
 class AVLTree {
     //todo - rule of three for dynamic mem - copy constructor, overloaded assignment op, desturctor (postorder trav delete)
 private:
+    //copy constructor
+    ///todo - declare in private so that tree never shallow copies
+    AVLTree(const AVLTree &obj){}; //todo - enable copy constructor declaration later to prevent shallow copies
     class AVLNode {
 
     public:
@@ -32,8 +35,6 @@ private:
         //constructor for AVLNode
         AVLNode(); //todo - check if appropriate to make constructor inside AVLNode class
 
-        //copy constructor
-
         //assignment operator for AVLNode
         ///V &operator=(const AVLNode *&other); //todo - fixme
 
@@ -45,13 +46,14 @@ private:
     };
 
     //constructor for AVLNode class
-    //AVLNode(V val, AVLNode *left, AVLNode *right, int height) : val(val), left(left), right(right), height(height) {}
-
+    //AVLNode(V val, AVLNode *left, AVLNode *right, int height) : val(val), left(left), right(right), height(height);
     AVLNode *root = nullptr; //root of the tree
     //print function private
     void print(AVLNode *curr);
 
 public:
+    AVLTree();
+
     void chopDownTree();
 
     void chopDownTree(AVLNode *&curr);
@@ -299,6 +301,9 @@ template<typename K, typename T>
 int AVLTree<K, T>::max(int a, int b) {
     return (a < b) ? b : a;
 }
+
+template<typename K, typename V>
+AVLTree<K, V>::AVLTree() {} //todo - take out this constructor?
 
 template<typename K, typename T>
 T AVLTree<K, T>::searchTree(AVLTree::AVLNode *&root, K &key) {

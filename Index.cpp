@@ -182,3 +182,7 @@ set<long> Index::getDocIds(vector<string> words, bool isAnd) {
     return result;
 }
 
+Index::Index() {
+ //default constructor todo - initialize private data members of index???
+
+}
