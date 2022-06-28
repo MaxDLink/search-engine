@@ -14,7 +14,7 @@ QueryParser::QueryParser(std::string query, std::__1::set<std::string> stopWords
     std::string word = query;
     std::string lowerWord;
 
-// lower case, no punct
+// save for lower case, no punct for search word list (not person org)
 // only for terms (not person and org)
 //    std::transform(lowerWord.begin(), lowerWord.end(), lowerWord.begin(),
 //                   [](unsigned char c) {

@@ -21,10 +21,7 @@ using namespace std;
  */
 
 void
-ReadInData::indexAllFiles(const char *path, set<std::string> &stopWords, AVLTree<string, set<long>> &personTree,
-                          AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree,
-                          map<long, string> &documentIDAndName, map<long, string> &documentIDAndTitle) {
-
+ReadInData::indexAllFiles(const char *path, set<std::string> &stopWords) {
     auto start = std::chrono::steady_clock::now();
 
     //recursive_director_iterator used to "access" folder at parameter -path-
@@ -38,9 +35,7 @@ ReadInData::indexAllFiles(const char *path, set<std::string> &stopWords, AVLTree
             string jsonLink = entry.path();
             documentId++;
             documentIDAndName.insert(pair<int, string>(documentId, jsonLink));
-            readJsonFile(entry.path().c_str(), stopWords, personTree, orgTree, textTree,
-                         documentId, documentIDAndTitle); //call to readJsonFile function
-
+            readJsonFile(entry.path().c_str(), stopWords, documentId);
         }
     }
 
@@ -54,10 +49,7 @@ ReadInData::indexAllFiles(const char *path, set<std::string> &stopWords, AVLTree
  * entities.
  * @param fileName filename with relative or absolute path included.
  */
-void ReadInData::readJsonFile(const char *fileName, set<string> stopWords, AVLTree<string, set<long>> &personTree,
-                              AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree,
-                              long &documentId,
-                              map<long, string> &documentIDAndTitle) {
+void ReadInData::readJsonFile(const char *fileName, set<string> stopWords, long &documentId) {
     FILE *fp = fopen(fileName, "r");
 
     char readBuffer[128000];
@@ -141,11 +133,9 @@ void ReadInData::readInStopWords(std::set<std::string> &stopWords) {
     stopWordsFile.close();
 }
 
-void ReadInData::wordRetrieveViaQuery(vector<std::string> &query, AVLTree<string, set<long>> &tree,
-                                      map<long, string> &documentIdAndName,
-                                      map<long, string> &documentIdAndTitle) {
-    for (int i = 0; i < query.size(); i++) { //todo - put in org tree & text tree
-        set<long> docId = tree.searchTreeCall(query.at(i));
+void ReadInData::search(vector<std::string> &query) {
+    for (int i = 0; i < query.size(); i++) { //todo - put in org tree & person tree
+        set<long> docId = textTree.searchTreeCall(query.at(i));
         //std::cout << query.at(i) << ": ";
         std::cout << "Query: " << query.at(i) << " ";
         for (long const &Id: docId) {
@@ -154,9 +144,8 @@ void ReadInData::wordRetrieveViaQuery(vector<std::string> &query, AVLTree<string
         cout << std::endl;
 
         for (long const &Id: docId) {
-            std::cout << documentIdAndTitle[Id] << ", " << documentIdAndName[Id] << endl;
+            std::cout << documentIDAndTitle[Id] << ", " << documentIDAndName[Id] << endl;
         }
-        //cout << std::endl;
     }
 }
 

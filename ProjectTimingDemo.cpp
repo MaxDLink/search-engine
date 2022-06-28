@@ -46,19 +46,15 @@ std::cout << "FileReadStream: " << elapsed_seconds.count() << "s\n";
  */
 ProjectTimingDemo:: ProjectTimingDemo(string query, string absolutePathToDataFilesDir) {
     std::set<std::string> stopWords;
-    map<long, string> documentIdAndName; // todo into index
-    map<long, string> documentIdAndTitle; // todo into index
 
     // todo rename Index
     ReadInData data; // todo copy as ReadStopWords
     data.readInStopWords(stopWords);
-
-    data.indexAllFiles(absolutePathToDataFilesDir.c_str(), stopWords, personTree, orgTree, textTree,
-                       documentIdAndName, documentIdAndTitle);
+    data.indexAllFiles(absolutePathToDataFilesDir.c_str(), stopWords);
 
     // user input UI
 
-    QueryParser qp(query, stopWords); // todo implement stem etc.
+    QueryParser qp(query, stopWords);
 
     std::vector<std::string> wordVector = qp.termVector();
 //    std::vector<std::string> wordVector = qp.wordVector();
@@ -70,6 +66,6 @@ ProjectTimingDemo:: ProjectTimingDemo(string query, string absolutePathToDataFil
         cout << "query was a stop word" << endl;
     } else {
 //        index.search(qp);
-        data.wordRetrieveViaQuery(wordVector, textTree, documentIdAndName, documentIdAndTitle);
+        data.search(wordVector);
     }
 }

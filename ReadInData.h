@@ -39,21 +39,20 @@ using std::set;
 
 class ReadInData {
 private:
-    void readJsonFile(const char *fileName, set<string> stopWords, AVLTree<string, set<long>> &personTree,
-                      AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree, long &documentId,
-                      map<long, string> &documentIDAndTitle);
+    void readJsonFile(const char *fileName, set<string> stopWords, long &documentId);
+
+    AVLTree<string, set<long>> personTree;
+    AVLTree<string, set<long>> orgTree;
+    AVLTree<string, set<long>> textTree;
+    map<long, string> documentIDAndName;
+    map<long, string> documentIDAndTitle;
 
 public:
     void readInStopWords(std::set<std::string> &stopWords);
 
-    void indexAllFiles(const char *path, set<std::string> &stopWords, AVLTree<string, set<long>> &personTree,
-                       AVLTree<string, set<long>> &orgTree, AVLTree<string, set<long>> &textTree,
-                       map<long, string> &documentIDAndName, map<long, string> &documentIDAndTitle);
+    void indexAllFiles(const char *path, set<std::string> &stopWords);
 
-    void wordRetrieveViaQuery(vector<std::string> &query, AVLTree<string, set<long>> &tree,
-                              map<long, string> &documentIdAndName,
-                              map<long, string> &documentIdAndTitle);
-
+    void search(vector<std::string> &query);
 
 };
 
