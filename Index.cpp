@@ -146,14 +146,14 @@ void Index::search(string &query, set<std::string> &stopWords) {
     vector<string> words = qp.getWordList();
     vector<string> people = qp.getPersonList();
     vector<string> orgs = qp.getOrgList();
-    vector<string> cannot = qp.getNotWordList();
+    vector<string> notWords = qp.getNotWordList();
 
     set<long> wordDocIds = getDocIds(words, qp.isWordListAnd());
     for (long const &Id: wordDocIds) { std::cout << Id << ' '; } cout << std::endl;
     for (long const &Id: wordDocIds) { std::cout << documentIDAndTitle[Id] << ", " << documentIDAndName[Id] << endl; }
 //    set<long> peopleDocIds = getDocIds(people, qp.isPersonListAnd());
 //    set<long> orgDocIds = getDocIds(orgs, qp.isOrgListAnd());
-//    set<long> notDocIds = getDocIds(cannot, qp.isNotWordListAnd());
+//    set<long> notDocIds = getDocIds(notWords, qp.isNotWordListAnd());
 }
 
 set<long> Index::getDocIds(vector<string> words, bool isAnd) {
