@@ -3,80 +3,48 @@
 //
 
 #include "Interface.h"
+#include "Index.h"
 #include "iostream"
 #include "stemmer.h"
 #include "QueryParser.h"
 #include <sstream>
 #include <vector>
 #include <set>
-std::vector<std::string> Interface::userInterface(std::set<std::string> &stopWords) {
-    std::string userInput = "1";
-    std::vector<std::string> query;
-    while (userInput != "0") {
-        std::cout << "1. clear index" << std::endl << "2. manage persistent index" << std::endl
-                  << "3. parse to populate index" << std::endl << "4. parse to read from persistence file" << std::endl
-                  << "5. enter bool query" << std::endl << "6. output statistics" << std::endl << "0. Quit"
-                  << std::endl;
 
-        getline(std::cin, userInput);
+using namespace std;
+
+void Interface::userInterface(string &path, set<string> &stopWords, Index &index) {
+    string userInput = "1";
+    while (userInput != "0") {
+        cout << "1. Clear" << endl << "2. Save" << endl
+                  << "3. Index all Files" << endl << "4. Load" << endl
+                  << "5. Enter Query (Search)" << endl << "6. Output Statistics" << endl << "0. Quit"
+                  << endl;
+
+        getline(cin, userInput);
 
         if (userInput == "1") {
-            std::cout << "clearing index" << std::endl;
+            cout << "Clear (clearing index)" << endl;
+            index.clear();
         } else if (userInput == "2") {
-            std::cout << "managing persistent index" << std::endl;
+            cout << "Save (persist index)" << endl;
+            index.save();
         } else if (userInput == "3") {
-            std::cout << "parsing to populate index" << std::endl;
+            cout << "Index All Files (parsing to populate index)" << endl;
+            index.indexAllFiles(path, stopWords);
         } else if (userInput == "4") {
-            std::cout << "parsing to read from persistence file" << std::endl;
+            cout << "Load (parsing to read from persistence file)" << endl;
+            index.load();
         } else if (userInput == "5") {
-            std::cout << "enter query here: " << std::flush;
-            getline(std::cin, userInput);
-            QueryParser qp(userInput, stopWords); // todo implement stem etc.
-//            //lowercase & remove capitals
-//            std::istringstream ss(userInput);
-//           std::string word;
-//            while (ss >> word) {//push all text into a vector to compare to stopwords vector
-//                std::string lowerWord;
-//                for (int i = 0; i < word.size(); i++) {//todo - check lower casing for correct words being recorded
-//                    //if(tolower(word.at(i)) >= 'a' && tolower(word.at(i)) <= 'z' || tolower(word.at(i)) >= '0' && tolower(word.at(i)) <= '9'){//lowercases words
-//                    if (tolower(word.at(i)) >= 'a' && tolower(word.at(i)) <= 'z' ||
-//                        tolower(word.at(i)) >= '0' && tolower(word.at(i)) <= '9') {
-//                        lowerWord += tolower(word.at(i));
-//                    } else {//continues if punctuation
-//                        continue;
-//                    }
-//                }
-//                //removes punctuation from string
-//                for (int i = 0; i < word.size(); i++) {
-//                    if (ispunct(word.at(i))) {
-//                        word = word.erase(i, 1); //erases any punctuation from word
-//                    }
-//                }
-//                if (lowerWord != "") {//check for empty in lowerWord
-//                    query.push_back(lowerWord);
-//                    //textTree.insert(lowerWord, documentId); //inserts lower cased words to tree with given documentId
-//                    //todo - avl tree instead of textContent vector
-//                }
-//                //remove stop words
-//                for (int j = 0; j < query.size(); j++) {
-//                    if (stopWords.count(query.at(j))) {
-//                        query.at(j) = " "; //todo - filter out blank spaces from text on file writing
-//                    }
-//                }
-//                //stem word
-//                for (int i = 0; i < query.size(); i++) {
-//                    Porter2Stemmer::stem(query.at(i));
-//                    //todo - stem avlmap instead of textContent
-//                }
-//            }
-//            for(auto q : query)
-//                std::cout << q << std::endl;
+            cout << "enter query here: " << flush;
+            string query;
+            getline(cin, query);
+            index.search(query, stopWords);
         } else if (userInput == "6") {
-            std::cout << "outputting stats" << std::endl;
+            cout << "Outputting Stats" << endl;
+            index.stats();
         }
-        std::cout << std::endl;
-        return query;
+        cout << endl;
     }
-    return query;
-    std::cout << "exiting program" << std::endl;
+    cout << "exiting program" << endl;
 }

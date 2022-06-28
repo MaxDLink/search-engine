@@ -21,12 +21,12 @@ using namespace std;
  */
 
 void
-Index::indexAllFiles(const char *path, set<std::string> &stopWords) {
+Index::indexAllFiles(string path, set<std::string> &stopWords) {
     auto start = std::chrono::steady_clock::now();
 
     //recursive_director_iterator used to "access" folder at parameter -path-
     //we are using the recursive iterator so it will go into subfolders.
-    auto it = std::filesystem::recursive_directory_iterator(path);
+    auto it = std::filesystem::recursive_directory_iterator(path.c_str());
 
     //loop over all the entries & store document ID & .json file link in map
     long documentId = 0;
@@ -49,8 +49,8 @@ Index::indexAllFiles(const char *path, set<std::string> &stopWords) {
  * entities.
  * @param fileName filename with relative or absolute path included.
  */
-void Index::readJsonFile(const char *fileName, set<string> stopWords, long &documentId) {
-    FILE *fp = fopen(fileName, "r");
+void Index::readJsonFile(string fileName, set<string> stopWords, long &documentId) {
+    FILE *fp = fopen(fileName.c_str(), "r");
 
     char readBuffer[128000];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
@@ -117,6 +117,29 @@ void Index::readJsonFile(const char *fileName, set<string> stopWords, long &docu
     }
 }
 
+void Index::clear() {
+    textTree.chopDownTree();
+    personTree.chopDownTree();
+    orgTree.chopDownTree();
+
+    documentIDAndName.clear();
+    documentIDAndTitle.clear();
+}
+
+void Index::stats() {
+    textTree.print();
+    personTree.print();
+    orgTree.print();
+    cout << "Document Id Title size: " << documentIDAndTitle.size() << endl;
+    cout << "Document Id FileName size: " << documentIDAndName.size() << endl;
+}
+
+void Index::save() { // todo (copy assignment operator)
+}
+
+void Index::load() { // todo (copy assignment operator)
+}
+
 void Index::search(string &query, set<std::string> &stopWords) {
     QueryParser qp(query, stopWords);
 
@@ -146,5 +169,4 @@ void Index::search(string &query, set<std::string> &stopWords) {
         }
     }
 }
-
 

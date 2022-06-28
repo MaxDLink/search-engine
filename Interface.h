@@ -5,13 +5,17 @@
 #ifndef INC_22SU_SEARCH_ENGINE_INTERFACE_H
 #define INC_22SU_SEARCH_ENGINE_INTERFACE_H
 
+#include "Index.h"
 #include <set>
+#include <string>
+
+using namespace std;
+
 class Interface {
 private:
 
 public:
-    std::vector<std::string> userInterface(std::set<std::string> &stopWords);
+    void userInterface(string &path, set<string> &stopWords, Index &index);
 };
-
 
 #endif //INC_22SU_SEARCH_ENGINE_INTERFACE_H
