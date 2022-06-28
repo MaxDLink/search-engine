@@ -32,7 +32,7 @@ QueryParser::QueryParser(string &query, set<string> stopWords) {
     //string mode; ///todo - set equal to word at first and then change to person mode or org mode accordingly
     char feed[50];
     while (queryAsStream >> token) {///todo - take token in by space with istream or get line
-        if (token == "PERSON") {
+        if (token == "PERSON") {//todo - currWL changes between personList, orgList, & wordList during parsing
             currWl = personList; //todo figure out what currWl should be set to
             mode = "person"; //detected person keyword so set mode to person
         } else if (token == "ORG") {
@@ -40,8 +40,10 @@ QueryParser::QueryParser(string &query, set<string> stopWords) {
             mode = "org";
         } else if (token == "AND") {
             /// currWl.isAnd = true;
+            //todo - what should this else if do?
             wordListAnd = true; //detected AND keyword so set wordListAnd == true. if false means that an OR was detected
         } else if (mode == "word") {
+            currWl = wordList; //todo - permanently store words into wordList
             //lower & replace punctuation with blanks
             std::transform(token.begin(), token.end(), token.begin(),
                            [](unsigned char c) {
@@ -63,10 +65,6 @@ QueryParser::QueryParser(string &query, set<string> stopWords) {
                            });
             //add token to current word list
             currWl.push_back(token);
-
-
-        } else {///todo - either temp else or something here later
-            ;
         }
     }
 
@@ -103,7 +101,7 @@ QueryParser::QueryParser(string &query, set<string> stopWords) {
     //if current word is not a stop word then stem & pushback to query vector
     if (!stopWords.count(lowerWord)) {
         Porter2Stemmer::stem(lowerWord);
-        // todo trim lowerWord
+        Porter2Stemmer::trim(lowerWord);
         // todo remove bypass when parsing wordList.push_back(lowerWord);
     }
 }
