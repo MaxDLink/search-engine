@@ -96,7 +96,7 @@ void Index::readJsonFile(string fileName, set<string> stopWords, long &documentI
     std::istringstream ss(text);
     string lowerWord;
     while (ss >> lowerWord) { //push all text into a vector to compare to stopwords vector
-        // tolower & punctuation & capital word removal
+        // tolower & replace punctuation with blanks
         std::transform(lowerWord.begin(), lowerWord.end(), lowerWord.begin(),
                        [](unsigned char c) {
                            c = std::tolower(c);
@@ -105,7 +105,7 @@ void Index::readJsonFile(string fileName, set<string> stopWords, long &documentI
                            } else {
                                return (unsigned char) ' ';
                            }
-                       }); // todo put same in Query Parser
+                       });
 
 
         if (!stopWords.count(lowerWord)) {

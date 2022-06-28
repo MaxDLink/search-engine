@@ -19,8 +19,6 @@ QueryParser::QueryParser(string &query, set<string> stopWords) {
     string word = query;
     string lowerWord;
 // todo parse the queries
-    // i want to find a puppy PERSON steve or bill ORG dobe basset NOT cat mouse rat
-    // i want to find a puppy AND bird  PERSON steve AND bill ORG dobe OR basset NOT cat mouse rat
     // v wordList, isAnd = false
     // v personList, isAnd
     // v orgList, isAnd
@@ -28,7 +26,7 @@ QueryParser::QueryParser(string &query, set<string> stopWords) {
 
     //string query
     //v currWl = wordList
-    vector<string> currWl;
+    vector<string> currWl = wordList;
     string mode = "word"; //mode starts off as word to take in general words
     string token;
     //string mode; ///todo - set equal to word at first and then change to person mode or org mode accordingly
@@ -37,17 +35,37 @@ QueryParser::QueryParser(string &query, set<string> stopWords) {
         if (token == "PERSON") {
             currWl = personList; //todo figure out what currWl should be set to
             mode = "person"; //detected person keyword so set mode to person
+        } else if (token == "ORG") {
+            currWl = orgList; //todo figure out what orgList should be set to
+            mode = "org";
         } else if (token == "AND") {
-           /// currWl.isAnd = true;
-           wordListAnd = true; //detected AND keyword so set wordListAnd == true. if false means that an OR was detected
-        } else if (mode == word) {
-            //lower
-            //case it etc.. put in curr list
-            //currWl.push_back(token)
+            /// currWl.isAnd = true;
+            wordListAnd = true; //detected AND keyword so set wordListAnd == true. if false means that an OR was detected
+        } else if (mode == "word") {
+            //lower & replace punctuation with blanks
+            std::transform(token.begin(), token.end(), token.begin(),
+                           [](unsigned char c) {
+                               c = std::tolower(c);
+                               if (c >= 'a' && c <= 'z' || c >= '0' && c <= '9') {
+                                   return c;
+                               } else {
+                                   return (unsigned char) ' ';
+                               }
+                           });
+            //put words into current word list
+            currWl.push_back(token);
         } else if (mode == "person" || mode == "org") {
-            //tolower
-            //currWl.push_back(token);
-        } else{///todo - either temp else or something here later
+            //lowercase & return token //todo - double check that person's & org's will never have special punctuation/capitalization
+            std::transform(token.begin(), token.end(), token.begin(),
+                           [](unsigned char c) {
+                               c = std::tolower(c);
+                               return c;
+                           });
+            //add token to current word list
+            currWl.push_back(token);
+
+
+        } else {///todo - either temp else or something here later
             ;
         }
     }

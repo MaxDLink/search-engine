@@ -14,7 +14,7 @@
 using namespace std;
 
 void Interface::userInterface(string &path, set<string> &stopWords, Index &index) {
-    string notUsed = "AND financial society PERSON Steve Austin"; index.search(notUsed, stopWords); return; // todo bypass interface
+    string notUsed = "AND FINANCIAL! SoCiEtY. ORG BasketRobins DobermanPlanet TuffyTreats Alice'sWonderland Disney PERSON Steve Austin Susan Randy Michelle Bob Bill "; index.search(notUsed, stopWords); return; // todo bypass interface
 
 
     string userInput = "1";
