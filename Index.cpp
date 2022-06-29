@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <string>
 #include "AVLTree.h"
-
 using namespace std;
 
 /**
@@ -147,35 +146,57 @@ void Index::search(string &query, set<std::string> &stopWords) {
     vector<string> people = qp.getPersonList();
     vector<string> orgs = qp.getOrgList();
     vector<string> notWords = qp.getNotWordList();
-
+    //todo - do testing with these sets
     set<long> notWordDocIds;
     set<long> wordDocIds = getDocIds(words, qp.isWordListAnd(), textTree, notWords, notWordDocIds); //year AND people
-//    set<long> personDocIds = getDocIds(people, qp.isPersonListAnd(), personTree); //michelle bachelet
-//    set<long> orgDocIds = getDocIds(orgs, qp.isOrgListAnd(), orgTree); //
-    //todo - fill notTree with contents of orgTree, personTree, & textTree
+    set<long> personDocIds = getDocIds(people, qp.isPersonListAnd(), personTree, notWords,
+                                       notWordDocIds); //michelle bachelet
+    set<long> orgDocIds = getDocIds(orgs, qp.isOrgListAnd(), orgTree, notWords, notWordDocIds); //
 
     //set<long> notWordDocIds = getDocIds(notWords, qp.isNotWordListAnd(), notTree); //todo - not words stored in every tree so search every tree for not word ID's
 
-    //todo - getDocId on all 4 vectors
     //search result ID's
-    //todo - result = use set_intersection from getDocsId (word result & person result)
+    vector<long> intersection;
+    set<long>::iterator itr; //todo - iterate through wordsDocId's set & put into intersection vector for intersection operations
+    for(itr = wordDocIds.begin(); itr != wordDocIds.end(); itr++)
+    intersection.push_back(*itr);
+//todo - this intersection should happen if people have ID's
+    if (!personDocIds.empty()) {
+        std::set_intersection(wordDocIds.begin(), wordDocIds.end(),
+                              personDocIds.begin(), personDocIds.end(),
+                              std::back_inserter(intersection));
+    }
     //todo - result = if org words inserted then take line 155 result & intersect with org words here
-    //todo - subtract not words from result from line 156 (subtract notWords vector from result - google)
-    for (long const &Id: wordDocIds) { std::cout << Id << ' '; } cout << std::endl;
-    for (long const &Id: wordDocIds) { std::cout << documentIDAndTitle[Id] << ", " << documentIDAndName[Id] << endl; }
-//    set<long> peopleDocIds = getDocIds(people, qp.isPersonListAnd());
-//    set<long> orgDocIds = getDocIds(orgs, qp.isOrgListAnd());
-//    set<long> notDocIds = getDocIds(notWords, qp.isNotWordListAnd());
+    if(!orgDocIds.empty()){//todo - can vector intersection be used correctly in set_intersection?
+        std::set_intersection(intersection.begin(), intersection.end(),
+                              orgDocIds.begin(), orgDocIds.end(),
+                              std::back_inserter(intersection));
+    }
+//    //todo - subtract not words from result from line 156 (subtract notWords vector from result - google)
+//    //todo - use set difference from #include <algorithm> to get difference between searchResult set & notWordDocId's set
+    set<long> searchResult;
+    std::set_difference(intersection.begin(), intersection.end(), notWordDocIds.begin(), notWordDocIds.end(),
+                        std::inserter(searchResult, searchResult.end()));
+//    //print out search results
+    for (long const &Id: searchResult) { std::cout << Id << ' '; }
+    cout << std::endl;
+    for (long const &Id: searchResult) { std::cout << documentIDAndTitle[Id] << ", " << documentIDAndName[Id] << endl; }
+    //todo - enable if above incorrect
+//    for (long const &Id: wordDocIds) { std::cout << Id << ' '; }
+//    cout << std::endl;
+
 }
 
-set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set<long>>& tree, vector<string> &notWords,  set<long> &notWordDocIds) {
+set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set<long>> &tree, vector<string> &notWords,
+                           set<long> &notWordDocIds) {
     set<long> result;
     vector<long> intersection;
 
-    if (words.size() > 0) { //todo - search diff trees. Word vector = textTree, org vect = orgTree, personVect = personTree
+    if (words.size() >
+        0) { //todo - search diff trees. Word vector = textTree, org vect = orgTree, personVect = personTree
         result = tree.searchTreeCall(words.at(0));
 
-    }else if(notWords.size() > 0){
+    } else if (notWords.size() > 0) {
         //check if tree for notWords
         notWordDocIds = tree.searchTreeCall(notWords.at(0));
     }
@@ -219,6 +240,6 @@ set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set
 }
 
 Index::Index() {
- //default constructor todo - initialize private data members of index???
+    //default constructor todo - initialize private data members of index???
 
 }

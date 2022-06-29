@@ -15,10 +15,11 @@ using namespace std;
 
 void Interface::userInterface(string &path, set<string> &stopWords, Index &index) {
     //string notUsed = "AND FINANCIAL! SoCiEtY. ORG BasketRobins DobermanPlanet TuffyTreats Alice'sWonderland Disney PERSON Steve Austin Susan Randy Michelle Bob Bill ";
-    //string wordAndPersonQuery = "YEAR AND people PERSON michelle bachelet"; //todo - use word combos in docs 1, 5, 6, 9 ( AND/OR, PERSON/ORG
-    string orgQuery = "ORG ford NOT year";
+    string wordAndPersonQuery = "YEAR"; //todo - use word combos in docs 1, 5, 6, 9 ( AND/OR, PERSON/ORG
+    //AND people PERSON michelle bachelet
+    //string orgQuery = "ORG ford NOT year";
 //    string notUsed3 = "AND FINANCIAL! SoCiEtY. ORG BasketRobins DobermanPlanet TuffyTreats Alice'sWonderland Disney PERSON Steve Austin Susan Randy Michelle Bob Bill ";
-    index.search(orgQuery, stopWords);
+    index.search(wordAndPersonQuery, stopWords);
     return; // todo bypass interface
 
 
