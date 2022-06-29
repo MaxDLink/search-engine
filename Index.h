@@ -34,12 +34,13 @@ private:
     AVLTree<string, set<long>> personTree;
     AVLTree<string, set<long>> orgTree;
     AVLTree<string, set<long>> textTree;
-
+    AVLTree<string, set<long>> notTree;
     map<long, string> documentIDAndName;
     map<long, string> documentIDAndTitle;
 
     void readJsonFile(string fileName, set<string> stopWords, long &documentId);
-    set<long> getDocIds(vector<string> words, bool isAnd);
+    //set<long> getDocIds(vector<string> words, bool isAnd);
+    set<long> getDocIds(vector<string> words, bool isAnd, AVLTree<string, set<long>>& tree);
 
 public:
 

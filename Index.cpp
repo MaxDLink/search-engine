@@ -148,7 +148,19 @@ void Index::search(string &query, set<std::string> &stopWords) {
     vector<string> orgs = qp.getOrgList();
     vector<string> notWords = qp.getNotWordList();
 
-    set<long> wordDocIds = getDocIds(words, qp.isWordListAnd());
+
+    set<long> wordDocIds = getDocIds(words, qp.isWordListAnd(), textTree); //year AND people
+    set<long> personDocIds = getDocIds(people, qp.isPersonListAnd(), personTree); //michelle bachelet
+    set<long> orgDocIds = getDocIds(orgs, qp.isOrgListAnd(), orgTree); //
+    //todo - fill notTree with contents of orgTree, personTree, & textTree
+    //notTree = orgTree;
+    //set<long> notWordDocIds = getDocIds(notWords, qp.isNotWordListAnd(), notTree); //todo - not words stored in every tree so search every tree for not word ID's
+
+    //todo - getDocId on all 4 vectors
+    //search result ID's
+    //todo - result = use set_intersection from getDocsId (word result & person result)
+    //todo - result = if org words inserted then take line 155 result & intersect with org words here
+    //todo - subtract not words from result from line 156 (subtract notWords vector from result - google)
     for (long const &Id: wordDocIds) { std::cout << Id << ' '; } cout << std::endl;
     for (long const &Id: wordDocIds) { std::cout << documentIDAndTitle[Id] << ", " << documentIDAndName[Id] << endl; }
 //    set<long> peopleDocIds = getDocIds(people, qp.isPersonListAnd());
@@ -156,30 +168,32 @@ void Index::search(string &query, set<std::string> &stopWords) {
 //    set<long> notDocIds = getDocIds(notWords, qp.isNotWordListAnd());
 }
 
-set<long> Index::getDocIds(vector<string> words, bool isAnd) {
+set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set<long>>& tree) {
     set<long> result;
     vector<long> intersection;
 
-    if (words.size() >0 ) {
-        result = textTree.searchTreeCall(words.at(0));
+    if (words.size() > 0) { //todo - search diff trees. Word vector = textTree, org vect = orgTree, personVect = personTree
+        result = tree.searchTreeCall(words.at(0));
     }
 
     for (int i = 1; i < words.size(); i++) {
-        set<long> wordDocIds = textTree.searchTreeCall(words.at(i));
-        if (isAnd) {
+        set<long> wordDocIds = tree.searchTreeCall(words.at(i));
+        //what to do with wordDocs according to andBool
+        if (isAnd) {//todo -set_intersection should be null if words following true and bool not found?
             std::set_intersection(result.begin(), result.end(),
                                   wordDocIds.begin(), wordDocIds.end(),
                                   std::back_inserter(intersection));
-            // need to save for next call through
+            // need to save for next call through - clear result to replace with contents of intersection vector
             result.clear();
-            for (int k = 0; k < intersection.size(); k++) {
+            for (int k = 0; k < intersection.size(); k++) {//replace with contents of intersection vector
                 result.insert(intersection.at(k));
             }
         } else {
             result.merge(wordDocIds); // or
         }
     }
-    return result;
+
+    return result; //1, 6, 9 for year AND people
 }
 
 Index::Index() {

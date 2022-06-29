@@ -89,19 +89,6 @@ QueryParser::QueryParser(string &query, set<string> stopWords) {
         }
     }
 
-///lowercase junk
-// save for lower case, no punct for search word list (not person org)
-// only for terms (not person and org)
-//    transform(lowerWord.begin(), lowerWord.end(), lowerWord.begin(),
-//                   [](unsigned char c) {
-//                       c = tolower(c);
-//                       if (c >= 'a' && c <= 'z' || c >= '0' && c <= '9') {
-//                           return c;
-//                       } else {
-//                           return (unsigned char) ' ';
-//                       }
-//                   });
-
 }
 
 vector<string> QueryParser::getWordList() {
