@@ -66,28 +66,28 @@ void Index::readJsonFile(string fileName, set<string> stopWords, long &documentI
     auto persons = d["entities"]["persons"].GetArray();
     for (auto &p: persons) {
         string key = p["name"].GetString();
+        //lowercase's person words
         std::transform(key.begin(), key.end(), key.begin(),
                        [](unsigned char c) {
-                           return std::tolower(c);
-                       });
+                           return std::tolower(c);});
         set<long> docIds = personTree.searchTreeCall(key);
         docIds.insert(documentId);
-        personTree.insert(key,
-                          docIds); // no operation noop when same; inserts if new    //insert person names into person tree
+        //insert person names into person tree
+        personTree.insert(key,docIds);
     }
 
     // ORGS
     auto orgs = d["entities"]["organizations"].GetArray();
     for (auto &o: orgs) {
         string key = o["name"].GetString();
+        //lowercase's org words
         std::transform(key.begin(), key.end(), key.begin(),
                        [](unsigned char c) {
-                           return std::tolower(c);
-                       });
+                           return std::tolower(c);});
         set<long> docIds = orgTree.searchTreeCall(key);
         docIds.insert(documentId);
-        orgTree.insert(key,
-                       docIds); // no operation noop when same; inserts if new    //insert person names into person tree
+        //inserts org into orgTree
+        orgTree.insert(key,docIds);
     }
 
     //vector<string> stopWords;
@@ -148,7 +148,7 @@ void Index::search(string &query, set<std::string> &stopWords) {
     vector<string> orgs = qp.getOrgList();
     vector<string> notWords = qp.getNotWordList();
     //todo - do testing with these sets
-    set<long> notWordDocIds;
+    set<long> notWordDocIds; //todo - populate notWordDocId's after line 152 runs
     set<long> wordDocIds = getDocIds(words, qp.isWordListAnd(), textTree, notWords, notWordDocIds); //year AND people
     set<long> personDocIds = getDocIds(people, qp.isPersonListAnd(), personTree, notWords,
                                        notWordDocIds); //michelle bachelet
@@ -194,13 +194,11 @@ set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set
                            set<long> &notWordDocIds) {
     set<long> result;
     vector<long> intersection;
-
     if (words.size() >
         0) { //todo - search diff trees. Word vector = textTree, org vect = orgTree, personVect = personTree
         result = tree.searchTreeCall(words.at(0));
-
     } else if (notWords.size() > 0) {
-        //check if tree for notWords
+        //check if tree for notWords ///todo - passing in person Tree here somehow for notWords search? Tree address changing
         notWordDocIds = tree.searchTreeCall(notWords.at(0));
     }
     //continue to check for words, person, or orgs ID's
