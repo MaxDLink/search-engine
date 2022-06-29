@@ -69,11 +69,12 @@ void Index::readJsonFile(string fileName, set<string> stopWords, long &documentI
         //lowercase's person words
         std::transform(key.begin(), key.end(), key.begin(),
                        [](unsigned char c) {
-                           return std::tolower(c);});
+                           return std::tolower(c);
+                       });
         set<long> docIds = personTree.searchTreeCall(key);
         docIds.insert(documentId);
         //insert person names into person tree
-        personTree.insert(key,docIds);
+        personTree.insert(key, docIds);
     }
 
     // ORGS
@@ -83,11 +84,12 @@ void Index::readJsonFile(string fileName, set<string> stopWords, long &documentI
         //lowercase's org words
         std::transform(key.begin(), key.end(), key.begin(),
                        [](unsigned char c) {
-                           return std::tolower(c);});
+                           return std::tolower(c);
+                       });
         set<long> docIds = orgTree.searchTreeCall(key);
         docIds.insert(documentId);
         //inserts org into orgTree
-        orgTree.insert(key,docIds);
+        orgTree.insert(key, docIds);
     }
 
     //vector<string> stopWords;
@@ -193,13 +195,16 @@ void Index::search(string &query, set<std::string> &stopWords) {
 set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set<long>> &tree, vector<string> &notWords,
                            set<long> &notWordDocIds) {
     set<long> result;
+    set<long> localNotWordIds;
     vector<long> intersection;
-    if (words.size() >
-        0) { //todo - search diff trees. Word vector = textTree, org vect = orgTree, personVect = personTree
+    vector<long> notIntersection;
+    if (words.size() > 0) {
         result = tree.searchTreeCall(words.at(0));
-    } else if (notWords.size() > 0) {
-        //check if tree for notWords ///todo - passing in person Tree here somehow for notWords search? Tree address changing
-        notWordDocIds = tree.searchTreeCall(notWords.at(0));
+    }
+    //checks not words vector contents
+    if (notWords.size() > 0) {
+        //check if tree for notWords //todo - notWordDocId's should be kept a global variable & a local var should do this
+        localNotWordIds = tree.searchTreeCall(notWords.at(0));
     }
     //continue to check for words, person, or orgs ID's
     for (int i = 1; i < words.size(); i++) {
@@ -223,19 +228,26 @@ set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set
     for (int i = 1; i < notWords.size(); i++) {
         set<long> wordDocIds = tree.searchTreeCall(notWords.at(i));
         //what to do with wordDocs according to andBool
-        if (isAnd) {//todo -set_intersection should be null if words following true and bool not found?
-            std::set_intersection(notWordDocIds.begin(), notWordDocIds.end(),
-                                  notWordDocIds.begin(), notWordDocIds.end(),
-                                  std::back_inserter(intersection));
+        if (isAnd) {
+            std::set_intersection(localNotWordIds.begin(), localNotWordIds.end(),
+                                  wordDocIds.begin(), wordDocIds.end(), //todo - change to correct sets here
+                                  std::back_inserter(notIntersection));
             // need to save for next call through - clear result to replace with contents of intersection vector
             result.clear();
-            for (int k = 0; k < intersection.size(); k++) {//replace with contents of intersection vector
-                notWordDocIds.insert(intersection.at(k));
+            for (int k = 0; k < notIntersection.size(); k++) {//replace with contents of intersection vector
+                localNotWordIds.insert(notIntersection.at(k));
             }
-        } else {
-            notWordDocIds.merge(wordDocIds); // or
+        }
+        //if doc ID was retrieved & and bool does not happen then simply merge doc ID's without intersection
+        else {
+            localNotWordIds.merge(wordDocIds); // or
         }
     }
+    //add wordDocId's to notWordDocId's set
+//todo - check if notWordDocId's updates correctly
+  std::set_union(std::begin(notWordDocIds), std::end(notWordDocIds),
+                   std::begin(localNotWordIds), std::end(localNotWordIds),
+                   std::inserter(notWordDocIds, std::begin(notWordDocIds)));
     //return result of passed in word, person, or org vector
     return result; //1, 6, 9 for year AND people
 }
