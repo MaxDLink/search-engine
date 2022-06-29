@@ -40,7 +40,7 @@ private:
 
     void readJsonFile(string fileName, set<string> stopWords, long &documentId);
     //set<long> getDocIds(vector<string> words, bool isAnd);
-    set<long> getDocIds(vector<string> words, bool isAnd, AVLTree<string, set<long>>& tree);
+    set<long> getDocIds(vector<string> words, bool isAnd, AVLTree<string, set<long>>& tree, vector<string> &notWords,  set<long> &notWordDocIds);
 
 public:
 

@@ -148,12 +148,12 @@ void Index::search(string &query, set<std::string> &stopWords) {
     vector<string> orgs = qp.getOrgList();
     vector<string> notWords = qp.getNotWordList();
 
-
-    set<long> wordDocIds = getDocIds(words, qp.isWordListAnd(), textTree); //year AND people
-    set<long> personDocIds = getDocIds(people, qp.isPersonListAnd(), personTree); //michelle bachelet
-    set<long> orgDocIds = getDocIds(orgs, qp.isOrgListAnd(), orgTree); //
+    set<long> notWordDocIds;
+    set<long> wordDocIds = getDocIds(words, qp.isWordListAnd(), textTree, notWords, notWordDocIds); //year AND people
+//    set<long> personDocIds = getDocIds(people, qp.isPersonListAnd(), personTree); //michelle bachelet
+//    set<long> orgDocIds = getDocIds(orgs, qp.isOrgListAnd(), orgTree); //
     //todo - fill notTree with contents of orgTree, personTree, & textTree
-    //notTree = orgTree;
+
     //set<long> notWordDocIds = getDocIds(notWords, qp.isNotWordListAnd(), notTree); //todo - not words stored in every tree so search every tree for not word ID's
 
     //todo - getDocId on all 4 vectors
@@ -168,14 +168,18 @@ void Index::search(string &query, set<std::string> &stopWords) {
 //    set<long> notDocIds = getDocIds(notWords, qp.isNotWordListAnd());
 }
 
-set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set<long>>& tree) {
+set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set<long>>& tree, vector<string> &notWords,  set<long> &notWordDocIds) {
     set<long> result;
     vector<long> intersection;
 
     if (words.size() > 0) { //todo - search diff trees. Word vector = textTree, org vect = orgTree, personVect = personTree
         result = tree.searchTreeCall(words.at(0));
-    }
 
+    }else if(notWords.size() > 0){
+        //check if tree for notWords
+        notWordDocIds = tree.searchTreeCall(notWords.at(0));
+    }
+    //continue to check for words, person, or orgs ID's
     for (int i = 1; i < words.size(); i++) {
         set<long> wordDocIds = tree.searchTreeCall(words.at(i));
         //what to do with wordDocs according to andBool
@@ -193,6 +197,24 @@ set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set
         }
     }
 
+    //continue to check for not words
+    for (int i = 1; i < notWords.size(); i++) {
+        set<long> wordDocIds = tree.searchTreeCall(notWords.at(i));
+        //what to do with wordDocs according to andBool
+        if (isAnd) {//todo -set_intersection should be null if words following true and bool not found?
+            std::set_intersection(notWordDocIds.begin(), notWordDocIds.end(),
+                                  notWordDocIds.begin(), notWordDocIds.end(),
+                                  std::back_inserter(intersection));
+            // need to save for next call through - clear result to replace with contents of intersection vector
+            result.clear();
+            for (int k = 0; k < intersection.size(); k++) {//replace with contents of intersection vector
+                notWordDocIds.insert(intersection.at(k));
+            }
+        } else {
+            notWordDocIds.merge(wordDocIds); // or
+        }
+    }
+    //return result of passed in word, person, or org vector
     return result; //1, 6, 9 for year AND people
 }
 
