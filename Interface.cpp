@@ -15,8 +15,10 @@ using namespace std;
 
 void Interface::userInterface(string &path, set<string> &stopWords, Index &index) {
     //string notUsed = "AND FINANCIAL! SoCiEtY. ORG BasketRobins DobermanPlanet TuffyTreats Alice'sWonderland Disney PERSON Steve Austin Susan Randy Michelle Bob Bill ";
-    string wordAndPersonQuery = "YEAR"; //todo - use word combos in docs 1, 5, 6, 9 ( AND/OR, PERSON/ORG
-    //AND people PERSON michelle bachelet
+    //QUERY - YEAR: 1, 5, 6, 9 < --- 0010161, 0010148, 0010125, 0010154
+    //QUERY - YEAR AND people PERSON michelle bachelet: 1, 6, 9 <--- 0010161, 0010125, 0010154 //todo - AND QUERY returns extra ID's problem with intersection operation?
+    string wordAndPersonQuery = "YEAR AND people PERSON michelle bachelet"; //todo - use word combos in docs 1, 5, 6, 9 ( AND/OR, PERSON/ORG
+    //
     //string orgQuery = "ORG ford NOT year";
 //    string notUsed3 = "AND FINANCIAL! SoCiEtY. ORG BasketRobins DobermanPlanet TuffyTreats Alice'sWonderland Disney PERSON Steve Austin Susan Randy Michelle Bob Bill ";
     index.search(wordAndPersonQuery, stopWords);

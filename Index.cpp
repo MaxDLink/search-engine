@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <string>
 #include "AVLTree.h"
+
 using namespace std;
 
 /**
@@ -158,8 +159,9 @@ void Index::search(string &query, set<std::string> &stopWords) {
     //search result ID's
     vector<long> intersection;
     set<long>::iterator itr; //todo - iterate through wordsDocId's set & put into intersection vector for intersection operations
-    for(itr = wordDocIds.begin(); itr != wordDocIds.end(); itr++)
-    intersection.push_back(*itr);
+    for (itr = wordDocIds.begin(); itr != wordDocIds.end(); itr++)
+        intersection.push_back(*itr);
+//todo - ITERATRING THROUGH intersection MESSES UP ID's
 //todo - this intersection should happen if people have ID's
     if (!personDocIds.empty()) {
         std::set_intersection(wordDocIds.begin(), wordDocIds.end(),
@@ -167,7 +169,7 @@ void Index::search(string &query, set<std::string> &stopWords) {
                               std::back_inserter(intersection));
     }
     //todo - result = if org words inserted then take line 155 result & intersect with org words here
-    if(!orgDocIds.empty()){//todo - can vector intersection be used correctly in set_intersection?
+    if (!orgDocIds.empty()) {//todo - can vector intersection be used correctly in set_intersection?
         std::set_intersection(intersection.begin(), intersection.end(),
                               orgDocIds.begin(), orgDocIds.end(),
                               std::back_inserter(intersection));
@@ -177,6 +179,7 @@ void Index::search(string &query, set<std::string> &stopWords) {
     set<long> searchResult;
     std::set_difference(intersection.begin(), intersection.end(), notWordDocIds.begin(), notWordDocIds.end(),
                         std::inserter(searchResult, searchResult.end()));
+    cout << "SEARCH RESULTS FROM QUERY: " << query << endl;
 //    //print out search results
     for (long const &Id: searchResult) { std::cout << Id << ' '; }
     cout << std::endl;
@@ -204,7 +207,7 @@ set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set
     for (int i = 1; i < words.size(); i++) {
         set<long> wordDocIds = tree.searchTreeCall(words.at(i));
         //what to do with wordDocs according to andBool
-        if (isAnd) {//todo -set_intersection should be null if words following true and bool not found?
+        if (isAnd) {//todo - why does 9 show up here when the query is - YEAR AND people PERSON michelle bachelet
             std::set_intersection(result.begin(), result.end(),
                                   wordDocIds.begin(), wordDocIds.end(),
                                   std::back_inserter(intersection));
