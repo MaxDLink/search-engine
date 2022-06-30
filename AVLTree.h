@@ -34,7 +34,7 @@ private:
 
         //constructor for AVLNode
         AVLNode(); //todo - check if appropriate to make constructor inside AVLNode class
-
+        AVLNode(AVLNode * t);
         //assignment operator for AVLNode
         ///V &operator=(const AVLNode *&other); //todo - fixme
 
@@ -43,6 +43,7 @@ private:
         //overloaded constructor for AVLNode class //todo - check if appropriate for overloading in AVLNode class
         AVLNode(K &keyArg, V &valArg, AVLNode *&leftArg, AVLNode *&rightArg, int &heightArg);
 
+        V copyNodes(AVLNode *t);
     };
 
     //constructor for AVLNode class
@@ -82,6 +83,8 @@ public:
     V searchTree(AVLNode *&root, K &key);
 
     V searchTreeCall(K key);
+
+    AVLTree<K,V> operator=( const AVLTree & rhs );
 };
 
 //overloaded constructor for AVLNode class
@@ -104,6 +107,20 @@ AVLTree<K, V>::AVLNode::AVLNode() {
     left = nullptr;
     right = nullptr;
     height = 0;
+}
+
+template <typename K, typename V>
+V AVLTree<K, V>::AVLNode::copyNodes(AVLNode * t){
+    if ( t != NULL )
+    {
+        AVLNode* left = copyNodes( t->left );
+        AVLNode* right = copyNodes( t->right );
+        return new AVLNode(t->element, left, right, t->height);
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 //template<typename K, typename V> //todo - fixme
@@ -255,7 +272,7 @@ void AVLTree<K, T>::rotateWithRightChild(AVLNode *&k1) {//right-right imbalance
     //getHeight compares k1->left height & k2->right height & returns greatest height & adds one to account for being one level deeper than lowest child
     //know that max height can only be one level deeper than lowest child in a balanced tree so add one to max height
     k1->height = max(getHeight(k1->left), getHeight(k1->right)) + 1; //+1 because one level deeper than lowest children
-    k2->height = max(getHeight(k2->left), getHeight(k1->right)) + 1;
+    k2->height = max(getHeight(k2->left), getHeight(k2->right)) + 1;
     k1 = k2; //move k1 into the place of alpha
 }
 
@@ -323,6 +340,14 @@ T AVLTree<K, T>::searchTree(AVLTree::AVLNode *&root, K &key) {
 template<typename K, typename T>
 T AVLTree<K, T>::searchTreeCall(K key) {
     return searchTree(root, key);
+}
+
+template <typename K, typename V>
+AVLTree<K, V> AVLTree<K,V>::operator=( const AVLTree & rhs ){
+    AVLTree copy = rhs;
+    //std::swap( *this, copy);
+    //copyNodes();
+    return *this;
 }
 
 

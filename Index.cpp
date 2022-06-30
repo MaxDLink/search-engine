@@ -137,11 +137,14 @@ void Index::clear() {
 }
 
 void Index::stats() {
-    textTree.print();
-    personTree.print();
-    orgTree.print();
+//    textTree.print();
+//    personTree.print();
+//    orgTree.print();
     cout << "total # of articles parsed: " << documentIDAndTitle.size() << endl;
-    cout << "total # of unique words: " << uniqueWords << endl;
+    if(documentIDAndTitle.size() == 0){
+        uniqueWords = 0;
+    }
+    cout << "total # of parsed words: " << uniqueWords << endl;
     cout << "Document Id Title size: " << documentIDAndTitle.size() << endl;
     cout << "Document Id FileName size: " << documentIDAndName.size() << endl;
 }
