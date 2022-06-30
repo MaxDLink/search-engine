@@ -115,6 +115,14 @@ void Index::readJsonFile(string fileName, set<string> stopWords, long &documentI
             set<long> docIds = textTree.searchTreeCall(lowerWord);
             docIds.insert(documentId);
             textTree.insert(lowerWord, docIds);
+            uniqueWords++; //todo - unique words
+            //todo - put lowerWord in lowerFreq map
+            //wordFreqMap.insert(lowerWord, docIds);
+            wordFreqMap.insert(pair(lowerWord, documentId));
+
+            //todo - put lowerword in idf map
+            //idfMap.insert(lowerWord, docIds);
+            idfMap.insert(pair(lowerWord, documentId));
         }
     }
 }
@@ -132,6 +140,8 @@ void Index::stats() {
     textTree.print();
     personTree.print();
     orgTree.print();
+    cout << "total # of articles parsed: " << documentIDAndTitle.size() << endl;
+    cout << "total # of unique words: " << uniqueWords << endl;
     cout << "Document Id Title size: " << documentIDAndTitle.size() << endl;
     cout << "Document Id FileName size: " << documentIDAndName.size() << endl;
 }
@@ -149,43 +159,43 @@ void Index::search(string &query, set<std::string> &stopWords) {
     vector<string> people = qp.getPersonList();
     vector<string> orgs = qp.getOrgList();
     vector<string> notWords = qp.getNotWordList();
-    //todo - do testing with these sets
-    set<long> notWordDocIds; //todo - populate notWordDocId's after line 152 runs
+
+    set<long> notWordDocIds;
     set<long> wordDocIds = getDocIds(words, qp.isWordListAnd(), textTree, notWords, notWordDocIds); //year AND people
     set<long> personDocIds = getDocIds(people, qp.isPersonListAnd(), personTree, notWords,
                                        notWordDocIds); //michelle bachelet
-    set<long> orgDocIds = getDocIds(orgs, qp.isOrgListAnd(), orgTree, notWords, notWordDocIds); //
-
-    //set<long> notWordDocIds = getDocIds(notWords, qp.isNotWordListAnd(), notTree); //todo - not words stored in every tree so search every tree for not word ID's
+    set<long> orgDocIds = getDocIds(orgs, qp.isOrgListAnd(), orgTree, notWords, notWordDocIds);
 
     //search result ID's
     vector<long> intersection;
-    set<long>::iterator itr; //todo - iterate through wordsDocId's set & put into intersection vector for intersection operations
+    set<long>::iterator itr;
     for (itr = wordDocIds.begin(); itr != wordDocIds.end(); itr++)
         intersection.push_back(*itr);
-//todo - ITERATRING THROUGH intersection MESSES UP ID's
-//todo - this intersection should happen if people have ID's
+    //performs intersection with person ID's if personDocId's set is not empty
     if (!personDocIds.empty()) {
         std::set_intersection(wordDocIds.begin(), wordDocIds.end(),
                               personDocIds.begin(), personDocIds.end(),
                               std::back_inserter(intersection));
     }
-    //todo - result = if org words inserted then take line 155 result & intersect with org words here
-    if (!orgDocIds.empty()) {//todo - can vector intersection be used correctly in set_intersection?
+    //performs intersection with org ID's if org-docId's set is not empty
+    if (!orgDocIds.empty()) {
         std::set_intersection(intersection.begin(), intersection.end(),
                               orgDocIds.begin(), orgDocIds.end(),
                               std::back_inserter(intersection));
     }
-//    //todo - subtract not words from result from line 156 (subtract notWords vector from result - google)
-//    //todo - use set difference from #include <algorithm> to get difference between searchResult set & notWordDocId's set
+    //creates the final search result
     set<long> searchResult;
     std::set_difference(intersection.begin(), intersection.end(), notWordDocIds.begin(), notWordDocIds.end(),
                         std::inserter(searchResult, searchResult.end()));
     cout << "SEARCH RESULTS FROM QUERY: " << query << endl;
+    //todo - add calculation from ranking (print out sorted ID map) - final set to print out with the correct rankings goes here
+    ///qp.getWordList(); <-- list
+    ///searchResult
+    //TODO - RANK DOCUMENTS BY RELEVANCY //rankByTFIDF(words, searchResult, wordDocIds); //todo - words vector same as qp.getWordList()
 //    //print out search results
-    for (long const &Id: searchResult) { std::cout << Id << ' '; }
-    cout << std::endl;
-    for (long const &Id: searchResult) { std::cout << documentIDAndTitle[Id] << ", " << documentIDAndName[Id] << endl; }
+//    for (long const &Id: searchResult) { std::cout << Id << ' '; }
+//    cout << std::endl;
+    for (long const &Id: searchResult) { std::cout << "[" << Id << "]" << " " << documentIDAndTitle[Id] << ", " << documentIDAndName[Id] << endl; }
     //todo - enable if above incorrect
 //    for (long const &Id: wordDocIds) { std::cout << Id << ' '; }
 //    cout << std::endl;
@@ -256,3 +266,26 @@ Index::Index() {
     //default constructor todo - initialize private data members of index???
 
 }
+
+//void Index::rankByTFIDF(vector<string> &words, set<long> &searchResults, set<long>& wordDocIds) {
+//    map<long, int> didRank; //map to hold document ID & tfIDF rank
+//    vector<long> docIDs;
+//    //put set of word docIds into a vector
+//    docIDs.assign(wordDocIds.begin(), wordDocIds.end());
+//    //do ranking logic for each document in searchResults
+//    set<long>::iterator itr; //itr for searchResults
+//    int i = 0;
+//    for (itr = searchResults.begin(); itr != searchResults.end(); itr++){//go through each search result
+//        for(int j = 0; j < words.size(); j++) {//go through each word in each search result
+//            //iterator to retrieve value from wordFreqMap
+//            std::map<string, long>::iterator fm;
+//            //retrieve values out of each map
+//            fm = wordFreqMap.find(*itr);
+//            //use itr for each document ID
+//            int tfIDF = wordFreqMap.size() / idfMap.size(); //calculate TfIDF //todo - check that levels make sense
+//            didRank.insert(pair(docIDs.at(i), tfIDF));
+//            i++;
+//        }
+//    }
+//
+//}

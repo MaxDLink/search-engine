@@ -37,8 +37,13 @@ private:
     map<long, string> documentIDAndName;
     map<long, string> documentIDAndTitle;
 
+    //todo - freq map & idf map
+    map<string, long> wordFreqMap;
+    map<string, long> idfMap;
+
+    int uniqueWords = 0;
     void readJsonFile(string fileName, set<string> stopWords, long &documentId);
-    //set<long> getDocIds(vector<string> words, bool isAnd);
+    //void rankByTFIDF(vector<string>&, set<long>&, set<long>& wordDocIds);
     set<long> getDocIds(vector<string> words, bool isAnd, AVLTree<string, set<long>>& tree, vector<string> &notWords,  set<long> &notWordDocIds);
 
 public:
