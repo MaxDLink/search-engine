@@ -147,9 +147,18 @@ void Index::stats() {
 }
 
 void Index::save() { // todo (copy assignment operator)
+
+    personTreeCopy = personTree;
+
+    orgTreeCopy = orgTree;
+
+    textTreeCopy = textTree;
 }
 
 void Index::load() { // todo (copy assignment operator)
+    personTree = personTreeCopy;
+    orgTree = orgTreeCopy;
+    textTree = textTreeCopy;
 }
 
 void Index::search(string &query, set<std::string> &stopWords) {

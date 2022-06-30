@@ -31,9 +31,15 @@ using namespace std;
 
 class Index {
 private:
+    //main avl trees
     AVLTree<string, set<long>> personTree;
     AVLTree<string, set<long>> orgTree;
     AVLTree<string, set<long>> textTree;
+    //stores main avl tree contents for later saving/loading
+    AVLTree<string, set<long>> personTreeCopy;
+    AVLTree<string, set<long>> orgTreeCopy;
+    AVLTree<string, set<long>> textTreeCopy;
+
     map<long, string> documentIDAndName;
     map<long, string> documentIDAndTitle;
 
