@@ -34,11 +34,12 @@ Index::indexAllFiles(string path, set<std::string> &stopWords) {
         if (entry.is_regular_file() && entry.path().extension().string() == ".json") {
             string jsonLink = entry.path();
             documentId++;
+            //fills documentIDAndName data member with documentId and filepath as a string
             documentIDAndName.insert(pair<int, string>(documentId, jsonLink));
-            readJsonFile(entry.path().c_str(), stopWords, documentId);
+            readJsonFile(entry.path().c_str(), stopWords, documentId); //calls readJsonFile function
         }
     }
-
+    //end time for file parsing
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
     std::cout << "Time to index all files: " << elapsed_seconds.count() << "s\n";
@@ -50,19 +51,20 @@ Index::indexAllFiles(string path, set<std::string> &stopWords) {
  * @param fileName filename with relative or absolute path included.
  */
 void Index::readJsonFile(string fileName, set<string> stopWords, long &documentId) {
+    //read JsonFiles into buffer
     FILE *fp = fopen(fileName.c_str(), "r");
 
     char readBuffer[128000];
     FileReadStream is(fp, readBuffer, sizeof(readBuffer));
     Document d;
     d.ParseStream(is);
-    fclose(fp);
+    fclose(fp); //close file
 
-    // TITLE
+    // TAKE TITLE & Insert into documentIDAndTitle
     auto title = d["title"].GetString();
     documentIDAndTitle.insert(pair(documentId, title));
 
-    // PERSONS
+    // TAKE PERSONS & Insert into personTree
     auto persons = d["entities"]["persons"].GetArray();
     for (auto &p: persons) {
         string key = p["name"].GetString();
@@ -77,7 +79,7 @@ void Index::readJsonFile(string fileName, set<string> stopWords, long &documentI
         personTree.insert(key, docIds);
     }
 
-    // ORGS
+    // TAKE ORGS & insert into ORGS TREE
     auto orgs = d["entities"]["organizations"].GetArray();
     for (auto &o: orgs) {
         string key = o["name"].GetString();
@@ -92,8 +94,9 @@ void Index::readJsonFile(string fileName, set<string> stopWords, long &documentI
         orgTree.insert(key, docIds);
     }
 
-    //vector<string> stopWords;
-    vector<string> textContent;
+
+   //vector<string> textContent; todo - take out?
+   //parse text and put into text Tree
     auto text = d["text"].GetString();
     std::istringstream ss(text);
     string lowerWord;
@@ -110,24 +113,21 @@ void Index::readJsonFile(string fileName, set<string> stopWords, long &documentI
                        });
 
 
-        if (!stopWords.count(lowerWord)) {
+        if (!stopWords.count(lowerWord)) {//if word is not a stopWord then stem and trim and put in textTree
             Porter2Stemmer::stem(lowerWord);
             set<long> docIds = textTree.searchTreeCall(lowerWord);
             docIds.insert(documentId);
             textTree.insert(lowerWord, docIds);
-            uniqueWords++; //todo - unique words
-            //todo - put lowerWord in lowerFreq map
-            //wordFreqMap.insert(lowerWord, docIds);
+            totalWordsParsed++;
+            //document ranking vars
             wordFreqMap.insert(pair(lowerWord, documentId));
-
-            //todo - put lowerword in idf map
             //idfMap.insert(lowerWord, docIds);
             idfMap.insert(pair(lowerWord, documentId));
         }
     }
 }
 
-void Index::clear() {
+void Index::clear() {//clear AVL Tree's
     textTree.chopDownTree();
     personTree.chopDownTree();
     orgTree.chopDownTree();
@@ -136,20 +136,17 @@ void Index::clear() {
     documentIDAndTitle.clear();
 }
 
-void Index::stats() {
-//    textTree.print();
-//    personTree.print();
-//    orgTree.print();
+void Index::stats() {//output stats to console
     cout << "total # of articles parsed: " << documentIDAndTitle.size() << endl;
-    if(documentIDAndTitle.size() == 0){
-        uniqueWords = 0;
+    if (documentIDAndTitle.size() == 0) {//if nothing indexed & parsed then no stats displayed for total words parsed
+        totalWordsParsed = 0;
     }
-    cout << "total # of parsed words: " << uniqueWords << endl;
+    cout << "total # of parsed words: " << totalWordsParsed << endl;
     cout << "Document Id Title size: " << documentIDAndTitle.size() << endl;
     cout << "Document Id FileName size: " << documentIDAndName.size() << endl;
 }
 
-void Index::save() { // todo (copy assignment operator)
+void Index::save() {//saving
 
     personTreeCopy = personTree;
 
@@ -158,20 +155,20 @@ void Index::save() { // todo (copy assignment operator)
     textTreeCopy = textTree;
 }
 
-void Index::load() { // todo (copy assignment operator)
+void Index::load() {//loading
     personTree = personTreeCopy;
     orgTree = orgTreeCopy;
     textTree = textTreeCopy;
 }
 
 void Index::search(string &query, set<std::string> &stopWords) {
-    QueryParser qp(query, stopWords);
-
+    QueryParser qp(query, stopWords); //calls QueryParser function
+    //vectors to hold lists of words, people, orgs, & not words from the QueryParser
     vector<string> words = qp.getWordList();
     vector<string> people = qp.getPersonList();
     vector<string> orgs = qp.getOrgList();
     vector<string> notWords = qp.getNotWordList();
-
+    //get doc ID's from query parser vectors above
     set<long> notWordDocIds;
     set<long> wordDocIds = getDocIds(words, qp.isWordListAnd(), textTree, notWords, notWordDocIds); //year AND people
     set<long> personDocIds = getDocIds(people, qp.isPersonListAnd(), personTree, notWords,
@@ -200,17 +197,11 @@ void Index::search(string &query, set<std::string> &stopWords) {
     std::set_difference(intersection.begin(), intersection.end(), notWordDocIds.begin(), notWordDocIds.end(),
                         std::inserter(searchResult, searchResult.end()));
     cout << "SEARCH RESULTS FROM QUERY: " << query << endl;
-    //todo - add calculation from ranking (print out sorted ID map) - final set to print out with the correct rankings goes here
-    ///qp.getWordList(); <-- list
-    ///searchResult
-    //TODO - RANK DOCUMENTS BY RELEVANCY //rankByTFIDF(words, searchResult, wordDocIds); //todo - words vector same as qp.getWordList()
-//    //print out search results
-//    for (long const &Id: searchResult) { std::cout << Id << ' '; }
-//    cout << std::endl;
-    for (long const &Id: searchResult) { std::cout << "[" << Id << "]" << " " << documentIDAndTitle[Id] << ", " << documentIDAndName[Id] << endl; }
-    //todo - enable if above incorrect
-//    for (long const &Id: wordDocIds) { std::cout << Id << ' '; }
-//    cout << std::endl;
+
+    //print out search results
+    for (long const &Id: searchResult) {
+        std::cout << "[" << Id << "]" << " " << documentIDAndTitle[Id] << ", " << documentIDAndName[Id] << endl;
+    }
 
 }
 
@@ -225,14 +216,14 @@ set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set
     }
     //checks not words vector contents
     if (notWords.size() > 0) {
-        //check if tree for notWords //todo - notWordDocId's should be kept a global variable & a local var should do this
+        //check if tree for notWords
         localNotWordIds = tree.searchTreeCall(notWords.at(0));
     }
     //continue to check for words, person, or orgs ID's
     for (int i = 1; i < words.size(); i++) {
         set<long> wordDocIds = tree.searchTreeCall(words.at(i));
         //what to do with wordDocs according to andBool
-        if (isAnd) {//todo - why does 9 show up here when the query is - YEAR AND people PERSON michelle bachelet
+        if (isAnd) {
             std::set_intersection(result.begin(), result.end(),
                                   wordDocIds.begin(), wordDocIds.end(),
                                   std::back_inserter(intersection));
@@ -252,7 +243,7 @@ set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set
         //what to do with wordDocs according to andBool
         if (isAnd) {
             std::set_intersection(localNotWordIds.begin(), localNotWordIds.end(),
-                                  wordDocIds.begin(), wordDocIds.end(), //todo - change to correct sets here
+                                  wordDocIds.begin(), wordDocIds.end(),
                                   std::back_inserter(notIntersection));
             // need to save for next call through - clear result to replace with contents of intersection vector
             result.clear();
@@ -260,14 +251,13 @@ set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set
                 localNotWordIds.insert(notIntersection.at(k));
             }
         }
-        //if doc ID was retrieved & and bool does not happen then simply merge doc ID's without intersection
+            //if doc ID was retrieved & and bool does not happen then simply merge doc ID's without intersection
         else {
             localNotWordIds.merge(wordDocIds); // or
         }
     }
     //add wordDocId's to notWordDocId's set
-//todo - check if notWordDocId's updates correctly
-  std::set_union(std::begin(notWordDocIds), std::end(notWordDocIds),
+    std::set_union(std::begin(notWordDocIds), std::end(notWordDocIds),
                    std::begin(localNotWordIds), std::end(localNotWordIds),
                    std::inserter(notWordDocIds, std::begin(notWordDocIds)));
     //return result of passed in word, person, or org vector
@@ -275,10 +265,11 @@ set<long> Index::getDocIds(vector<string> words, bool isAnd, AVLTree<string, set
 }
 
 Index::Index() {
-    //default constructor todo - initialize private data members of index???
+    //default constructor
 
 }
 
+//unfinished TFIDF ranking function
 //void Index::rankByTFIDF(vector<string> &words, set<long> &searchResults, set<long>& wordDocIds) {
 //    map<long, int> didRank; //map to hold document ID & tfIDF rank
 //    vector<long> docIDs;

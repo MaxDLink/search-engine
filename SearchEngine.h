@@ -13,7 +13,7 @@ class SearchEngine {
 
 private:
 public:
-    SearchEngine(string absolutePathToDataFilesDir);
+    SearchEngine(string absolutePathToDataFilesDir); //takes file path
 };
 
 

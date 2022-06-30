@@ -15,27 +15,24 @@ using namespace std;
 
 QueryParser::QueryParser(string &query, set<string> stopWords) {
     //lowercase & remove capitals
-    istringstream queryAsStream(query); //todo - either leave this or change query to istringstream later
+    istringstream queryAsStream(query);
     string word = query;
     string lowerWord;
-// todo parse the queries
 
     //string query
     //v currWl = wordList
     vector<string>* currWl = &wordList; //pointer to list of words
     string mode = "word"; //mode starts off as word to take in general words
     string token;
-    //string mode; ///todo - set equal to word at first and then change to person mode or org mode accordingly
     char feed[50];
-    while (queryAsStream >> token) {///todo - take token in by space with istream or get line
-        if (token == "PERSON") {//todo - currWL changes between personList, orgList, & wordList during parsing
-            currWl = &personList; //todo figure out what currWl should be set to
+    while (queryAsStream >> token) {//feed in each word from user phrase & check its mode and bool status
+        if (token == "PERSON") {
+            currWl = &personList;
             mode = "person"; //detected person keyword so set mode to person
         } else if (token == "ORG") {
-            currWl = &orgList; //todo figure out what orgList should be set to
+            currWl = &orgList;
             mode = "org";
         } else if (token == "AND") {
-            //todo - mode for all bools
             if (mode == "word") {
                 wordListAnd = true; //detected AND keyword so set wordListAnd == true. if false means that an OR was detected
             } else if (mode == "person") {
@@ -46,7 +43,6 @@ QueryParser::QueryParser(string &query, set<string> stopWords) {
                 notWordListAnd = true;
             }
         } else if (token == "OR") {//or detected so set wordListAnd to false
-            //todo - defaults to false (include each bool false)
             if (mode == "word") {
                 wordListAnd = false; //detected AND keyword so set wordListAnd == true. if false means that an OR was detected
             } else if (mode == "person") {
@@ -71,14 +67,14 @@ QueryParser::QueryParser(string &query, set<string> stopWords) {
                                }
                            });
 
-            if (!stopWords.count(token)) {
+            if (!stopWords.count(token)) {//only put in words that are not stopwords & stem/trim to match document words
                 Porter2Stemmer::stem(token);
                 Porter2Stemmer::trim(token);
                 //put words into current word list
                 (*currWl).push_back(token);
             }
         } else if (mode == "person" || mode == "org") {
-            //lowercase & return token //todo - double check that person's & org's will never have special punctuation/capitalization
+            //lowercase & return token
             std::transform(token.begin(), token.end(), token.begin(),
                            [](unsigned char c) {
                                c = std::tolower(c);
@@ -90,7 +86,7 @@ QueryParser::QueryParser(string &query, set<string> stopWords) {
     }
 
 }
-
+//getters for vectors in Index.cpp
 vector<string> QueryParser::getWordList() {
 
     return wordList;
@@ -107,7 +103,7 @@ vector<string> QueryParser::getOrgList() {
 vector<string> QueryParser::getNotWordList() {
     return notWordList;
 }
-
+//getters for AND bool for index.cpp
 bool QueryParser::isWordListAnd() {
     return wordListAnd;
 }

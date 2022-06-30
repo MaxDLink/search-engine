@@ -14,25 +14,26 @@ using namespace std;
 class QueryParser {
 
 private:
-    vector<string> wordList;
-    bool wordListAnd;
+    vector<string> wordList; //holds words
+    bool wordListAnd; //and bool for words
 
-    vector<string> personList;
+    vector<string> personList; //holds persons
     bool personListAnd; // true if "PERSON p1 AND p1"
 
-    vector<string> orgList;
+    vector<string> orgList; //holds orgs
     bool orgListAnd; // true if "ORG co1 AND co1"
 
-    vector<string> notWordList;
-    bool notWordListAnd;
+    vector<string> notWordList; //holds not words
+    bool notWordListAnd; //AND bool for not words
 
 public:
-    QueryParser(string &query, set<string> stopWords);
+    QueryParser(string &query, set<string> stopWords); //query parser function
+    //getters for word types (word, person, org, not words)
     vector<string> getWordList();
     vector<string> getPersonList();
     vector<string> getOrgList();
     vector<string> getNotWordList();
-
+    //getters for AND bool types (words, person, org)
     bool isWordListAnd();
     bool isPersonListAnd();
     bool isOrgListAnd();

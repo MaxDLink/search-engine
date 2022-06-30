@@ -15,7 +15,7 @@ class Interface {
 private:
 
 public:
-    void userInterface(string &path, set<string> &stopWords, Index &index);
+    void userInterface(string &path, set<string> &stopWords, Index &index); //userInterface class contents
 };
 
 #endif //INC_22SU_SEARCH_ENGINE_INTERFACE_H

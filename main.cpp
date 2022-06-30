@@ -14,6 +14,6 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     string absolutePathToDataFilesDir = argv[1];
-    SearchEngine ptd(absolutePathToDataFilesDir);
+    SearchEngine ptd(absolutePathToDataFilesDir); //gives search engine the file path
     return 0;
 }

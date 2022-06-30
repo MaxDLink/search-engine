@@ -14,46 +14,34 @@
 using namespace std;
 
 void Interface::userInterface(string &path, set<string> &stopWords, Index &index) {
-    //string notUsed = "AND FINANCIAL! SoCiEtY. ORG BasketRobins DobermanPlanet TuffyTreats Alice'sWonderland Disney PERSON Steve Austin Susan Randy Michelle Bob Bill ";
-    //QUERY - YEAR: 1, 5, 6, 9 < --- 0010161, 0010148, 0010125, 0010154
-    //QUERY - YEAR AND people PERSON michelle bachelet: 1, 6, 9 <--- 0010161, 0010125, 0010154 //todo - AND QUERY returns extra ID's problem with intersection operation?
-//    string wordAndPersonQuery = "OR year bankruptcy NOT fender ORG snap PERSON daniel wallis"; //todo - use word combos in docs 1, 5, 6, 9 ( AND/OR, PERSON/ORG
-    //todo - querying one word - "YEAR"
-    //todo - querying AND - "AND year PERSON farley"
-    //todo - querying OR - "
-    //string orgQuery = "ORG ford NOT year";
-//    string notUsed3 = "AND FINANCIAL! SoCiEtY. ORG BasketRobins DobermanPlanet TuffyTreats Alice'sWonderland Disney PERSON Steve Austin Susan Randy Michelle Bob Bill ";
-//    index.search(wordAndPersonQuery, stopWords);
-//    return; // todo bypass interface
-
 
     string userInput = "1";
-    while (userInput != "0") {
+    while (userInput != "0") { //userInterface menu in a while loop
         cout << "1. Clear" << endl << "2. Save" << endl
-                  << "3. Index all Files" << endl << "4. Load" << endl
-                  << "5. Enter Query (Search)" << endl << "6. Output Statistics" << endl << "0. Quit"
-                  << endl;
+             << "3. Index all Files" << endl << "4. Load" << endl
+             << "5. Enter Query (Search)" << endl << "6. Output Statistics" << endl << "0. Quit"
+             << endl;
 
         getline(cin, userInput);
 
-        if (userInput == "1") {
+        if (userInput == "1") {//clears the index
             cout << "Clear (clearing index)" << endl;
             index.clear();
-        } else if (userInput == "2") {
+        } else if (userInput == "2") {//saves index
             cout << "Save (persist index)" << endl;
             index.save();
-        } else if (userInput == "3") {
+        } else if (userInput == "3") {//Indexes all files
             cout << "Index All Files (parsing to populate index)" << endl;
             index.indexAllFiles(path, stopWords);
-        } else if (userInput == "4") {
+        } else if (userInput == "4") {//loads file
             cout << "Load (parsing to read from persistence file)" << endl;
             index.load();
-        } else if (userInput == "5") {
+        } else if (userInput == "5") {//takes user query
             cout << "enter query here: " << flush;
             string query;
             getline(cin, query);
             index.search(query, stopWords);
-        } else if (userInput == "6") {
+        } else if (userInput == "6") {//outputs stats like total number of words & documents parsed
             cout << "Outputting Stats" << endl;
             index.stats();
         }

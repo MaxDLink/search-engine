@@ -16,7 +16,7 @@ void ReadInData::readInStopWords(std::set<std::string> &stopWords) {
     }
     char stopWordsBuffer[500];
 
-    while (!stopWordsFile.eof()) {
+    while (!stopWordsFile.eof()) {//reads stopWords into buffer & inserts into vector
         stopWordsFile.getline(stopWordsBuffer, 500);
         string buffer = stopWordsBuffer;
         stopWords.insert(buffer); //fills stopWords vector with the list of stopwords from the stopWords.txt file
