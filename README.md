@@ -2,15 +2,18 @@ General Architecture info:
 - a search engine for a large collection of financial news articles from Jan - May 2018.  
 - The dataset contains more than 300,000 articles
 - search engine will take a query and find the documents that satisfy the request
-- Main components: 
+- Main components:
+ 
   Index Handler 
     * Read and write to the main word index 
     * Create inverted file index to store references from each element to be indexed to the 
       corresponding document(s) in which those elements exist
     * Create and maintain an index of ORGANIZATION entities and an index of PERSON entities (store each inside an AVL Tree) 
     * Searches the inverted file index based on a request from the query processor
+  
   Document parser/processor (RapidJson parser)
     * stems words & removes stop words from read in news articles 
+  
   Query processor
     * Handles user entered phrases by deliniating by boolean & ORG/PERSON
     * EX: AND year fender (finds documents with year and fender) 
