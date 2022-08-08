@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="22su_PA03" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="links.txt pa03output.txt" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="22su_search_engine" TARGET_NAME="22su_PA03" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="22su_search_engine" RUN_TARGET_NAME="22su_PA03">
-    <method v="2">
-      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-    </method>
-  </configuration>
-</component>
