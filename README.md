@@ -19,6 +19,10 @@ General Architecture info:
     * EX: AND year fender (finds documents with year and fender) 
     * EX: AND year fender PERSON daniel wallis (finds documents that contain year, fender, and daniel wallis) 
  
+
+##Run 
+`/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --build "/Users/maxlink/Desktop/DS SE test run/search-engine-main/cmake-build-debug" --target 22su_search_engine`
+
  
 6/22/22 
 
