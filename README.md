@@ -22,8 +22,11 @@ General Architecture info:
 
 ##Run
 
-`/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --build "/Users/maxlink/Desktop/DS SE test run/search-engine-main/cmake-build-debug" --target 22su_search_engine`
+`/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --build "./cmake-build-debug" --target 22su_search_engine`
 
+`./cmake-build-debug/22su_search_engine ./sample_data output.txt`
+
+Search for `book`
  
 6/22/22 
 
