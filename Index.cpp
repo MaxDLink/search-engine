@@ -10,6 +10,8 @@
 #include <set>
 #include <algorithm>
 #include <string>
+#include <locale> //for converter declaration
+#include <codecvt> //for converter declaration
 #include "AVLTree.h"
 
 using namespace std;
@@ -32,11 +34,16 @@ Index::indexAllFiles(string path, set<std::string> &stopWords) {
     long documentId = 0;
     for (const auto &entry: it) {
         if (entry.is_regular_file() && entry.path().extension().string() == ".json") {
-            string jsonLink = entry.path();
+            string jsonLink = entry.path().string();
             documentId++;
             //fills documentIDAndName data member with documentId and filepath as a string
             documentIDAndName.insert(pair<int, string>(documentId, jsonLink));
-            readJsonFile(entry.path().c_str(), stopWords, documentId); //calls readJsonFile function
+
+            // Convert wide character string to regular string
+            std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+            std::string narrowPath = converter.to_bytes(entry.path().wstring());
+
+            readJsonFile(narrowPath, stopWords, documentId); //calls readJsonFile function
         }
     }
     //end time for file parsing
